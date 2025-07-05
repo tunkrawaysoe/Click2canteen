@@ -1,41 +1,91 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import Link from "next/link";
+"use client";
+
 import React from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Button,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Box,
+} from "@mui/material";
+
+import Link from "next/link";
+
+const navLinks = [
+  { label: "Home", href: "/home" },
+  { label: "Canteens", href: "/canteens" },
+  { label: "Aboutus", href: "/aboutus" },
+];
 
 export default function NavBar() {
+  const [open, setOpen] = React.useState(false);
+
+  const toggleDrawer = () => setOpen(!open);
+
+  const drawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer}>
+      <List>
+        {navLinks.map((item) => (
+          <ListItem button key={item.label} component={Link} href={item.href}>
+            <ListItemText primary={item.label} />
+          </ListItem>
+        ))}
+        <ListItem button component={Link} href="/login">
+          <ListItemText primary="Login" />
+        </ListItem>
+        <ListItem button component={Link} href="/register">
+          <ListItemText primary="Register" />
+        </ListItem>
+      </List>
+    </Box>
+  );
+
   return (
-    <div>
-      <AppBar
-        position="fixed"
-        sx={{
-          backgroundColor: "#00022E",
-          color: "white",
-          top: 0,
-          zIndex: 1100,
-        }} // bol, white text
-      >
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+    <>
+      <AppBar position="sticky" sx={{ backgroundColor: "#0f172a" }}>
+        <Toolbar className="max-w-7xl mx-auto w-full">
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={toggleDrawer}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          ></IconButton>
+
+          <Typography variant="h6" className="font-bold flex-grow">
             Click2Canteen
           </Typography>
-          <Box sx={{ display: "flex", gap: 3 }}>
-            <Link href="/home" passHref>
-              <Button>Home</Button>
-            </Link>
 
-            <Link href="/canteens" passHref>
-              <Button>Canteen</Button>
-            </Link>
+          <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 2 }}>
+            {navLinks.map((item) => (
+              <Link key={item.label} href={item.href} passHref>
+                <Button color="inherit">{item.label}</Button>
+              </Link>
+            ))}
+          </Box>
 
-            <Link href="/aboutus" passHref>
-              <Button>AboutUs</Button>
+          <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 1, ml: 2 }}>
+            <Link href="/login" passHref>
+              <Button variant="outlined" color="inherit">
+                Login
+              </Button>
             </Link>
-            <Link href="/cart" passHref>
-              <Button>Cart</Button>
+            <Link href="/register" passHref>
+              <Button variant="contained" color="secondary">
+                Register
+              </Button>
             </Link>
           </Box>
         </Toolbar>
       </AppBar>
-    </div>
+
+      <Drawer anchor="left" open={open} onClose={toggleDrawer}>
+        {drawerList}
+      </Drawer>
+    </>
   );
 }

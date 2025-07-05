@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Canteen() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" color="black">
       Welcome to the canteens
       <Link href={"/canteens/1/menu"}>Canteen 1</Link>
       <Link href={"/canteens/2/menu"}>Canteen 2</Link>
