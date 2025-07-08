@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import NavBar from "@/components/NavBar";
+import "../globals.css";
+import AdminNavBar from "@/components/AdminNavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,8 +23,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NavBar/>
-        {children}
+        <AdminNavBar />
+        {/* Add a wrapper with left margin equal to drawer width */}
+        <main style={{ marginLeft: "250px" }}>{children}</main>
       </body>
     </html>
   );
