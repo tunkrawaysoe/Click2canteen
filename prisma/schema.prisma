@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  DELIVERED
+  CANCELLED
+}
+
+enum MenuCategory {
+  APPETIZER
+  MAIN
+  DESSERT
+  DRINK
+  SNACK
+}
+
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  role         String?
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  orders       Order[]
+}
+
+model Restaurant {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  address   String
+  imageUrl  String?
+  isOpen    Boolean  @default(true)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  menus     Menu[]
+  orders    Order[]
+}
+
+model Menu {
+  id           String       @id @default(cuid())
+  name         String
+  price        Float
+  category     MenuCategory
+  description  String?
+  imageUrl     String?
+  isActive     Boolean      @default(true)
+  restaurant   Restaurant   @relation(fields: [restaurantId], references: [id])
+  restaurantId String
+  orderItems   OrderItem[]
+  addOns       AddOn[]
+
+  @@index([restaurantId])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  restaurant      Restaurant  @relation(fields: [restaurantId], references: [id])
+  restaurantId    String
+  createdAt       DateTime    @default(now())
+  status          OrderStatus @default(PENDING)
+  totalPrice      Float
+  deliveryAddress String?
+  orderItems      OrderItem[]
+
+  @@index([restaurantId])
+  @@index([userId])
+}
+
+model AddOn {
+  id              String           @id @default(cuid())
+  name            String
+  price           Float
+  menu            Menu             @relation(fields: [menuId], references: [id])
+  menuId          String
+  orderItemAddOns OrderItemAddOn[]
+}
+
+model OrderItem {
+  id              String           @id @default(cuid())
+  order           Order            @relation(fields: [orderId], references: [id])
+  orderId         String
+  menu            Menu             @relation(fields: [menuId], references: [id])
+  menuId          String
+  quantity        Int
+  price           Float
+  orderItemAddOns OrderItemAddOn[]
+}
+
+model OrderItemAddOn {
+  id          String    @id @default(cuid())
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+  orderItemId String
+  addOn       AddOn     @relation(fields: [addOnId], references: [id])
+  addOnId     String
+}
