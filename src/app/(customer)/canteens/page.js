@@ -67,108 +67,229 @@
 // =======
 "use client";
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardMedia from "@mui/material/CardMedia";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  CardActionArea,
+  CardMedia,
+  IconButton,
+  Chip,
+} from "@mui/material";
 import Link from "next/link";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const canteens = [
   {
     id: 1,
     name: "Main Campus Canteen",
     description: "Affordable meals with local flavors.",
-    image: "/images/canteen.jpeg", // Put your image path here
+    image: "/images/canteen.jpeg",
+    isOpen: true,
+    isActive: true,
   },
   {
     id: 2,
     name: "North Wing Canteen",
     description: "Fresh snacks and beverages.",
     image: "/images/canteen1.jpeg",
+    isOpen: true,
+    isActive: true,
   },
   {
     id: 3,
     name: "Vegetarian Canteen",
     description: "Healthy vegetarian options available.",
     image: "/images/canteen2.jpeg",
+    isOpen: true,
+    isActive: true,
   },
   {
     id: 4,
     name: "Foodies Canteen",
     description: "Fresh snacks and beverages",
     image: "/images/canteen3.jpeg",
+    isOpen: true,
+    isActive: true,
+  },
+  {
+    id: 5,
+    name: "Rocker Canteen",
+    description: "Fresh snacks and beverages",
+    image: "/images/canteen2.jpeg",
+    isOpen: true,
+    isActive: true,
+  },
+  {
+    id: "6",
+    name: "Golden Spoon",
+    description: "No. 42, Inya Road | 09-765432109",
+    image: "/images/canteen3.jpeg",
+    isOpen: true,
+    isActive: true,
   },
 ];
 
 function SelectCanteenCard() {
   const [selectedCard, setSelectedCard] = React.useState(null);
+  const scrollRef = React.useRef(null);
+
+  const scroll = (direction) => {
+    const container = scrollRef.current;
+    if (container) {
+      container.scrollBy({
+        left: direction === "left" ? -300 : 300,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <>
+      {/* Heading */}
       <Box
         sx={{
           padding: "70px",
-          fontSize: "15px",
-          color: "red",
-          alignItems: "end",
+          color: "green",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "right", // or 'flex-start' / 'flex-end' based on desired alignment
+          textAlign: "right",
+          fontFamily: "nunito",
+          fontSize: "200%",
         }}
       >
-        <Typography sx={{ marginRight: "30px" }}>
-          Choose Your Canteen to
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          Choose Your Canteen
         </Typography>
-        <Typography>Explore the Menu!</Typography>
+        <Typography variant="subtitle1">Explore the Menu!</Typography>
       </Box>
-      <Box
+      <Box>
+        
+      </Box>
+
+      {/* Left Arrow */}
+      <IconButton
+        onClick={() => scroll("left")}
         sx={{
-          width: "100%",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: 2,
+          position: "absolute",
+          left: 10,
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 2,
+          backgroundColor: "skyblue",
+          boxShadow: 5,
+          "&:hover": { backgroundColor: "#f5f5f5" },
         }}
       >
-       {canteens.map((canteen, index) => (
-  <Link key={canteen.id} href={`/canteens/${canteen.id}/menu`}>
-    <Card sx={{ height: "100%" }}>
-      <CardActionArea
-        onClick={() => setSelectedCard(index)}
-        data-active={selectedCard === index ? "" : undefined}
+        <ArrowBackIosNewIcon />
+      </IconButton>
+
+      {/* Right Arrow */}
+      <IconButton
+        onClick={() => scroll("right")}
         sx={{
-          height: "100%",
-          "&[data-active]": {
-            backgroundColor: "action.selected",
-            "&:hover": {
-              backgroundColor: "action.selectedHover",
-            },
+          position: "absolute",
+          right: 10,
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 2,
+          backgroundColor: "skyblue",
+          boxShadow: 5,
+          "&:hover": { backgroundColor: "#f5f5f5" },
+        }}
+      >
+        <ArrowForwardIosIcon />
+      </IconButton>
+
+      {/* Scrollable Card List */}
+      <Box
+        ref={scrollRef}
+        sx={{
+          marginBottom: 3,
+          padding: 2,
+          display: "flex",
+          overflowX: "auto",
+          gap: 3,
+          position: "relative",
+          scrollBehavior: "smooth",
+          scrollbarWidth: "thick",
+          "&::-webkit-scrollbar": {
+            height: 8,
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "green",
+            borderRadius: 4,
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "#0000",
           },
         }}
       >
-        {canteen.image && (
-          <CardMedia
-            component="img"
-            height="140"
-            image={canteen.image}
-            alt={canteen.name}
-          />
-        )}
-        <CardContent>
-          <Typography variant="h6" component="div">
-            {canteen.name}
-          </Typography>
+        {canteens.map((canteen, index) => (
+          <Link key={canteen.id} href={`/canteens/${canteen.id}/menu`} passHref>
+            <Card
+              sx={{
+                minWidth: 350,
+                maxWidth: 350,
+                height: 500,
+                flexShrink: 0,
+                transition: "transform 0.5s ease, box-shadow 0.5s ease",
+                transformOrigin: "center",
+                position: "relative",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  boxShadow: 10,
+                  zIndex: 10,
+                },
+              }}
+            >
+              {/* Show "Open" badge if isOpen === true */}
+              {canteen.isOpen && (
+                <Chip
+                  label="Open"
+                  color="success"
+                  size="small"
+                  sx={{ position: "absolute", top: 8, right: 8, zIndex: 5 }}
+                />
+              )}
 
-          <Typography variant="body2" color="text.secondary">
-            {canteen.description}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  </Link>
-))}
-
+              <CardActionArea
+                onClick={() => setSelectedCard(index)}
+                data-active={selectedCard === index ? "" : undefined}
+                sx={{
+                  height: "100%",
+                  "&[data-active]": {
+                    backgroundColor: "action.selected",
+                    "&:hover": {
+                      backgroundColor: "action.selectedHover",
+                    },
+                  },
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={canteen.image || "/default-image.jpg"}
+                  alt={canteen.name}
+                />
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    {canteen.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {canteen.description || "No description available."}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Link>
+        ))}
       </Box>
     </>
   );
 }
 
-export default SelectCanteenCard;
+ export default SelectCanteenCard;
