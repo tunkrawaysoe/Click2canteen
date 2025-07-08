@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardMedia from '@mui/material/CardMedia';
+import Link from 'next/link';
 
 const canteens = [
   {
@@ -40,17 +41,16 @@ function SelectCanteenCard() {
   return (
 
     <>
-    <Typography
+    <Box
      sx={{
-      width:'100%',
-      display:'grid',
-      
-
+      padding: "70px",
+        fontSize: "15px",
+        color:"red",
+        alignItems:"end"
     }}>
-      <div>Choose Your Canteen to</div> 
-      <p>Explore the Menu!</p>
-      <div>Choose a canteen to start</div>
-    </Typography>
+      <Typography sx={{marginRight:"30px"}}>Choose Your Canteen to</Typography> 
+      <Typography>Explore the Menu!</Typography>
+    </Box>
     <Box
       sx={{
         width: '100%',
@@ -60,7 +60,8 @@ function SelectCanteenCard() {
       }}
     >
       {canteens.map((canteen, index) => (
-        <Card key={canteen.id} sx={{ height: '100%' }}>
+        <Link href={`/canteens/${canteen.id}/menu`}><
+          Card key={canteen.id} sx={{ height: '100%' }}>
           <CardActionArea
             onClick={() => setSelectedCard(index)}
             data-active={selectedCard === index ? '' : undefined}
@@ -92,7 +93,7 @@ function SelectCanteenCard() {
               </Typography>
             </CardContent>
           </CardActionArea>
-        </Card>
+        </Card></Link>
       ))}
     </Box>
     </>
