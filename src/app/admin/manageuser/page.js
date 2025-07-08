@@ -1,4 +1,10 @@
-import React from "react";
-export default function ManageUser() {
-  return <div color="black">Welcome to Manage User Page.</div>;
+"use client";
+import { Typography } from "@mui/material";
+
+export default function ManageUserPage() {
+  return (
+    <>
+      <Typography>This is the Manage User page content.</Typography>
+    </>
+  );
 }

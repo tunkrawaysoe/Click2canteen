@@ -1,4 +1,10 @@
-import React from "react";
-export default function OrderHistory() {
-  return <div color="black">Welcome to Order History Page.</div>;
+"use client";
+import { Typography } from "@mui/material";
+
+export default function OrderHistoryPage() {
+  return (
+    <>
+      <Typography>This is the Order History page content.</Typography>
+    </>
+  );
 }

@@ -1,4 +1,10 @@
-import React from "react";
-export default function UploadMenu() {
-  return <div color="black">Welcome to Upload Menu Page.</div>;
+"use client";
+import { Typography } from "@mui/material";
+
+export default function UploadMenuPage() {
+  return (
+    <>
+      <Typography>This is the Upload Menu page content.</Typography>
+    </>
+  );
 }

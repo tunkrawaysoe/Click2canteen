@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import AdminNavBar from "@/components/AdminNavBar";
-
+import ResponsiveDrawer from "@/components/ResponsiveDrawer"; // or "@/components/ResponsiveDrawer"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,9 +22,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AdminNavBar />
-        {/* Add a wrapper with left margin equal to drawer width */}
-        <main style={{ marginLeft: "250px" }}>{children}</main>
+        <ResponsiveDrawer>{children}</ResponsiveDrawer>
       </body>
     </html>
   );
