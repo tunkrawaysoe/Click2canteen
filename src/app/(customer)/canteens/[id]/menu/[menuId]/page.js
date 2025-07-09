@@ -113,7 +113,7 @@ export default function MenuDetailsPage({ params }) {
             className={`mt-2 w-full py-2 rounded text-white transition ${
               quantity < 1
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-900 hover:bg-green-700"
+                : "bg-[#253863] hover:opacity-90"
             }`}
           >
             Add to Cart

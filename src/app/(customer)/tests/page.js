@@ -57,7 +57,7 @@ export default function AddRestaurantPage() {
           <span>Is Active</span>
         </label>
 
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:opacity-90">
           Add Restaurant
         </button>
       </form>

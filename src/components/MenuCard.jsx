@@ -43,7 +43,7 @@ export default function MenuCard({
 
           {isActive && (
             <Link href={`/canteens/${canteenId}/menu/${id}`} passHref>
-              <button className="mt-2 px-3 py-1 bg-blue-900 text-white rounded hover:bg-green-700 transition">
+              <button className="mt-2 px-3 py-1 bg-[#253863] text-white rounded hover:opacity-90 transition">
                 Details
               </button>
             </Link>

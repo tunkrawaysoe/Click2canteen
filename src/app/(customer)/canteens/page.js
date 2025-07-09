@@ -166,9 +166,7 @@ function SelectCanteenCard() {
         </Typography>
         <Typography variant="subtitle1">Explore the Menu!</Typography>
       </Box>
-      <Box>
-        
-      </Box>
+      <Box></Box>
 
       {/* Left Arrow */}
       <IconButton
@@ -292,4 +290,4 @@ function SelectCanteenCard() {
   );
 }
 
- export default SelectCanteenCard;
+export default SelectCanteenCard;

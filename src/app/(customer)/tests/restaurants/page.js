@@ -13,6 +13,7 @@ export default async function RestaurantsPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  console.log('rest',restaurants)
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
@@ -23,7 +24,7 @@ export default async function RestaurantsPage() {
         {restaurants.map((rest) => (
           <div
             key={rest.id}
-            className="flex flex-col md:flex-row gap-4 bg-white rounded-2xl shadow-md p-4"
+            className={`flex flex-col md:flex-row gap-4 bg-white rounded-2xl shadow-md p-4 ${!rest.isOpen ? "opacity-60 pointer-events-none" : "" }`}
           >
             <div className="relative w-full md:w-64 h-48 rounded-xl overflow-hidden">
               <Image
@@ -37,8 +38,8 @@ export default async function RestaurantsPage() {
               />
             </div>
 
-            <div className="flex flex-col gap-2 justify-between">
-              <div>
+            <div className="flex flex-col  justify-between">
+              <div className="flex flex-col gap-2">
                 <h2 className="text-xl font-semibold">{rest.name}</h2>
                 <p className="text-sm text-gray-600">
                   <span className="text-black font-bold">Phone Number : </span>{" "}
@@ -48,7 +49,7 @@ export default async function RestaurantsPage() {
                   <span className="text-black font-bold">Address : </span>{" "}
                   {rest.address}
                 </p>
-                <div className="flex gap-2 mt-4 flex-wrap">
+                <div className="flex gap-3 flex-wrap">
                   {rest.isOpen ? (
                     <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
                       Open
@@ -69,12 +70,14 @@ export default async function RestaurantsPage() {
               </div>
 
               <div>
-                <Link
+                {rest.isOpen && (
+                  <Link
                   href={`/tests/restaurants/${rest.id}/menu`}
-                  className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
+                  className="inline-block bg-[#253863] text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
                 >
                   View Menu
                 </Link>
+                )}
               </div>
             </div>
           </div>
