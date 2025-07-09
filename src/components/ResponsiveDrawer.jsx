@@ -22,8 +22,10 @@ import {
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
+import MailIcon from "@mui/icons-material/Mail";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { label: "Manage Admin", href: "/admin/manageadmin" },
@@ -85,7 +87,7 @@ const getIconByText = (text) => {
         />
       );
     default:
-      return null;
+      return <MailIcon />;
   }
 };
 
@@ -96,8 +98,18 @@ function ResponsiveDrawer({ children, window }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const pathname = usePathname();
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  // Add this new function to close drawer when a link is clicked
+  const handleLinkClick = () => {
+    if (mobileOpen) {
+      // setMobileOpen(false);
+      setTimeout(() => setMobileOpen(false), 200); // 200ms delay
+    }
   };
 
   const handleOpenUserMenu = (event) => {
@@ -115,8 +127,13 @@ function ResponsiveDrawer({ children, window }) {
       <List>
         {navLinks.map((text, index) => (
           <ListItem key={index} disablePadding>
-            <Link key={index} href={text.href} passHref>
-              <ListItemButton>
+            <Link
+              key={index}
+              href={text.href}
+              passHref
+              onClick={handleLinkClick}
+            >
+              <ListItemButton selected={pathname === text.href}>
                 <ListItemIcon>{getIconByText(text.label)}</ListItemIcon>
                 <ListItemText primary={text.label} />
               </ListItemButton>
@@ -140,7 +157,6 @@ function ResponsiveDrawer({ children, window }) {
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
           // backgroundColor: "primary.main",
-          //backgroundColor: "#FFD700",
           backgroundColor: "#001D51",
         }}
       >
@@ -153,22 +169,16 @@ function ResponsiveDrawer({ children, window }) {
               edge="start"
               onClick={handleDrawerToggle}
               sx={{ mr: 2, display: { sm: "none" } }}
+              aria-expanded={mobileOpen}
             >
               <MenuIcon />
             </IconButton>
-            {/* <img
-              src="/logo&icon/click2canteenLogo1.svg"
+            <img
+              src="/logo&icon/click2canteenLogo(1).svg"
               alt="Logo"
               height={40}
               style={{ display: "block" }}
-            /> */}
-            <Box sx={{ width: { xs: 120, sm: 250, md: 300 }, mr: 2 }}>
-              <img
-                src="/logo&icon/Click2CanteenLogo(1).svg"
-                alt="Logo"
-                style={{ width: "100%", height: "auto" }}
-              />
-            </Box>
+            />
           </Box>
 
           {/* Right - Avatar */}
