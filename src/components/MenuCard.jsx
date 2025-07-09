@@ -1,31 +1,54 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function MenuCard({ id, title, description, price, imageUrl, canteenId }) {
+export default function MenuCard({
+  id,
+  title,
+  description,
+  price,
+  imageUrl,
+  canteenId,
+  isActive,
+}) {
   return (
-    <div className="w-full p-2 bg-gray-100 rounded-lg shadow-lg overflow-hidden flex flex-row sm:flex-col gap-4">
-      {/* Image container */}
-      <div className="relative w-1/3 sm:w-full h-32 sm:h-[180px] rounded-sm overflow-hidden">
-        <Image
-          src={imageUrl}
-          alt={title}
-          layout="fill"
-          objectFit="cover"
-          priority
-        />
-      </div>
+    <div className="relative w-full p-2 rounded-lg shadow-lg overflow-hidden">
+      {/* Out of Stock badge - always visible */}
+      {!isActive && (
+        <span className="absolute top-5 left-5 z-10 bg-red-600 text-white font-bold text-xs px-2 py-1 rounded shadow">
+          Out of Stock
+        </span>
+      )}
 
-      {/* Text content */}
-      <div className="flex flex-col gap-2 justify-center w-2/3 sm:w-full">
-        <h3 className="text-xl text-black font-semibold line-clamp-1">{title}</h3>
-        <p className="font-bold text-green-700">{price}</p>
+      {/* Card content */}
+      <div
+        className={`flex flex-row sm:flex-col gap-4 bg-gray-100 rounded-lg ${
+          !isActive ? "opacity-60 pointer-events-none" : ""
+        }`}
+      >
+        {/* Image */}
+        <div className="relative w-1/3 sm:w-full h-32 sm:h-[180px] rounded-sm overflow-hidden">
+          <Image
+            src={imageUrl}
+            alt={title}
+            layout="fill"
+            objectFit="cover"
+            priority
+          />
+        </div>
 
-        {/* ✅ Wrap Link around the button */}
-        <Link href={`/canteens/${canteenId}/menu/${id}`} passHref>
-          <button className="mt-2 px-3 py-1 bg-blue-900 text-white rounded hover:bg-green-700 transition">
-            Details
-          </button>
-        </Link>
+        {/* Text content */}
+        <div className="flex flex-col gap-2 justify-center w-2/3 sm:w-full p-2">
+          <h3 className="text-xl text-black font-semibold line-clamp-1">{title}</h3>
+          <p className="font-bold text-green-700">{price}</p>
+
+          {isActive && (
+            <Link href={`/canteens/${canteenId}/menu/${id}`} passHref>
+              <button className="mt-2 px-3 py-1 bg-blue-900 text-white rounded hover:bg-green-700 transition">
+                Details
+              </button>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

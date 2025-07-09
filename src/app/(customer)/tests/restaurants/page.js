@@ -70,7 +70,7 @@ export default async function RestaurantsPage() {
 
               <div>
                 <Link
-                  href={`/restaurant/${rest.id}/menu`}
+                  href={`/tests/restaurants/${rest.id}/menu`}
                   className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
                 >
                   View Menu
