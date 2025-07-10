@@ -28,9 +28,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { label: "Manage Admin", href: "/admin/manageadmin" },
-  { label: "Manage Restaurant", href: "/admin/managerestaurant" },
   { label: "Manage User", href: "/admin/manageuser" },
+  { label: "Manage Restaurant", href: "/admin/managerestaurant" },
   { label: "Food Order", href: "/admin/foodorder" },
   { label: "Order History", href: "/admin/orderhistory" },
   { label: "Upload Menu", href: "/admin/uploadmenu" },
@@ -38,22 +37,6 @@ const navLinks = [
 
 const getIconByText = (text) => {
   switch (text) {
-    case "Manage Admin":
-      return (
-        <img
-          src="/logo&icon/admin.png"
-          alt="Dashboard"
-          style={{ width: 24, height: 24 }}
-        />
-      );
-    case "Manage Restaurant":
-      return (
-        <img
-          src="/logo&icon/restaurant.png"
-          alt="Dashboard"
-          style={{ width: 24, height: 24 }}
-        />
-      );
     case "Manage User":
       return (
         <img
@@ -62,6 +45,16 @@ const getIconByText = (text) => {
           style={{ width: 24, height: 24 }}
         />
       );
+
+    case "Manage Restaurant":
+      return (
+        <img
+          src="/logo&icon/restaurant.png"
+          alt="Dashboard"
+          style={{ width: 24, height: 24 }}
+        />
+      );
+
     case "Food Order":
       return (
         <img
@@ -87,7 +80,7 @@ const getIconByText = (text) => {
         />
       );
     default:
-      return <MailIcon />;
+      return null;
   }
 };
 
@@ -173,19 +166,26 @@ function ResponsiveDrawer({ children, window }) {
             >
               <MenuIcon />
             </IconButton>
-            <img
+            {/* <img
               src="/logo&icon/click2canteenLogo(1).svg"
               alt="Logo"
               height={40}
               style={{ display: "block" }}
-            />
+            /> */}
+            <Box sx={{ width: { xs: 150, sm: 300, md: 380 }, mr: 2 }}>
+              <img
+                src="/logo&icon/click2canteenLogo(1).svg"
+                alt="Logo"
+                style={{ width: "100%", height: "auto" }}
+              />
+            </Box>
           </Box>
 
           {/* Right - Avatar */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Admin" src="/userProfilePhoto/admin.jpg" />
+                <Avatar alt="Admin" src="/userProfilePhoto/admin_photo.svg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -278,6 +278,7 @@ function ResponsiveDrawer({ children, window }) {
             flexGrow: 1,
             p: 0,
             width: { sm: `calc(100% - ${drawerWidth}px)` },
+            mr: 2,
           }}
         >
           {children}
