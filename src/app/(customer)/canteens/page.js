@@ -76,6 +76,7 @@ import {
   CardMedia,
   IconButton,
   Chip,
+  colors,
 } from "@mui/material";
 import Link from "next/link";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -95,8 +96,8 @@ const canteens = [
     name: "North Wing Canteen",
     description: "Fresh snacks and beverages.",
     image: "/images/canteen1.jpeg",
-    isOpen: true,
-    isActive: true,
+    isOpen: false,
+    isActive: false,
   },
   {
     id: 3,
@@ -119,8 +120,8 @@ const canteens = [
     name: "Rocker Canteen",
     description: "Fresh snacks and beverages",
     image: "/images/canteen2.jpeg",
-    isOpen: true,
-    isActive: true,
+    isOpen: false,
+    isActive: false,
   },
   {
     id: "6",
@@ -140,7 +141,7 @@ function SelectCanteenCard() {
     const container = scrollRef.current;
     if (container) {
       container.scrollBy({
-        left: direction === "left" ? -300 : 300,
+        left: direction === "left" ? -100 : 200,
         behavior: "smooth",
       });
     }
@@ -148,8 +149,22 @@ function SelectCanteenCard() {
 
   return (
     <>
+    <Box sx={{ flexGrow: 1, minHeight: '100vh', backgroundColor: '#0f172a' ,
+            width: '100%',           // full width of parent
+            height: '400px',         // fixed height
+            backgroundImage: `url('/images/background.jpeg')`,
+            backgroundSize: '100% 90%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            textAlign: 'center',
+        }}>
       {/* Heading */}
-      <Box
+      {/* <Box
         sx={{
           padding: "70px",
           color: "green",
@@ -165,10 +180,8 @@ function SelectCanteenCard() {
           Choose Your Canteen
         </Typography>
         <Typography variant="subtitle1">Explore the Menu!</Typography>
-      </Box>
-      <Box>
-        
-      </Box>
+        <Typography variant="subtitle3">WOW,What is that!</Typography>
+      </Box> */}
 
       {/* Left Arrow */}
       <IconButton
@@ -179,9 +192,9 @@ function SelectCanteenCard() {
           top: "50%",
           transform: "translateY(-50%)",
           zIndex: 2,
-          backgroundColor: "skyblue",
+          backgroundColor: "#f5f5f5",
           boxShadow: 5,
-          "&:hover": { backgroundColor: "#f5f5f5" },
+          "&:hover": { backgroundColor: "skyblue" },
         }}
       >
         <ArrowBackIosNewIcon />
@@ -196,9 +209,9 @@ function SelectCanteenCard() {
           top: "50%",
           transform: "translateY(-50%)",
           zIndex: 2,
-          backgroundColor: "skyblue",
+          backgroundColor: "#f5f5f5",
           boxShadow: 5,
-          "&:hover": { backgroundColor: "#f5f5f5" },
+          "&:hover": { backgroundColor: "skyblue" },
         }}
       >
         <ArrowForwardIosIcon />
@@ -208,11 +221,11 @@ function SelectCanteenCard() {
       <Box
         ref={scrollRef}
         sx={{
-          marginBottom: 3,
-          padding: 2,
+          marginBottom: 1,
+          padding: 5,
           display: "flex",
           overflowX: "auto",
-          gap: 3,
+          gap: 10,
           position: "relative",
           scrollBehavior: "smooth",
           scrollbarWidth: "thick",
@@ -234,8 +247,10 @@ function SelectCanteenCard() {
               sx={{
                 minWidth: 350,
                 maxWidth: 350,
-                height: 500,
+                height: 450,
                 flexShrink: 0,
+                color: "orange",
+                backgroundColor: "rgb(226, 197, 159)",
                 transition: "transform 0.5s ease, box-shadow 0.5s ease",
                 transformOrigin: "center",
                 position: "relative",
@@ -243,14 +258,22 @@ function SelectCanteenCard() {
                   transform: "scale(1.05)",
                   boxShadow: 10,
                   zIndex: 10,
+                  backgroundColor: " #C19A6B",
                 },
               }}
             >
-              {/* Show "Open" badge if isOpen === true */}
-              {canteen.isOpen && (
+              {/* Show "Open" badge if isOpen === true */ false}
+              {canteen.isOpen ? (
                 <Chip
                   label="Open"
                   color="success"
+                  size="small"
+                  sx={{ position: "absolute", top: 8, right: 8, zIndex: 5 }}
+                />
+              ) : (
+                <Chip
+                  label="Closed"
+                  color="error"
                   size="small"
                   sx={{ position: "absolute", top: 8, right: 8, zIndex: 5 }}
                 />
@@ -288,8 +311,9 @@ function SelectCanteenCard() {
           </Link>
         ))}
       </Box>
+      </Box>
     </>
   );
 }
 
- export default SelectCanteenCard;
+export default SelectCanteenCard;

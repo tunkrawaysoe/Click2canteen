@@ -20,6 +20,7 @@ const navLinks = [
   { label: "Home", href: "/home" },
   { label: "Canteens", href: "/canteens" },
   { label: "Aboutus", href: "/aboutus" },
+  { label: "Cart", href: "/cart" },
 ];
 
 export default function NavBar() {
@@ -49,12 +50,6 @@ export default function NavBar() {
     <>
       <AppBar position="sticky" sx={{ backgroundColor: "#0f172a" }}>
         <Toolbar className="max-w-7xl mx-auto w-full">
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={toggleDrawer}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          ></IconButton>
 
           <Typography variant="h6" className="font-bold flex-grow">
             Click2Canteen
