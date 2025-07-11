@@ -1,23 +1,9 @@
 import MenuCard from "@/components/MenuCard";
-import { PrismaClient } from "@/generated/prisma";
-
-const prisma = new PrismaClient();
+import { getAllMenus } from "@/lib/data/menu/menu";
 
 export default async function Menu({ params }) {
   const { canteenId } = await params;
-  console.log("canteenId", canteenId);
-
-  // Fetch real menu items for this restaurant/canteen
-  const menus = await prisma.menu.findMany({
-    where: { restaurantId: canteenId },
-    include: {
-      addOns: true,
-    },
-    orderBy: {
-      createdAt: "desc", // ✅ newest menus first
-    },
-  });
-  console.log("Menu is", menus);
+  const menus = await getAllMenus(canteenId);
 
   return (
     <div className="w-5/6 mx-auto">

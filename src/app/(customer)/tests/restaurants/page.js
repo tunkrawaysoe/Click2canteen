@@ -1,19 +1,10 @@
-import { PrismaClient } from "@/generated/prisma";
+import { getAllRestaurants } from "@/lib/data/restaurant/restaurant";
 import Image from "next/image";
-import Link from "next/link"; // ✅ import Link for navigation
-
-let prisma;
-if (!global.prisma) {
-  global.prisma = new PrismaClient();
-}
-prisma = global.prisma;
+import Link from "next/link";
 
 export default async function RestaurantsPage() {
-  const restaurants = await prisma.restaurant.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const restaurants = await getAllRestaurants();
 
-  console.log("rest", restaurants);
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Restaurants</h1>

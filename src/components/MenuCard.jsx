@@ -33,9 +33,10 @@ export default function MenuCard({
           <Image
             src={imageUrl || defaultImageUrl}
             alt={title}
-            layout="fill"
-            objectFit="cover"
+            fill
             priority
+            style={{ objectFit: "cover" }}
+            sizes="(max-width: 640px) 100vw, 33vw"
           />
         </div>
 
