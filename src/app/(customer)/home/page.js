@@ -28,14 +28,14 @@ const HeroSection = () => {
       >
         {/* Left: Text */}
         <Grid item xs={12} md={6}>
-          <Typography variant='h2' component="h1" gutterBottom fontWeight="bold">
+          <Typography variant='h2' component="h1" gutterBottom fontWeight="bold" color='gold' fontStyle={"italic"}>
               Welcome from Click2Canteen
             </Typography>
           <Box sx={{ textAlign: { xs: 'center', md: 'left' }, maxWidth: 500, mx: 'auto'}}>
-            <Typography variant="h4" component="h3"  fontWeight="50">
+            <Typography variant="h4" component="h3"  fontWeight="50" color='#FFFF99'>
               Delicious Food, Delivered Fast
             </Typography>
-            <Typography variant="h6" sx={{ mb: 4 }}>
+            <Typography variant="h6" sx={{ mb: 4, color:"#D3D3D3" }}>
               Order your favorite meals from the canteen, hot and fresh. Easy, fast, and tasty.
             </Typography>
             <Link href="/canteens" passHref>
