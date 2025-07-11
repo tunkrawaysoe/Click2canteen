@@ -50,7 +50,6 @@ export async function addRestaurant(formData) {
   }
 }
 
-
 /**
  * Server action to add a new Menu item with optional Add-Ons
  * @param {FormData} formData - data submitted from the form
@@ -70,10 +69,12 @@ export async function addMenuWithAddOns(formData) {
   const addOnPrices = formData.getAll("addOnPrice");
 
   // Map Add-Ons to objects
-  const addOns = addOnNames.map((name, i) => ({
-    name,
-    price: parseFloat(addOnPrices[i]),
-  }));
+  const addOns = addOnNames
+    .map((name, i) => ({
+      name: name.trim(),
+      price: parseFloat(addOnPrices[i]),
+    }))
+    .filter((addOn) => addOn.name !== "" && !isNaN(addOn.price));
 
   // Debugging: log Add-Ons to server console
   console.log("🧩 AddOns submitted:", addOns);
@@ -88,9 +89,7 @@ export async function addMenuWithAddOns(formData) {
       imageUrl,
       isActive,
       restaurantId,
-      addOns: {
-        create: addOns,
-      },
+      addOns: addOns.length > 0 ? { create: addOns } : undefined,
     },
   });
 

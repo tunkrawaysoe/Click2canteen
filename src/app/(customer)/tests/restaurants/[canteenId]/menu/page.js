@@ -34,8 +34,7 @@ export default async function Menu({ params }) {
             isActive={item.isActive}
             price={`MMK ${item.price.toLocaleString()}`}
             imageUrl={
-              item.imageUrl ||
-              "https://images.unsplash.com/photo-1551183053-bf91a1d81141" // fallback image
+              item.imageUrl // fallback image
             }
             canteenId={canteenId}
           />
