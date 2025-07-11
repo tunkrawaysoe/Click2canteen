@@ -67,6 +67,7 @@ model Menu {
   restaurantId String
   orderItems   OrderItem[]
   addOns       AddOn[]
+  createdAt    DateTime     @default(now())
 
   @@index([restaurantId])
 }
