@@ -1,9 +1,74 @@
-import React from 'react'
-export default function home() {
+"use client";
+import React from 'react';
+import { Box, Grid, Typography, Button } from '@mui/material';
+import Link from 'next/link';
+
+const HeroSection = () => {
   return (
-   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">Welcome From Click2Canteen</h1>
-      <p className="text-gray-600 mt-4">What yours order</p>
-    </div>
-  )
-}
+    <Box sx={{ flexGrow: 1, minHeight: '100vh', backgroundColor: '#0f172a' ,
+        width: '100%',           // full width of parent
+        height: '400px',         // fixed height
+        backgroundImage: `url('/images/background.jpeg')`,
+        backgroundSize: '100% 90%',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        textAlign: 'center',
+    }}>
+      <Grid
+        container
+        spacing={0}
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: '100vh', px: 4 }}
+      >
+        {/* Left: Text */}
+        <Grid item xs={12} md={6}>
+          <Typography variant='h2' component="h1" gutterBottom fontWeight="bold" color='gold' fontStyle={"italic"}>
+              Welcome from Click2Canteen
+            </Typography>
+          <Box sx={{ textAlign: { xs: 'center', md: 'left' }, maxWidth: 500, mx: 'auto'}}>
+            <Typography variant="h4" component="h3"  fontWeight="50" color='#FFFF99'>
+              Delicious Food, Delivered Fast
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 4, color:"#D3D3D3" }}>
+              Order your favorite meals from the canteen, hot and fresh. Easy, fast, and tasty.
+            </Typography>
+            <Link href="/canteens" passHref>
+            <Button
+              variant="contained"
+              color="error"
+              size="large"
+              sx={{ px: 4, py: 1.5, fontWeight: 'bold' }}
+            >
+              Select Restaurant
+            </Button>
+            </Link>
+          </Box>
+        </Grid>
+
+        {/* Right: Image */}
+        <Grid item xs={12} md={6}>
+          <Box
+            component="img"
+            src="/images/food.png"
+            alt="Delicious Food"
+            sx={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: { xs: 300, md: 500 },
+              objectFit: 'cover',
+              borderRadius: 4,
+            }}
+          />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export default HeroSection;
