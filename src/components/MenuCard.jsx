@@ -10,6 +10,9 @@ export default function MenuCard({
   canteenId,
   isActive,
 }) {
+  const defaultImageUrl =
+    "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
+
   return (
     <div className="relative w-full p-2 rounded-lg shadow-lg overflow-hidden">
       {/* Out of Stock badge - always visible */}
@@ -28,17 +31,20 @@ export default function MenuCard({
         {/* Image */}
         <div className="relative w-1/3 sm:w-full h-32 sm:h-[180px] rounded-sm overflow-hidden">
           <Image
-            src={imageUrl}
+            src={imageUrl || defaultImageUrl}
             alt={title}
-            layout="fill"
-            objectFit="cover"
+            fill
             priority
+            style={{ objectFit: "cover" }}
+            sizes="(max-width: 640px) 100vw, 33vw"
           />
         </div>
 
         {/* Text content */}
         <div className="flex flex-col gap-2 justify-center w-2/3 sm:w-full p-2">
-          <h3 className="text-xl text-black font-semibold line-clamp-1">{title}</h3>
+          <h3 className="text-xl text-black font-semibold line-clamp-1">
+            {title}
+          </h3>
           <p className="font-bold text-green-700">{price}</p>
 
           {isActive && (

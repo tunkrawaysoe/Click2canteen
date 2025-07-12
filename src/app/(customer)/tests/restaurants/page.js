@@ -1,19 +1,10 @@
-import { PrismaClient } from "@/generated/prisma";
+import { getAllRestaurants } from "@/lib/data/restaurant/restaurant";
 import Image from "next/image";
-import Link from "next/link"; // ✅ import Link for navigation
-
-let prisma;
-if (!global.prisma) {
-  global.prisma = new PrismaClient();
-}
-prisma = global.prisma;
+import Link from "next/link";
 
 export default async function RestaurantsPage() {
-  const restaurants = await prisma.restaurant.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const restaurants = await getAllRestaurants();
 
-  console.log('rest',restaurants)
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
@@ -24,7 +15,9 @@ export default async function RestaurantsPage() {
         {restaurants.map((rest) => (
           <div
             key={rest.id}
-            className={`flex flex-col md:flex-row gap-4 bg-white rounded-2xl shadow-md p-4 ${!rest.isOpen ? "opacity-60 pointer-events-none" : "" }`}
+            className={`flex flex-col md:flex-row gap-4 bg-white rounded-2xl shadow-md p-4 ${
+              !rest.isOpen ? "opacity-60 pointer-events-none" : ""
+            }`}
           >
             <div className="relative w-full md:w-64 h-48 rounded-xl overflow-hidden">
               <Image
@@ -69,15 +62,21 @@ export default async function RestaurantsPage() {
                 </div>
               </div>
 
-              <div>
+              <div className="flex gap-3">
                 {rest.isOpen && (
                   <Link
-                  href={`/tests/restaurants/${rest.id}/menu`}
-                  className="inline-block bg-[#253863] text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
-                >
-                  View Menu
-                </Link>
+                    href={`/tests/restaurants/${rest.id}/menu`}
+                    className="inline-block bg-[#253863] text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
+                  >
+                    View Menu
+                  </Link>
                 )}
+                <Link
+                  href={`/tests/restaurants/${rest.id}/add-menu`}
+                  className="inline-block bg-[#409e58] text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
+                >
+                  + Add Menu
+                </Link>
               </div>
             </div>
           </div>
