@@ -254,9 +254,7 @@ const columns = [
     renderCell: (params) => (
       <Box
         sx={{
-          bgcolor: params.value.includes("Is Active")
-            ? "primary.light"
-            : "grey.200",
+          bgcolor: params.value.includes("Open") ? "primary.light" : "#ff7961",
           px: 1,
           borderRadius: 1,
           fontSize: "0.75rem",
@@ -319,7 +317,7 @@ const rows = [
     location: "MICT Park, Near Building 4",
     openinghour: "8:AM - 7:PM",
     contactphonenumber: 9774455040,
-    isactive: "Open",
+    isactive: "Close",
   },
   {
     id: 4,
