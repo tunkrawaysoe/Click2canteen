@@ -1,9 +1,42 @@
-import React from 'react'
+import { getCartAction } from "@/actions/cart";
+import Link from "next/link";
+import CartListClient from "./app/cart/CartListClient";
+import prisma from "@/lib/prisma";
 
-const Cart = () => {
+export default async function CartPage() {
+  const userId = "guest";
+  const cart = await getCartAction(userId);
+
+  const menuDetails = await Promise.all(
+    cart.map(async (item) => {
+      const menu = await prisma.menu.findUnique({
+        where: { id: item.menuId },
+        include: { addOns: true },
+      });
+      return { ...item, menu };
+    })
+  );
+
   return (
-    <div>Cart page</div>
-  )
-}
+    <div className="max-w-4xl mx-auto p-6">
+      
 
-export default Cart
+      {menuDetails.length === 0 ? (
+        <div className="flex flex-col items-center justify-center text-center text-gray-700 py-50 gap-3">
+          <div className="text-6xl">🛒</div>
+          <h2 className="text-lg font-semibold">Your cart is empty</h2>
+          <p className="text-sm">Looks like you haven’t added anything yet.</p>
+
+          <Link
+            href="tests/restaurants"
+            className="mt-4 inline-block px-5 py-2.5 bg-blue-900 text-white rounded-md hover:bg-blue-900 transition"
+          >
+            Browse Restaurants
+          </Link>
+        </div>
+      ) : (
+        <CartListClient cartItems={menuDetails} userId={userId} />
+      )}
+    </div>
+  );
+}

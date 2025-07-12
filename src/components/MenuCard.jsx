@@ -48,7 +48,7 @@ export default function MenuCard({
           <p className="font-bold text-green-700">{price}</p>
 
           {isActive && (
-            <Link href={`/canteens/${canteenId}/menu/${id}`} passHref>
+            <Link href={`/tests/restaurants/${canteenId}/menu/${id}`} passHref>
               <button className="mt-2 px-3 py-1 bg-[#253863] text-white rounded hover:opacity-90 transition">
                 Details
               </button>
