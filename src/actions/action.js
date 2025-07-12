@@ -3,6 +3,7 @@
 import { PrismaClient } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { delKey } from "@/lib/utils/cached";
 
 // Initialize Prisma Client once to avoid multiple instances in development
 let prisma;
@@ -92,7 +93,9 @@ export async function addMenuWithAddOns(formData) {
       addOns: addOns.length > 0 ? { create: addOns } : undefined,
     },
   });
-
+  const CACHE_KEY = `menu:all:${restaurantId}`;
+  await delKey(CACHE_KEY);
+  console.log(`🗑️ Deleted cache key: ${CACHE_KEY}`);
   // Revalidate cache for the menu page
   revalidatePath(`/tests/restaurants/${restaurantId}/menu`);
 

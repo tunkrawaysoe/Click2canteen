@@ -3,7 +3,9 @@ import { getAllMenus } from "@/lib/data/menu/menu";
 
 export default async function Menu({ params }) {
   const { canteenId } = await params;
+  console.log("canten",canteenId)
   const menus = await getAllMenus(canteenId);
+  console.log(menus)
 
   return (
     <div className="w-5/6 mx-auto">
