@@ -1,6 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import ResponsiveDrawer from "@/components/ResponsiveDrawer"; // or "@/components/ResponsiveDrawer"
+
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import StyledRoot from "./StyledRoot";
+import AppLayout from "@/components/AppLayout";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,7 +26,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ResponsiveDrawer>{children}</ResponsiveDrawer>
+        <AppRouterCacheProvider>
+          <StyledRoot>
+            <AppLayout>
+              <ResponsiveDrawer>{children}</ResponsiveDrawer>
+            </AppLayout>
+          </StyledRoot>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
