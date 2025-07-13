@@ -63,6 +63,7 @@ model Menu {
   description  String?
   imageUrl     String?
   isActive     Boolean      @default(true)
+  isSpecial    Boolean      @default(false) // 👈 Add this line
   restaurant   Restaurant   @relation(fields: [restaurantId], references: [id])
   restaurantId String
   orderItems   OrderItem[]

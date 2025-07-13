@@ -102,3 +102,75 @@ export async function addMenuWithAddOns(formData) {
   // Redirect user after successful creation
   redirect(`/tests/restaurants/${restaurantId}/menu`);
 }
+
+export async function updateMenuWithAddOns(formData) {
+  const menuId = formData.get("menuId");
+  const restaurantId = formData.get("restaurantId");
+
+  if (!menuId || !restaurantId) {
+    throw new Error("Missing menuId or restaurantId");
+  }
+
+  // Extract main fields
+  const name = formData.get("name") || "";
+  const price = parseFloat(formData.get("price") || "0");
+  const category = formData.get("category") || "MAIN";
+  const description = formData.get("description") || "";
+  const imageUrl = formData.get("imageUrl") || "";
+  const isActive = formData.get("isActive") === "on";
+  const isSpecial = formData.get("isSpecial") === "on";
+
+  // Extract add-ons
+  const addOnNames = formData.getAll("addOnName");
+  const addOnPrices = formData.getAll("addOnPrice");
+
+  const newAddOns = addOnNames
+    .map((name, i) => ({
+      name: name.trim(),
+      price: parseFloat(addOnPrices[i]),
+    }))
+    .filter((a) => a.name !== "" && !isNaN(a.price));
+
+  console.log("🔁 Updating menu:", menuId);
+  console.log("🧩 New AddOns:", newAddOns);
+
+  // Transaction: update menu + delete old addOns + create new ones
+  await prisma.$transaction([
+    // Update the menu
+    prisma.menu.update({
+      where: { id: menuId },
+      data: {
+        name,
+        price,
+        category,
+        description,
+        imageUrl,
+        isActive,
+        isSpecial,
+      },
+    }),
+
+    // Delete all previous addOns
+    prisma.addOn.deleteMany({
+      where: { menuId },
+    }),
+
+    // Add the new ones if any
+    ...(newAddOns.length > 0
+      ? [
+          prisma.addOn.createMany({
+            data: newAddOns.map((a) => ({
+              ...a,
+              menuId,
+            })),
+          }),
+        ]
+      : []),
+  ]);
+
+  await delKey(`menu:all:${restaurantId}`);
+  await delKey(`menu:single:${menuId}`);
+
+  revalidatePath(`/tests/restaurants/${restaurantId}/menu`);
+  redirect(`/tests/restaurants/${restaurantId}/menu`);
+}

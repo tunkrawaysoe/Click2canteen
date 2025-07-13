@@ -1,10 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { addMenuWithAddOns } from "@/actions/action"; // Your server action
+import { useState, useEffect } from "react";
 
-export default function AddMenuFormClient({ canteenId }) {
+export default function MenuFormClient({
+  canteenId,
+  menu = null,          // existing menu object for update, or null for add
+  onSubmit,             // server action or handler function
+  submitLabel = "Save Menu"
+}) {
   const [addons, setAddons] = useState([{ name: "", price: "" }]);
+  const [isSpecial, setIsSpecial] = useState(false);
+
+  // Initialize form fields state with menu data if editing
+  useEffect(() => {
+    if (menu) {
+      setAddons(menu.addOns?.length ? menu.addOns.map(a => ({
+        name: a.name,
+        price: a.price.toString()
+      })) : [{ name: "", price: "" }]);
+      setIsSpecial(menu.isSpecial ?? false);
+    }
+  }, [menu]);
 
   const handleAddAddOn = () => setAddons([...addons, { name: "", price: "" }]);
   const handleRemoveAddOn = (index) => {
@@ -19,12 +35,20 @@ export default function AddMenuFormClient({ canteenId }) {
   };
 
   return (
-    <form action={addMenuWithAddOns} className="space-y-4 p-4 max-w-md">
+    <form action={onSubmit} className="space-y-4 p-4 max-w-md">
+      {menu?.id && (
+        <input type="hidden" name="menuId" value={menu.id} />
+      )}
       <input type="hidden" name="restaurantId" value={canteenId} />
 
       <div>
         <label>Name</label>
-        <input name="name" required className="w-full p-2 border rounded" />
+        <input
+          name="name"
+          defaultValue={menu?.name || ""}
+          required
+          className="w-full p-2 border rounded"
+        />
       </div>
 
       <div>
@@ -33,6 +57,7 @@ export default function AddMenuFormClient({ canteenId }) {
           name="price"
           type="number"
           step="0.01"
+          defaultValue={menu?.price?.toString() || ""}
           required
           className="w-full p-2 border rounded"
         />
@@ -40,7 +65,11 @@ export default function AddMenuFormClient({ canteenId }) {
 
       <div>
         <label>Category</label>
-        <select name="category" className="w-full p-2 border rounded">
+        <select
+          name="category"
+          defaultValue={menu?.category || "APPETIZER"}
+          className="w-full p-2 border rounded"
+        >
           <option value="APPETIZER">Appetizer</option>
           <option value="MAIN">Main</option>
           <option value="DESSERT">Dessert</option>
@@ -51,29 +80,38 @@ export default function AddMenuFormClient({ canteenId }) {
 
       <div>
         <label>Description</label>
-        <textarea name="description" className="w-full p-2 border rounded" />
+        <textarea
+          name="description"
+          defaultValue={menu?.description || ""}
+          className="w-full p-2 border rounded"
+        />
       </div>
 
       <div>
         <label>Image URL</label>
-        <input name="imageUrl" className="w-full p-2 border rounded" />
+        <input
+          name="imageUrl"
+          defaultValue={menu?.imageUrl || ""}
+          className="w-full p-2 border rounded"
+        />
       </div>
 
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"
           name="isActive"
-          defaultChecked
+          defaultChecked={menu?.isActive ?? true}
           className="mr-2"
         />
         <label>Is Active</label>
       </div>
 
-      {/* New isSpecial checkbox */}
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"
           name="isSpecial"
+          checked={isSpecial}
+          onChange={(e) => setIsSpecial(e.target.checked)}
           className="mr-2"
         />
         <label>Is Special</label>
@@ -124,7 +162,7 @@ export default function AddMenuFormClient({ canteenId }) {
         type="submit"
         className="px-4 py-2 bg-blue-600 text-white rounded"
       >
-        Save Menu
+        {submitLabel}
       </button>
     </form>
   );
