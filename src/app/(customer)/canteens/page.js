@@ -152,8 +152,8 @@ function SelectCanteenCard() {
     <Box sx={{ flexGrow: 1, minHeight: '100vh', backgroundColor: '#0f172a' ,
             width: '100%',           // full width of parent
             height: '400px',         // fixed height
-            backgroundImage: `url('/images/background.jpeg')`,
-            backgroundSize: '100% 90%',
+            backgroundImage: `url('/images/BGCanteen.jpeg')`,
+            backgroundSize: '100% 100%',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             position: 'relative',
