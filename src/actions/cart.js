@@ -8,13 +8,18 @@ const getCartKey = (userId) => `cart:${userId}`;
 /**
  * Add an item to the user's cart in Redis.
  */
-export async function addToCartAction(userId = 123, menuId, quantity, addOns) {
+export async function addToCartAction(
+  userId = 123,
+  menuId,
+  quantity,
+  addOns,
+  CACHE_ttl = 300
+) {
   const key = getCartKey(userId);
 
   // Fetch existing cart data from Redis
-  const cart = await redis.get(key);
+  const cart = (await redis.get(key)) || [];
 
-  if (!cart) return;
   // Check if the item (with same menuId and addOns) already exists
   const existingIndex = cart.findIndex(
     (item) =>
@@ -24,8 +29,8 @@ export async function addToCartAction(userId = 123, menuId, quantity, addOns) {
 
   console.log("existingIndex", existingIndex);
 
-  // If found, update the quantity
   if (existingIndex > -1) {
+    // If found, update the quantity
     cart[existingIndex].quantity += quantity;
   } else {
     // If not found, add as new item
@@ -33,7 +38,7 @@ export async function addToCartAction(userId = 123, menuId, quantity, addOns) {
   }
 
   // Save updated cart to Redis
-  await redis.set(key, JSON.stringify(cart));
+  await redis.set(key, JSON.stringify(cart), { ex: CACHE_ttl });
 }
 
 /**
@@ -42,7 +47,7 @@ export async function addToCartAction(userId = 123, menuId, quantity, addOns) {
 export async function getCartAction(userId) {
   const cart = await redis.get(getCartKey(userId));
   console.log("Cart data", cart);
-  return cart;
+  return cart || [];
 }
 
 /**

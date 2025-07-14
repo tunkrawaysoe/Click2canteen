@@ -34,19 +34,15 @@ model Restaurant {
 }
 
 model Menu {
-  id           String       @id @default(cuid())
-  name         String
-  price        Float
-  category     MenuCategory
-  description  String?
-  imageUrl     String?
-  isActive     Boolean      @default(true)
-  restaurantId String
-  createdAt    DateTime     @default(now())
-  isSpecial    Boolean      @default(false)
-  addOns       AddOn[]
-  restaurant   Restaurant   @relation(fields: [restaurantId], references: [id])
-  orderItems   OrderItem[]
+  id          String       @id @default(cuid())
+  name        String
+  price       Float
+  category    MenuCategory
+  description String?
+  imageUrl    String?
+  isActive    Boolean      @default(true)
+  restaurant  Restaurant   @relation(fields: [restaurantId], references: [id])
+  orderItems  OrderItem[]
 
   @@index([restaurantId])
 }

@@ -29,3 +29,18 @@ export async function getAllRestaurants(forceRefresh = false) {
   console.timeEnd("🕒 getAllRestaurants");
   return restaurants;
 }
+export async function getRestaurantById(restaurantId) {
+  const key = `restaurant:${restaurantId}`;
+  const cached = await getCachedData(key);
+  if (cached) return cached;
+
+  const restaurant = await prisma.restaurant.findUnique({
+    where: { id: restaurantId },
+  });
+
+  if (restaurant) {
+    await setCachedData(key, restaurant, CACHE_TTL);
+  }
+
+  return restaurant;
+}

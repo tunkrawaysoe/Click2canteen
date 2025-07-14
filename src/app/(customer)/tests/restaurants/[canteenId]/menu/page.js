@@ -8,7 +8,7 @@ export default async function Menu({ params }) {
   console.log(menus)
 
   return (
-    <div className="w-5/6 mx-auto">
+    <div className="w-[95%] mx-auto">
       <h1 className="text-2xl font-semibold mb-6">
         Menu for Canteen {canteenId}
       </h1>
