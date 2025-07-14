@@ -1,6 +1,6 @@
 
 import { getMenuWithAddons } from "@/lib/data/menu/menu";
-import MenuDetailClient from "./MenuDetailClient";
+import MenuDetailClient from "@/components/MenuDetailClient";
 
 
 export default async function MenuDetailPage({ params }) {

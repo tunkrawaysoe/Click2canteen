@@ -44,7 +44,7 @@ export default function MenuCard({
           <p className="font-bold text-green-700">{price}</p>
 
           <div className="flex gap-2 mt-2">
-            <Link href={`/tests/restaurants/${canteenId}/menu/${id}`} passHref>
+            <Link href={`/canteens/${canteenId}/menu/${id}`} passHref>
               <button className="px-3 py-1 bg-[#253863] text-white rounded hover:opacity-90 transition">
                 Details
               </button>

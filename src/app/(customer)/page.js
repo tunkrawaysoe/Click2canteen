@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import pizza from "../../../public/images/seafood-pizza-removebg-preview.png";
+import pizza from "../../../public/images/newpiza.jpg";
+
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 export default function HeroSection() {
   return (
@@ -10,7 +11,7 @@ export default function HeroSection() {
       <section className="bg-white py-8 px-4 sm:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto flex  md:flex-row items-center">
           {/* Text Content for md+ */}
-          <div className="hidden md:flex text-left w-[47%]">
+          <div className="hidden md:flex text-left w-[47%] ">
             <div>
               <h1 className="text-4xl tracking-tight font-bold text-gray-800">
                 Mealtime Made Easy
@@ -38,7 +39,7 @@ export default function HeroSection() {
           </div>
 
           {/* Image for md+ */}
-          <div className="hidden md:block flex-1 relative rounded-2xl  w-full min-h-[300px] sm:min-h-[400px] md:min-h-[500px] overflow-hidden">
+          <div className="hidden md:block flex-1 relative rounded-2xl  w-full h-160">
             <Image
               src={pizza}
               alt="Online Food Ordering"
