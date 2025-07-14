@@ -327,8 +327,45 @@ export default async function RestaurantsPage() {
   const restaurants = await getAllRestaurants();
 
   return (
+<<<<<<< HEAD
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Restaurants</h1>
+=======
+    <>
+    <Box sx={{ flexGrow: 1, minHeight: '100vh', backgroundColor: '#0f172a' ,
+            width: '100%',           // full width of parent
+            height: '400px',         // fixed height
+            backgroundImage: `url('/images/BGCanteen.jpeg')`,
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            textAlign: 'center',
+        }}>
+      {/* Heading */}
+      {/* <Box
+        sx={{
+          padding: "70px",
+          color: "green",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "right", // or 'flex-start' / 'flex-end' based on desired alignment
+          textAlign: "right",
+          fontFamily: "nunito",
+          fontSize: "200%",
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          Choose Your Canteen
+        </Typography>
+        <Typography variant="subtitle1">Explore the Menu!</Typography>
+        <Typography variant="subtitle3">WOW,What is that!</Typography>
+      </Box> */}
+>>>>>>> 784b97d9c26e43c08adce46f301daa7436d29452
 
       {restaurants.length === 0 && <p>No restaurants found.</p>}
 
