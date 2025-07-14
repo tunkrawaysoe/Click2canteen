@@ -4,11 +4,11 @@ import MenuDetailClient from "@/components/MenuDetailClient";
 
 
 export default async function MenuDetailPage({ params }) {
-  const menuId = await params.menuid;
-  console.log(menuId)
+  const {menuid} = await params;
+  console.log(menuid)
   
 
-  const menu = await getMenuWithAddons(menuId);
+  const menu = await getMenuWithAddons(menuid);
   console.log(menu)
    
   // includes add-ons

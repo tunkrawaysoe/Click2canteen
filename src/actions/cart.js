@@ -12,33 +12,44 @@ export async function addToCartAction(
   userId = 123,
   menuId,
   quantity,
-  addOns,
+  addOns = [],
   CACHE_ttl = 300
 ) {
   const key = getCartKey(userId);
 
-  // Fetch existing cart data from Redis
-  const cart = (await redis.get(key)) || [];
+  // Fetch and parse cart
+  const raw = await redis.get(key);
+  let cart = [];
 
-  // Check if the item (with same menuId and addOns) already exists
+  try {
+    cart = raw ? JSON.parse(raw) : [];
+  } catch (err) {
+    console.error("Failed to parse cart from Redis:", err);
+  }
+
+  // Debug logs
+  console.log("Existing cart:", cart);
+  console.log("Incoming item:", { menuId, quantity, addOns });
+
   const existingIndex = cart.findIndex(
     (item) =>
       item.menuId === menuId &&
       JSON.stringify(item.addOns) === JSON.stringify(addOns)
   );
 
-  console.log("existingIndex", existingIndex);
-
   if (existingIndex > -1) {
-    // If found, update the quantity
     cart[existingIndex].quantity += quantity;
   } else {
-    // If not found, add as new item
     cart.push({ menuId, quantity, addOns });
   }
 
-  // Save updated cart to Redis
-  await redis.set(key, JSON.stringify(cart), { ex: CACHE_ttl });
+  // Save back to Redis
+  try {
+    await redis.set(key, JSON.stringify(cart), { ex: CACHE_ttl });
+    console.log("Cart saved:", cart);
+  } catch (err) {
+    console.error("Failed to save cart:", err);
+  }
 }
 
 /**

@@ -1,9 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import pizza from "../../../public/images/newpiza.jpg";
-
+import AnimatedButton from "@/components/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 export default function HeroSection() {
   return (
@@ -25,15 +23,7 @@ export default function HeroSection() {
                 just for you.
               </p>
               <Link href="/canteens">
-                <button
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
-                  }}
-                  className="text-white px-6 py-3 rounded-2xl shadow transition duration-300 ease-in-out hover:brightness-110"
-                >
-                  Browse Menus
-                </button>
+                <AnimatedButton/>
               </Link>
             </div>
           </div>
@@ -167,7 +157,7 @@ export default function HeroSection() {
                 <ClipboardList className="h-10 w-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                Browse Menus
+                Browse
               </h3>
               <p className="text-gray-600">
                 Discover a wide variety of delicious meals from your favorite
