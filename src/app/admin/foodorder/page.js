@@ -7,22 +7,22 @@ import Link from "next/link";
 
 const columns = [
   {
-    field: "orderid",
-    headerName: "Order ID",
-    width: 70,
+    field: "id",
+    headerName: "ID",
+    minWidthidth: 50,
     hideable: true,
   },
   {
     field: "userid",
     headerName: "User ID",
-    width: 90,
+    width: 80,
     hideable: true,
   },
   {
     field: "restaurantid",
     headerName: "Restaurant ID",
-    flex: 1,
-    minWidth: 120,
+    width: 120,
+    hideable: true,
   },
   {
     field: "orderdate",
@@ -59,13 +59,13 @@ const columns = [
   {
     field: "deliveryaddress",
     headerName: "Delivery Address",
-    width: 250,
+    minWidthwidth: 250,
     hideable: true,
   },
   {
     field: "actions",
     headerName: "Action",
-    width: 120,
+    width: 100,
     sortable: false,
     filterable: false,
     renderCell: (params) => (
@@ -84,7 +84,7 @@ const columns = [
 
 const rows = [
   {
-    id: 1,
+    id: 1, //Order ID
     userid: 11,
     restaurantid: 111,
     orderdate: "2-25-09-22",
@@ -93,7 +93,7 @@ const rows = [
     deliveryaddress: "MICT Park, Near Building 4",
   },
   {
-    id: 2,
+    id: 2, //Order ID
     userid: 22,
     restaurantid: 111,
     orderdate: "2-25-09-22",
@@ -102,7 +102,7 @@ const rows = [
     deliveryaddress: "MICT Park, Near Building 4",
   },
   {
-    id: 3,
+    id: 3, //Order ID
     userid: 33,
     restaurantid: 111,
     orderdate: "2-25-09-22",
@@ -111,7 +111,7 @@ const rows = [
     deliveryaddress: "MICT Park, Near Building 4",
   },
   {
-    id: 4,
+    id: 4, //Order ID
     userid: 44,
     restaurantid: 111,
     orderdate: "2-25-09-22",
@@ -120,7 +120,7 @@ const rows = [
     deliveryaddress: "MICT Park, Near Building 4",
   },
   {
-    id: 5,
+    id: 5, //Order ID
     userid: 55,
     restaurantid: 111,
     orderdate: "2-25-09-22",
@@ -138,8 +138,7 @@ export default function FoodOrderPageTable() {
     <Paper
       sx={{
         height: "70vh",
-        // width: "100%",
-        width: "82vw",
+        width: "100%",
         overflow: "hidden",
         p: isSmallScreen ? 0.5 : 2,
         [`.${gridClasses.main}`]: {
@@ -151,10 +150,11 @@ export default function FoodOrderPageTable() {
         rows={rows}
         columns={columns}
         columnVisibilityModel={{
-          adminid: !isSmallScreen,
-          description: !isSmallScreen,
-          location: !isSmallScreen,
-          openinghour: !isSmallScreen,
+          userid: !isSmallScreen,
+          restaurantid: !isSmallScreen,
+          orderdate: !isSmallScreen,
+          status: !isSmallScreen,
+          totalamount: !isSmallScreen,
         }}
         initialState={{
           pagination: { paginationModel: { pageSize: 10 } },
