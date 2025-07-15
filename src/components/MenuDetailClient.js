@@ -6,15 +6,21 @@ import { addToCartAction } from "@/actions/cart";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function MenuDetailClient({ menu }) {
+export default function MenuDetailClient({ menu, cart }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [isPending, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
+
+  const userId = "guest";
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
 
-  const userId = "guest"; // Replace with real user ID or session ID
+  const showError = (msg) => {
+    setErrorMessage(msg);
+    setTimeout(() => setErrorMessage(""), 4000); // auto-hide after 4s
+  };
 
   const handleAddOnChange = (addonId) => {
     setSelectedAddons((prev) =>
@@ -24,12 +30,27 @@ export default function MenuDetailClient({ menu }) {
     );
   };
 
-  const handleAddToCart = () => {
-    startTransition(() => {
-      addToCartAction(userId, menu.id, quantity, selectedAddons);
-      router.back()
+  const handleAddToCart = async () => {
+    try {
+      if (cart?.length > 0) {
+        const existingRestaurantId = cart[0].menu?.restaurantId;
 
-    });
+        if (
+          existingRestaurantId &&
+          existingRestaurantId !== menu.restaurantId
+        ) {
+          showError("You can only add items from one restaurant at a time.");
+          return;
+        }
+      }
+
+      await addToCartAction(userId, menu.id, quantity, selectedAddons);
+      window.dispatchEvent(new Event("cartUpdated"));
+      router.back();
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+      showError("Failed to add to cart. Please try again.");
+    }
   };
 
   return (
@@ -44,6 +65,7 @@ export default function MenuDetailClient({ menu }) {
       </div>
 
       <h1 className="text-2xl font-bold mt-4">{menu.name}</h1>
+
       <Link href="/cart" className="text-sm font-medium text-blue-600">
         🛒 Cart
       </Link>
@@ -85,6 +107,12 @@ export default function MenuDetailClient({ menu }) {
         </div>
       )}
 
+      {errorMessage && (
+        <div className="mt-4 p-3 bg-red-100 text-red-700 rounded">
+          {errorMessage}
+        </div>
+      )}
+
       <button
         onClick={handleAddToCart}
         disabled={isPending}
@@ -94,7 +122,6 @@ export default function MenuDetailClient({ menu }) {
       >
         {isPending ? "Adding..." : "Add to Cart"}
       </button>
-      
     </div>
   );
 }
