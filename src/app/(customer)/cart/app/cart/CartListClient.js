@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 
 export default function CartListClient({ cartItems, userId }) {
-  console.log("CartItem",cartItems)
   const router = useRouter();
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
@@ -62,18 +61,19 @@ export default function CartListClient({ cartItems, userId }) {
             key={item.menuId + idx}
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", md: "row" },
+              flexDirection: { xs: "column", sm: "row" },
               boxShadow: 3,
               borderRadius: 2,
               overflow: "hidden",
+              height: { xs: "auto", sm: 220 },
             }}
           >
-            {/* Image */}
+            {/* Image section */}
             <CardMedia
               sx={{
                 position: "relative",
-                width: { xs: "100%", md: 240 },
-                height: { xs: 180, md: "auto" },
+                width: { xs: "100%", sm: "33.33%" },
+                height: { xs: 200, sm: "100%" },
                 flexShrink: 0,
               }}
             >
@@ -81,13 +81,22 @@ export default function CartListClient({ cartItems, userId }) {
                 src={item.menu.imageUrl || defaultImageUrl}
                 alt={item.menu.name}
                 fill
-                sizes="(max-width: 768px) 100vw, 240px"
+                sizes="(max-width: 600px) 100vw, 33vw"
                 style={{ objectFit: "cover" }}
               />
             </CardMedia>
 
-            {/* Content */}
-            <CardContent sx={{ flex: 1, position: "relative" }}>
+            {/* Content section */}
+            <CardContent
+              sx={{
+                width: { xs: "100%", sm: "66.66%" },
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                py: 2,
+              }}
+            >
               {/* Remove Button */}
               <IconButton
                 aria-label="Remove item"
@@ -97,43 +106,46 @@ export default function CartListClient({ cartItems, userId }) {
                 <Trash2 size={20} strokeWidth={2} />
               </IconButton>
 
-              {/* Name and Restaurant */}
-              <Typography variant="h6" noWrap>
-                {item.menu.name}
-              </Typography>
-              {item.menu.restaurant?.name && (
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  from <strong>{item.menu.restaurant.name}</strong>
+              <Box>
+                <Typography variant="h6" noWrap>
+                  {item.menu.name}
                 </Typography>
-              )}
+                {item.menu.restaurant?.name && (
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    from <strong>{item.menu.restaurant.name}</strong>
+                  </Typography>
+                )}
 
-              {/* Quantity */}
-              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-                <Typography variant="body2">Quantity:</Typography>
-                <TextField
-                  type="number"
-                  size="small"
-                  inputProps={{ min: 1 }}
-                  value={item.quantity}
-                  onChange={(e) => handleQuantityChange(item.menuId, e.target.value)}
-                  sx={{ width: 80 }}
-                />
-              </Stack>
-
-              {/* Add-ons */}
-              {itemAddons.length > 0 && (
-                <Stack direction="row" spacing={1} flexWrap="wrap" mb={2}>
-                  {itemAddons.map((addon) => (
-                    <Chip
-                      key={addon.id}
-                      label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  ))}
+                {/* Quantity Input */}
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                  <Typography variant="body2">Quantity:</Typography>
+                  <TextField
+                    type="number"
+                    size="small"
+                    inputProps={{ min: 1 }}
+                    value={item.quantity}
+                    onChange={(e) =>
+                      handleQuantityChange(item.menuId, e.target.value)
+                    }
+                    sx={{ width: 80 }}
+                  />
                 </Stack>
-              )}
+
+                {/* Add-ons */}
+                {itemAddons.length > 0 && (
+                  <Stack direction="row" spacing={1} flexWrap="wrap" mb={1}>
+                    {itemAddons.map((addon) => (
+                      <Chip
+                        key={addon.id}
+                        label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    ))}
+                  </Stack>
+                )}
+              </Box>
 
               <Divider sx={{ my: 1 }} />
 
