@@ -84,7 +84,7 @@ export default function AboutUs() {
           </div>
         </div>
 
-        <div className="mt-20 bg-gray-900 text-white rounded-3xl px-6 py-12">
+        <div className="mt-15 bg-gray-800 text-white rounded-3xl px-6 py-12">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Meet Our Team */}
             <div>
@@ -118,32 +118,7 @@ export default function AboutUs() {
                     <p className="text-sm text-gray-300">Lead Developer</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center text-lg font-bold">
-                    <img
-                      src="/images/Devejpeg"
-                      alt="Thiha Oo"
-                      className="w-12 h-12 rounded-full object-cover shadow"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Thiha Oo</p>
-                    <p className="text-sm text-gray-300">Developer</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center text-lg font-bold">
-                    <img
-                      src="/images/lady.jpeg"
-                      alt="May Moe Thu Kha"
-                      className="w-12 h-12 rounded-full object-cover shadow"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-semibold">May Moe Thu Kha</p>
-                    <p className="text-sm text-gray-300">Designer</p>
-                  </div>
-                </div>
+
               </div>
             </div>
 

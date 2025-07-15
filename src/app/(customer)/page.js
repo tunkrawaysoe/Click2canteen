@@ -1,35 +1,40 @@
 import Image from "next/image";
 import Link from "next/link";
-import pizza from "../../../public/images/newpiza.jpg";
+import pizza from "../../../public/images/pizza123.png";
 import AnimatedButton from "@/components/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 export default function HeroSection() {
   return (
     <>
-      <section className="bg-white py-8 px-4 sm:px-8 lg:px-16">
+      <section
+        style={{
+          background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
+        }}
+        className="bg-white py-8 px-4 sm:px-8 lg:px-16"
+      >
         <div className="max-w-7xl mx-auto flex  md:flex-row items-center">
           {/* Text Content for md+ */}
-          <div className="hidden md:flex text-left w-[47%] ">
+          <div className="hidden md:flex text-left w-[47%]">
             <div>
-              <h1 className="text-4xl tracking-tight font-bold text-gray-800">
+              <h1 className="text-4xl tracking-tight font-bold text-white">
                 Mealtime Made Easy
               </h1>
-              <h1 className="text-3xl tracking-tight font-bold text-gray-800 mb-4 pl-6">
+              <h1 className="text-3xl tracking-tight font-bold text-white mb-4 pl-12 mt-5">
                 We’ve Got You Covered !
               </h1>
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-lg text-white mt-10 mb-8">
                 Explore a variety of menus, discover daily specials, and enjoy
                 quick, easy access to your favorite meals all in one place, made
                 just for you.
               </p>
               <Link href="/canteens">
-                <AnimatedButton/>
+                <AnimatedButton />
               </Link>
             </div>
           </div>
 
           {/* Image for md+ */}
-          <div className="hidden md:block flex-1 relative rounded-2xl  w-full h-160">
+          <div className="hidden md:block flex-1 relative rounded-2xl  w-full h-165">
             <Image
               src={pizza}
               alt="Online Food Ordering"
@@ -62,7 +67,7 @@ export default function HeroSection() {
                 <button
                   style={{
                     background:
-                      "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
+                      "linear-gradient(180deg, #000212 0%, #ffffff 100%)",
                   }}
                   className="text-white px-6 py-3 rounded-2xl shadow transition duration-300 ease-in-out hover:brightness-110"
                 >
@@ -73,12 +78,7 @@ export default function HeroSection() {
           </div>
         </div>
       </section>
-      <section
-        style={{
-          background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
-        }}
-        className="py-16 px-4 sm:px-8 lg:px-16 text-white"
-      >
+      <section className="bg-[#FFF8E7] py-16 px-4 sm:px-8 lg:px-16 text-[#000212]">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold mb-12">Featured Menus</h2>
 
@@ -138,9 +138,13 @@ export default function HeroSection() {
         </div>
       </section>
 
-      <section className="py-12 px-4 sm:px-8 lg:px-16">
+      <section 
+      style={{
+          background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
+        }}
+      className="py-12 px-4 sm:px-8 lg:px-16">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-extrabold mb-12 text-gray-800">
+          <h2 className="text-3xl font-extrabold mb-12 text-white">
             How It Works
           </h2>
 
@@ -156,10 +160,10 @@ export default function HeroSection() {
               >
                 <ClipboardList className="h-10 w-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-800">
+              <h3 className="text-xl font-semibold mb-2 text-white">
                 Browse
               </h3>
-              <p className="text-gray-600">
+              <p className="text-[#d9d9d9]">
                 Discover a wide variety of delicious meals from your favorite
                 canteens.
               </p>
@@ -176,10 +180,10 @@ export default function HeroSection() {
               >
                 <CheckCircle className="h-10 w-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-800">
+              <h3 className="text-xl font-semibold mb-2 text-white">
                 Customize Your Order
               </h3>
-              <p className="text-gray-600">
+              <p className="text-[#d9d9d9]">
                 Select your dishes, add extras or special requests before
                 placing your order.
               </p>
@@ -196,10 +200,10 @@ export default function HeroSection() {
               >
                 <Truck className="h-10 w-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-800">
+              <h3 className="text-xl font-semibold mb-2 text-white">
                 Checkout & Enjoy
               </h3>
-              <p className="text-gray-600">
+              <p className="text-[#d9d9d9]">
                 Pay securely and receive your order fast — delivered or ready
                 for pickup.
               </p>
