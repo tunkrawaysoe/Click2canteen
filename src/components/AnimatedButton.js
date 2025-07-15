@@ -23,7 +23,7 @@ export default function AnimatedButton() {
       style={{
         background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
       }}
-      className="text-white px-8 py-3 rounded-3xl font-semibold shadow-lg tracking-wide transition-shadow duration-300"
+      className="text-white px-8 cursor-pointer py-3 rounded-2xl font-semibold shadow-lg tracking-wide transition-shadow duration-300"
     >
       Browse Canteens
     </motion.button>
