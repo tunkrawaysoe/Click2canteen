@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 
 import { getAllRestaurants } from "@/lib/data/restaurant/restaurant";
+import { color } from "framer-motion";
+import { blue } from "@mui/material/colors";
 
 export default async function RestaurantsList() {
   const restaurants = await getAllRestaurants();

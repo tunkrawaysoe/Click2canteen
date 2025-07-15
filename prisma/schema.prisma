@@ -24,9 +24,6 @@ enum MenuCategory {
   SNACK
 }
 
-<<<<<<< HEAD
-=======
-
 model User {
   id           String      @id @default(cuid())
   name         String
@@ -113,5 +110,3 @@ model OrderItemAddOn {
   addOn       AddOn     @relation(fields: [addOnId], references: [id])
   addOnId     String
 }
-
->>>>>>> 6b34d25d6bd3a770bc82995f26f3a2a4ac6c7f01

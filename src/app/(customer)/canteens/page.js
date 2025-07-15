@@ -1,21 +1,31 @@
-// app/restaurants/page.tsx (or wherever your page file is)
-
 import { Suspense } from "react";
-import { Container, Typography, Skeleton, Stack } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Skeleton,
+  Stack,
+  Box,
+} from "@mui/material";
 import RestaurantsList from "@/components/RestaurantLists";
-
 
 export default function RestaurantsPage() {
   return (
-    <Container maxWidth="md" sx={{ py: 2 }}>
-      <Typography variant="h4" fontWeight="bold" mb={1}>
-        Restaurants
-      </Typography>
+    <Box sx={{ backgroundColor: "#FFF8E7", minHeight: "100vh", py: 6 }}>
+      <Container maxWidth="md">
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          mb={3}
+          color="text.primary"
+        >
+          Restaurants
+        </Typography>
 
-      <Suspense fallback={<FallbackLoader />}>
-        <RestaurantsList />
-      </Suspense>
-    </Container>
+        <Suspense fallback={<FallbackLoader />}>
+          <RestaurantsList />
+        </Suspense>
+      </Container>
+    </Box>
   );
 }
 
