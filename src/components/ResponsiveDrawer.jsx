@@ -21,18 +21,16 @@ import {
   Typography,
 } from "@mui/material";
 
-import MenuIcon from "@mui/icons-material/Menu";
-// import MailIcon from "@mui/icons-material/Mail";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import MenuIcon from "@mui/icons-material/Menu";
+
 const navLinks = [
   { label: "Manage User", href: "/admin/manageuser" },
-  { label: "Manage Restaurant", href: "/admin/managerestaurant" },
+  { label: "Manage Canteen", href: "/admin/managecanteen" },
   { label: "Food Order", href: "/admin/foodorder" },
   { label: "Order History", href: "/admin/orderhistory" },
-  { label: "Upload Menu", href: "/admin/uploadmenu" },
 ];
 
 const getIconByText = (text) => {
@@ -46,10 +44,10 @@ const getIconByText = (text) => {
         />
       );
 
-    case "Manage Restaurant":
+    case "Manage Canteen":
       return (
         <img
-          src="/logo&icon/restaurant.png"
+          src="/logo&icon/canteen.png"
           alt="Dashboard"
           style={{ width: 24, height: 24 }}
         />
@@ -67,14 +65,6 @@ const getIconByText = (text) => {
       return (
         <img
           src="/logo&icon/history.png"
-          alt="Dashboard"
-          style={{ width: 24, height: 24 }}
-        />
-      );
-    case "Upload Menu":
-      return (
-        <img
-          src="/logo&icon/upload.png"
           alt="Dashboard"
           style={{ width: 24, height: 24 }}
         />
@@ -116,7 +106,7 @@ function ResponsiveDrawer({ children, window }) {
   const drawer = (
     <div>
       <Toolbar sx={{ minHeight: 50 }} />
-      <Divider />
+      {/* <Divider /> */}
       <List>
         {navLinks.map((text, index) => (
           <ListItem key={index} disablePadding>
@@ -149,7 +139,6 @@ function ResponsiveDrawer({ children, window }) {
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          // backgroundColor: "primary.main",
           backgroundColor: "#001D51",
         }}
       >
@@ -166,13 +155,7 @@ function ResponsiveDrawer({ children, window }) {
             >
               <MenuIcon />
             </IconButton>
-            {/* <img
-              src="/logo&icon/click2canteenLogo(1).svg"
-              alt="Logo"
-              height={40}
-              style={{ display: "block" }}
-            /> */}
-            <Box sx={{ width: { xs: 150, sm: 300, md: 380 }, mr: 2 }}>
+            <Box sx={{ width: { xs: 100, sm: 150, md: 200 }, mr: 2 }}>
               <img
                 src="/logo&icon/click2canteenLogo(1).svg"
                 alt="Logo"
@@ -264,25 +247,8 @@ function ResponsiveDrawer({ children, window }) {
         }}
       >
         <Toolbar />
-        {/* <Typography variant="h5" gutterBottom>
-          Welcome to the Admin Dashboard
-        </Typography>
-        <Typography>
-          Add your main content here. This layout supports both mobile and
-          desktop screens.
-        </Typography> */}
-        {/* Main Content - replace the hardcoded content with children */}
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            p: 0,
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            mr: 2,
-          }}
-        >
-          {children}
-        </Box>
+
+        {children}
       </Box>
     </Box>
   );

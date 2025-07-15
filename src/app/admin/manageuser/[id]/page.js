@@ -117,7 +117,7 @@ export default function UserEdit() {
             render={({ field }) => (
               <Select
                 {...field}
-                labelId="gender-label"
+                labelId="role-label"
                 label="Role"
                 value={field.value || ""} //Ensure Controlled value
               >

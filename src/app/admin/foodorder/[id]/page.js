@@ -29,7 +29,7 @@ const schema = yup.object().shape({
 });
 
 const Status = [
-  { value: "pendig", label: "Pending" },
+  { value: "pending", label: "Pending" },
   { value: "delivered", label: "Delivered" },
 ];
 
@@ -85,11 +85,11 @@ export default function FoodOrderDetail() {
         <Typography variant="h4">Order Detail</Typography>
         <TextField
           disabled
-          label="Order ID"
+          label="ID"
           fullWidth
-          {...register("orderid")}
-          error={!!errors.orderid}
-          helperText={errors.orderid?.message}
+          {...register("id")}
+          error={!!errors.id}
+          helperText={errors.id?.message}
         />
         <TextField
           disabled

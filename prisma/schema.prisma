@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -29,6 +23,9 @@ enum MenuCategory {
   DRINK
   SNACK
 }
+
+<<<<<<< HEAD
+=======
 
 model User {
   id           String      @id @default(cuid())
@@ -116,3 +113,5 @@ model OrderItemAddOn {
   addOn       AddOn     @relation(fields: [addOnId], references: [id])
   addOnId     String
 }
+
+>>>>>>> 6b34d25d6bd3a770bc82995f26f3a2a4ac6c7f01
