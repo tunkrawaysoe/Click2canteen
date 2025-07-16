@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, X, UserCircle, ShoppingCart } from "lucide-react";
-import Logo from "../../public/logo&icon/click2canteenLogo(1).svg";
+import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
 
 export default function Navbar() {
@@ -44,16 +44,10 @@ export default function Navbar() {
             </div>
 
             <div className="hidden md:flex gap-6 ml-4">
-              <Link
-                href="canteens"
-                className="hover:text-gray-300 transition"
-              >
+              <Link href="canteens" className="hover:text-gray-300 transition">
                 Canteens
               </Link>
-              <Link
-                href="/aboutus"
-                className="hover:text-gray-300 transition"
-              >
+              <Link href="/aboutus" className="hover:text-gray-300 transition">
                 About Us
               </Link>
               <Link
