@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
-import Logo from "../../public/logo&icon/click2canteenLogo(1).svg";
+import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
 
 export default function Navbar() {
