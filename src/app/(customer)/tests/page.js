@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { addRestaurant } from "@/actions/action";
-import { UploadButton } from "@uploadthing/react";
+import { UploadDropzone } from "@/lib/utils/uploadthing";
 
 export default function AddRestaurantPage() {
   const [status, setStatus] = useState(null);
@@ -50,37 +50,38 @@ export default function AddRestaurantPage() {
         />
 
         {/* UploadThing image upload */}
-        <div className="mb-4">
+        <div className="mb-4 ">
           <p className="mb-2 font-semibold text-gray-700">Upload Image</p>
 
-          <UploadButton
+          <UploadDropzone
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
-              setImageUrl(res?.[0]?.url || "");
-              setStatus("✅ Image uploaded!");
+              console.log("Upload response:", JSON.stringify(res, null, 2));
+              if (res && res.length > 0) {
+                const url = res[0].fileUrl || res[0].ufsUrl || res[0].url;
+                if (url) {
+                  setImageUrl(url);
+                } else {
+                  console.warn("No valid file URL found in upload response");
+                }
+              }
+              alert("Upload Completed");
             }}
-            onUploadError={(err) => {
-              setStatus(`❌ Upload failed: ${err.message}`);
-            }}
-            appearance={{
-              button:
-                "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition-all disabled:opacity-50",
-              container: "inline-block",
-            }}
-            content={{
-              button({ ready, uploading }) {
-                if (uploading) return "Uploading...";
-                return ready ? "📁 Upload Image" : "Loading...";
-              },
+            onUploadError={(error) => {
+              alert(`ERROR! ${error.message}`);
             }}
           />
 
           {imageUrl && (
-            <img
-              src={imageUrl}
-              alt="Uploaded preview"
-              className="mt-3 h-32 w-32 object-cover rounded border shadow-sm"
-            />
+            <div className="mt-3 inline-block rounded overflow-hidden border border-gray-300 shadow-sm w-32 h-32">
+              <img
+                src={imageUrl}
+                alt="Uploaded preview"
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           )}
         </div>
 

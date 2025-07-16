@@ -1,5 +1,7 @@
-import { generateComponents } from "@uploadthing/react";
+import {
+  generateUploadButton,
+  generateUploadDropzone,
+} from "@uploadthing/react";
 
-const { UploadButton } = generateComponents();
-
-export { UploadButton };
+export const UploadButton = generateUploadButton();
+export const UploadDropzone = generateUploadDropzone();
