@@ -6,7 +6,7 @@ export default async function Menu({ params }) {
   const {canteenId} = await params;
   return (
     <Suspense fallback={<MenuFallback />}>
-      <MenuContent canteenId={params.canteenId} />
+      <MenuContent canteenId={canteenId} />
     </Suspense>
   );
 }

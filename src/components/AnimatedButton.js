@@ -21,9 +21,9 @@ export default function AnimatedButton() {
       }}
       whileTap={{ scale: 0.95 }}
       style={{
-        background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
+        background: "#ffff",
       }}
-      className="text-white px-8 cursor-pointer py-3 rounded-2xl font-semibold shadow-lg tracking-wide transition-shadow duration-300"
+      className="text-[#00022E] px-8 cursor-pointer py-3 rounded-2xl font-semibold shadow-lg tracking-wide transition-shadow duration-300"
     >
       Browse Canteens
     </motion.button>

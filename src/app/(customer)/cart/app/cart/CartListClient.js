@@ -4,6 +4,18 @@ import { removeFromCartAction, updateCartQuantity } from "@/actions/cart";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  IconButton,
+  TextField,
+  Stack,
+  Chip,
+  Box,
+  Divider,
+} from "@mui/material";
 
 export default function CartListClient({ cartItems, userId }) {
   const router = useRouter();
@@ -12,6 +24,7 @@ export default function CartListClient({ cartItems, userId }) {
 
   async function handleRemove(menuId) {
     await removeFromCartAction(userId, menuId);
+    window.dispatchEvent(new Event("cartUpdated"));
     router.refresh();
   }
 
@@ -19,18 +32,19 @@ export default function CartListClient({ cartItems, userId }) {
     const quantity = parseInt(value);
     if (quantity > 0) {
       await updateCartQuantity(userId, menuId, quantity);
+      window.dispatchEvent(new Event("cartUpdated"));
       router.refresh();
     }
   }
 
   return (
-    <div className="space-y-4">
+    <Stack spacing={3}>
       {cartItems.map((item, idx) => {
         if (!item.menu) {
           return (
-            <p key={idx} className="text-red-500">
+            <Typography key={idx} color="error">
               Menu not found (ID: {item.menuId})
-            </p>
+            </Typography>
           );
         }
 
@@ -39,106 +53,139 @@ export default function CartListClient({ cartItems, userId }) {
           .filter(Boolean);
 
         const basePrice = item.menu.price;
-        const addonTotal = itemAddons.reduce(
-          (sum, a) => sum + (a?.price || 0),
-          0
-        );
+        const addonTotal = itemAddons.reduce((sum, a) => sum + (a?.price || 0), 0);
         const itemPrice = basePrice + addonTotal;
 
         return (
-          <div
+          <Card
             key={item.menuId + idx}
-            className="flex flex-col md:flex-row gap-2 md:h-[250] bg-white shadow-2xl rounded-lg overflow-hidden"
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              boxShadow: 3,
+              borderRadius: 2,
+              overflow: "hidden",
+              height: { xs: "auto", sm: 220 },
+            }}
           >
-            {/* Image */}
-            <div className="relative w-full md:w-[250px] h-60 md:h-auto flex-shrink-0">
+            {/* Image section */}
+            <CardMedia
+              sx={{
+                position: "relative",
+                width: { xs: "100%", sm: "33.33%" },
+                height: { xs: 200, sm: "100%" },
+                flexShrink: 0,
+              }}
+            >
               <Image
                 src={item.menu.imageUrl || defaultImageUrl}
                 alt={item.menu.name}
                 fill
-                className="object-cover"
+                sizes="(max-width: 600px) 100vw, 33vw"
+                style={{ objectFit: "cover" }}
               />
-            </div>
+            </CardMedia>
 
-            {/* Content */}
-            <div className="flex-1 p-4 flex flex-col justify-between relative">
-              {/* Delete Button */}
-              <button
+            {/* Content section */}
+            <CardContent
+              sx={{
+                width: { xs: "100%", sm: "66.66%" },
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                py: 2,
+              }}
+            >
+              {/* Remove Button */}
+              <IconButton
+                aria-label="Remove item"
                 onClick={() => handleRemove(item.menuId)}
-                className="absolute top-2  cursor-pointer right-2 text-red-500 hover:text-red-600 transition"
+                sx={{ position: "absolute", top: 8, right: 8, color: "error.main" }}
               >
                 <Trash2 size={20} strokeWidth={2} />
-              </button>
+              </IconButton>
 
-              {/* Top Section */}
-              <div className="space-y-2">
-                <h2 className="font-semibold text-lg truncate">
+              <Box>
+                <Typography variant="h6" noWrap>
                   {item.menu.name}
-                </h2>
+                </Typography>
+                {item.menu.restaurant?.name && (
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    from <strong>{item.menu.restaurant.name}</strong>
+                  </Typography>
+                )}
 
-                {/* Quantity */}
-                <div className="flex items-center gap-2">
-                  <label
-                    htmlFor={`qty-${item.menuId}`}
-                    className="text-sm text-gray-600"
-                  >
-                    Quantity:
-                  </label>
-                  <input
-                    id={`qty-${item.menuId}`}
+                {/* Quantity Input */}
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                  <Typography variant="body2">Quantity:</Typography>
+                  <TextField
                     type="number"
-                    min="1"
+                    size="small"
+                    inputProps={{ min: 1 }}
                     value={item.quantity}
                     onChange={(e) =>
                       handleQuantityChange(item.menuId, e.target.value)
                     }
-                    className="w-16 border px-2 py-1 rounded text-sm"
+                    sx={{ width: 80 }}
                   />
-                </div>
+                </Stack>
 
                 {/* Add-ons */}
                 {itemAddons.length > 0 && (
-                  <div>
-                    <p className="text-sm font-medium">Add-ons:</p>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {itemAddons.map((addon) => (
-                        <span
-                          key={addon.id}
-                          className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full whitespace-nowrap truncate max-w-[200px]"
-                        >
-                          {addon.name} (+{addon.price.toLocaleString()} MMK)
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  <Stack direction="row" spacing={1} flexWrap="wrap" mb={1}>
+                    {itemAddons.map((addon) => (
+                      <Chip
+                        key={addon.id}
+                        label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    ))}
+                  </Stack>
                 )}
-              </div>
+              </Box>
 
-              {/* Price Section */}
-              <div className="mt-3 space-y-1 text-sm">
-                <div className="flex justify-between text-gray-600">
-                  <span>Regular price:</span>
-                  <span>{basePrice.toLocaleString()} MMK</span>
-                </div>
+              <Divider sx={{ my: 1 }} />
+
+              {/* Price Summary */}
+              <Box>
+                <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Regular price:
+                  </Typography>
+                  <Typography variant="body2">
+                    {basePrice.toLocaleString()} MMK
+                  </Typography>
+                </Stack>
 
                 {addonTotal > 0 && (
-                  <div className="flex justify-between text-gray-600">
-                    <span>Add-ons:</span>
-                    <span>{addonTotal.toLocaleString()} MMK</span>
-                  </div>
+                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Add-ons:
+                    </Typography>
+                    <Typography variant="body2">
+                      {addonTotal.toLocaleString()} MMK
+                    </Typography>
+                  </Stack>
                 )}
 
-                <div className="flex justify-between font-semibold text-base">
-                  <span>Total:</span>
-                  <span>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  sx={{ fontWeight: "bold", fontSize: "1rem", mt: 1 }}
+                >
+                  <Typography>Total:</Typography>
+                  <Typography>
                     {(itemPrice * item.quantity).toLocaleString()} MMK
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+                  </Typography>
+                </Stack>
+              </Box>
+            </CardContent>
+          </Card>
         );
       })}
-    </div>
+    </Stack>
   );
 }

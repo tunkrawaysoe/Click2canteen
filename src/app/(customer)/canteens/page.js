@@ -1,21 +1,39 @@
-// app/restaurants/page.tsx (or wherever your page file is)
-
 import { Suspense } from "react";
-import { Container, Typography, Skeleton, Stack } from "@mui/material";
+import { Container, Typography, Skeleton, Stack, Box } from "@mui/material";
 import RestaurantsList from "@/components/RestaurantLists";
-
-
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 export default function RestaurantsPage() {
   return (
-    <Container maxWidth="md" sx={{ py: 2 }}>
-      <Typography variant="h4" fontWeight="bold" mb={1}>
-        Restaurants
-      </Typography>
+    <Box sx={{ minHeight: "100vh", py: 2 }}>
+      <Container maxWidth="md">
+        <Box display="flex" alignItems="center" mb={3} gap={1.5}>
+          <RestaurantMenuIcon sx={{ color: "#001D51", fontSize: 32 }} />
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            sx={{
+              background: "linear-gradient(to bottom, #00022E, #001D51)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              letterSpacing: "0.05em",
+              textTransform: "capitalize",
+              fontFamily:
+                '"Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+              fontSize: { xs: "1.4rem", sm: "1.6rem" },
+              userSelect: "none",
+              lineHeight: 1.2,
+            }}
+          >
+            Explore Tasty Canteens
+          </Typography>
+          <RestaurantMenuIcon sx={{ color: "#001D51", fontSize: 32 }} />
+        </Box>
 
-      <Suspense fallback={<FallbackLoader />}>
-        <RestaurantsList />
-      </Suspense>
-    </Container>
+        <Suspense fallback={<FallbackLoader />}>
+          <RestaurantsList />
+        </Suspense>
+      </Container>
+    </Box>
   );
 }
 

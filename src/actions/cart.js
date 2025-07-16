@@ -22,7 +22,7 @@ export async function addToCartAction(
   let cart = [];
 
   try {
-    cart = raw ? JSON.parse(raw) : [];
+    cart = raw  || [];
   } catch (err) {
     console.error("Failed to parse cart from Redis:", err);
   }

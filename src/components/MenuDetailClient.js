@@ -1,20 +1,39 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { addToCartAction } from "@/actions/cart";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  Box,
+  Typography,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Alert,
+  Button,
+  Stack,
+  Paper,
+} from "@mui/material";
+import { useFormStatus } from "react-dom";
+import { CircularProgress } from "@mui/material";
 
-export default function MenuDetailClient({ menu }) {
+export default function MenuDetailClient({ menu, cart }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState([]);
-  const [isPending, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState("");
+  const userId = "guest";
+  const { pending } = useFormStatus;
   const router = useRouter();
+
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
 
-  const userId = "guest"; // Replace with real user ID or session ID
+  const showError = (msg) => {
+    setErrorMessage(msg);
+    setTimeout(() => setErrorMessage(""), 5000);
+  };
 
   const handleAddOnChange = (addonId) => {
     setSelectedAddons((prev) =>
@@ -24,77 +43,134 @@ export default function MenuDetailClient({ menu }) {
     );
   };
 
-  const handleAddToCart = () => {
-    startTransition(() => {
-      addToCartAction(userId, menu.id, quantity, selectedAddons);
-      router.back()
+  const handleAddToCart = async () => {
+    try {
+      if (cart?.length > 0) {
+        const existingRestaurantId = cart[0].menu?.restaurantId;
+        if (
+          existingRestaurantId &&
+          existingRestaurantId !== menu.restaurantId
+        ) {
+          showError("You can only add items from one restaurant at a time.");
+          return;
+        }
+      }
 
-    });
+      await addToCartAction(userId, menu.id, quantity, selectedAddons);
+      window.dispatchEvent(new Event("cartUpdated"));
+      router.back();
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+      showError("Failed to add to cart. Please try again.");
+    }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <div className="relative w-full h-80">
+    <Paper elevation={3} sx={{ maxWidth: 600, mx: "auto", p: 2, mt: 4 }}>
+      <Box
+        sx={{
+          position: "relative",
+          width: "100%",
+          height: 300,
+          borderRadius: 2,
+          overflow: "hidden",
+          mb: 3,
+        }}
+      >
         <Image
           src={menu.image || defaultImageUrl}
           alt={menu.name}
           fill
-          className="rounded object-cover"
+          style={{ objectFit: "cover" }}
         />
-      </div>
+      </Box>
 
-      <h1 className="text-2xl font-bold mt-4">{menu.name}</h1>
-      <Link href="/cart" className="text-sm font-medium text-blue-600">
-        🛒 Cart
-      </Link>
+      <Typography variant="h5" fontWeight="bold" gutterBottom>
+        {menu.name}
+      </Typography>
 
-      <p className="text-gray-700 mt-2 text-justify leading-relaxed">
+      <Typography variant="body1" color="text.secondary" paragraph>
         {menu.description}
-      </p>
+      </Typography>
 
-      <p className="text-lg font-semibold mt-2">Price: {menu.price} MMK</p>
+      <Typography variant="h6" gutterBottom>
+        Price: {menu.price.toLocaleString()} MMK
+      </Typography>
 
-      <div className="mt-4">
-        <label className="font-medium">Quantity</label>
-        <input
+      <Box sx={{ mt: 3 }}>
+        <Typography fontWeight={500}>Quantity</Typography>
+        <TextField
           type="number"
+          size="small"
           value={quantity}
-          min={1}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
-          className="border p-1 ml-2 w-16"
+          inputProps={{ min: 1 }}
+          sx={{ mt: 1, width: 80 }}
         />
-      </div>
+      </Box>
 
       {menu.addOns?.length > 0 && (
-        <div className="mt-4">
-          <label className="font-medium">Add-ons</label>
-          <div className="flex flex-col gap-2 mt-2">
+        <Box sx={{ mt: 4 }}>
+          <Typography fontWeight={500} gutterBottom>
+            Add-ons
+          </Typography>
+          <FormGroup>
             {menu.addOns.map((addon) => (
-              <label key={addon.id} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  value={addon.id}
-                  onChange={() => handleAddOnChange(addon.id)}
-                />
-                <span>
-                  {addon.name} (+{addon.price} MMK)
-                </span>
-              </label>
+              <FormControlLabel
+                key={addon.id}
+                control={
+                  <Checkbox
+                    checked={selectedAddons.includes(addon.id)}
+                    onChange={() => handleAddOnChange(addon.id)}
+                  />
+                }
+                label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
+              />
             ))}
-          </div>
-        </div>
+          </FormGroup>
+        </Box>
       )}
 
-      <button
+      {errorMessage && (
+        <Alert severity="error" sx={{ mt: 3 }}>
+          {errorMessage}
+        </Alert>
+      )}
+      <Button
         onClick={handleAddToCart}
-        disabled={isPending}
-        className={`mt-6 px-4 py-2 rounded text-white ${
-          isPending ? "bg-gray-500" : "bg-black"
-        }`}
+        variant="contained"
+        fullWidth
+        disabled={pending}
+        sx={{
+          mt: 4,
+          py: 1.5,
+          fontWeight: 600,
+          fontSize: "1rem",
+          background: "linear-gradient(to bottom, #00022E, #001D51)",
+          "&:hover": {
+            opacity: 0.9,
+            background: "linear-gradient(to bottom, #00022E, #001D51)",
+          },
+          "&.Mui-disabled": {
+            background: "#ccc",
+            color: "#666",
+          },
+        }}
       >
-        {isPending ? "Adding..." : "Add to Cart"}
-      </button>
-      
-    </div>
+        {pending ? (
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            spacing={1}
+          >
+            <CircularProgress size={20} color="inherit" />
+            <span>Adding...</span>
+          </Stack>
+        ) : (
+          "Add to Cart"
+        )}
+      </Button>
+    </Paper>
   );
 }
