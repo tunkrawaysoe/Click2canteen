@@ -1,17 +1,11 @@
 "use server";
 
-import { PrismaClient } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { delKey } from "@/lib/utils/cached";
+import prisma from "@/lib/prisma";
 
-// Initialize Prisma Client once to avoid multiple instances in development
-let prisma;
-if (!global.prisma) {
-  global.prisma = new PrismaClient();
-}
-prisma = global.prisma;
-
+const CACHE_KEY = "restaurants:all";
 /**
  * Server action to add a new Restaurant
  * @param {FormData} formData - data submitted from the form
@@ -43,6 +37,7 @@ export async function addRestaurant(formData) {
         isActive,
       },
     });
+    await delKey(CACHE_KEY);
 
     return { success: true };
   } catch (err) {

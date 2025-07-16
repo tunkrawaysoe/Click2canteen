@@ -19,7 +19,7 @@ export default function MenuCard({
       sx={{
         position: "relative",
         width: "100%",
-        p : 1,
+        p: 1,
         borderRadius: 1,
         boxShadow: 1,
         overflow: "hidden",
@@ -29,7 +29,7 @@ export default function MenuCard({
         gap: { xs: 1, sm: 1.5 },
         opacity: isActive ? 1 : 0.6,
         pointerEvents: isActive ? "auto" : "none",
-        alignItems: "stretch", // <-- Important for matching heights
+        alignItems: "stretch", // for matching heights
         minHeight: { xs: 140, sm: "auto" }, // fixed height on mobile
       }}
       elevation={3}
@@ -59,8 +59,8 @@ export default function MenuCard({
       <Box
         sx={{
           position: "relative",
-          width: { xs: "43%", sm: "100%" },
-          height: { xs: "100%", sm: 180 }, // match height on mobile
+          width: { xs: "40%", sm: "100%" },    // 40% width on xs, full on sm+
+          height: { xs: 140, sm: 180 },       // fixed height on small screens
           borderRadius: 1,
           overflow: "hidden",
           flexShrink: 0,
@@ -82,7 +82,7 @@ export default function MenuCard({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          width: { xs: "57%", sm: "100%" },
+          width: { xs: "60%", sm: "100%" },
           py: 1,
           px: 2,
           gap: 1,

@@ -1,13 +1,15 @@
 import { Suspense } from "react";
 import { Container, Typography, Skeleton, Stack, Box } from "@mui/material";
 import RestaurantsList from "@/components/RestaurantLists";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
+import { HandPlatter } from "lucide-react";
+
 export default function RestaurantsPage() {
   return (
-    <Box sx={{ minHeight: "100vh", py: 2 }}>
+    <Box sx={{ minHeight: "100vh", py: 3}}>
       <Container maxWidth="md">
         <Box display="flex" alignItems="center" mb={3} gap={1.5}>
-          <RestaurantMenuIcon sx={{ color: "#001D51", fontSize: 32 }} />
+          <HandPlatter sx={{ color: "#001D51", fontSize: 32 }} />
           <Typography
             variant="h5"
             fontWeight={700}
@@ -26,7 +28,6 @@ export default function RestaurantsPage() {
           >
             Explore Tasty Canteens
           </Typography>
-          <RestaurantMenuIcon sx={{ color: "#001D51", fontSize: 32 }} />
         </Box>
 
         <Suspense fallback={<FallbackLoader />}>

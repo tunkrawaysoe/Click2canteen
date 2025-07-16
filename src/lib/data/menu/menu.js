@@ -1,11 +1,17 @@
 import prisma from "@/lib/prisma";
 import { getCachedData, setCachedData, delKey } from "@/lib/utils/cached";
 
-export async function getAllMenus(canteenId, forceRefresh = false) {
-  const CACHE_KEY = `menu:all:${canteenId}`;
+export async function getAllMenus(
+  canteenId,
+  category = null,
+  forceRefresh = false
+) {
+  const categoryKey = category ? `:${category}` : "";
+  const CACHE_KEY = `menu:all:${canteenId}${categoryKey}`;
   const CACHE_TTL = 300;
 
   console.time("🕒 getAllMenus");
+
   if (forceRefresh) {
     await delKey(CACHE_KEY);
     console.log("🗑️ Cache cleared to force DB fetch");
@@ -13,13 +19,18 @@ export async function getAllMenus(canteenId, forceRefresh = false) {
 
   const cached = await getCachedData(CACHE_KEY);
   if (cached) {
-    console.log(`✅ [Redis] Menus loaded from cache ${canteenId}`);
+    console.log(`✅ [Redis] Menus loaded from cache ${CACHE_KEY}`);
     console.timeEnd("🕒 getAllMenus");
     return cached;
   }
 
+  const where = {
+    restaurantId: canteenId,
+    ...(category ? { category } : {}),
+  };
+
   const menus = await prisma.menu.findMany({
-    where: { restaurantId: canteenId },
+    where,
     include: {
       addOns: true,
     },
@@ -34,8 +45,6 @@ export async function getAllMenus(canteenId, forceRefresh = false) {
   console.timeEnd("🕒 getAllMenus");
   return menus;
 }
-
-
 
 export async function getMenuWithAddons(menuId, forceRefresh = false) {
   const CACHE_KEY = `menu:single:${menuId}`;

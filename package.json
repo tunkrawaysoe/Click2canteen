@@ -19,6 +19,7 @@
     "@mui/x-data-grid": "^8.7.0",
     "@mui/x-date-pickers": "^8.7.0",
     "@prisma/client": "^6.11.1",
+    "@uploadthing/react": "^7.3.2",
     "@upstash/redis": "^1.35.1",
     "axios": "^1.10.0",
     "dayjs": "^1.11.13",
@@ -27,6 +28,7 @@
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "uploadthing": "^7.7.3",
     "yup": "^1.6.1"
   },
   "devDependencies": {

@@ -60,7 +60,7 @@ export default function Navbar() {
   const linkStyle = (path) =>
     `pb-1 border-b-2 transition-all duration-300 ${
       pathname === path
-        ? "border-purple-500 text-white"
+        ? "border-white text-white"
         : "border-transparent hover:border-purple-300 text-white"
     }`;
 
@@ -105,7 +105,7 @@ export default function Navbar() {
               href="/cart"
               className={`relative md:hidden flex items-center transition hover:text-gray-300 ${
                 pathname === "/cart"
-                  ? "text-white border-b-2 border-purple-500"
+                  ? "text-white border-b-2 border-white"
                   : "border-transparent hover:border-purple-300"
               }`}
             >
@@ -123,7 +123,7 @@ export default function Navbar() {
                 href="/profile"
                 className={`flex items-center gap-2 pb-1 border-b-2 transition-all duration-300 ${
                   pathname.startsWith("/profile")
-                    ? "border-purple-500 text-white"
+                    ? "border-white text-white"
                     : "border-transparent hover:border-purple-300 text-white"
                 }`}
               >
@@ -177,7 +177,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             className={`pb-1 border-b-2 transition-all duration-300 ${
               pathname.startsWith("/profile")
-                ? "border-purple-500 text-white"
+                ? "border-white text-white"
                 : "border-transparent hover:border-purple-300 text-white"
             }`}
           >

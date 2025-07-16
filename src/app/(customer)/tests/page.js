@@ -1,17 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { addRestaurant } from '@/actions/action';
+import { useState } from "react";
+
+import { addRestaurant } from "@/actions/action";
+import { UploadButton } from "@uploadthing/react";
 
 export default function AddRestaurantPage() {
   const [status, setStatus] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   async function handleFormAction(formData) {
+    if (imageUrl) {
+      formData.set("imageUrl", imageUrl);
+    }
+
     const result = await addRestaurant(formData);
     if (result?.error) {
       setStatus(`❌ ${result.error}`);
     } else {
-      setStatus('✅ Restaurant added!');
+      setStatus("✅ Restaurant added!");
     }
   }
 
@@ -41,12 +48,41 @@ export default function AddRestaurantPage() {
           className="w-full p-2 border rounded"
           required
         />
-        <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL (optional)"
-          className="w-full p-2 border rounded"
-        />
+
+        {/* UploadThing image upload */}
+        <div className="mb-4">
+          <p className="mb-2 font-semibold text-gray-700">Upload Image</p>
+
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              setImageUrl(res?.[0]?.url || "");
+              setStatus("✅ Image uploaded!");
+            }}
+            onUploadError={(err) => {
+              setStatus(`❌ Upload failed: ${err.message}`);
+            }}
+            appearance={{
+              button:
+                "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition-all disabled:opacity-50",
+              container: "inline-block",
+            }}
+            content={{
+              button({ ready, uploading }) {
+                if (uploading) return "Uploading...";
+                return ready ? "📁 Upload Image" : "Loading...";
+              },
+            }}
+          />
+
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="Uploaded preview"
+              className="mt-3 h-32 w-32 object-cover rounded border shadow-sm"
+            />
+          )}
+        </div>
 
         <label className="flex items-center space-x-2">
           <input type="checkbox" name="isOpen" defaultChecked />
@@ -57,7 +93,10 @@ export default function AddRestaurantPage() {
           <span>Is Active</span>
         </label>
 
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:opacity-90">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white p-2 rounded hover:opacity-90"
+        >
           Add Restaurant
         </button>
       </form>

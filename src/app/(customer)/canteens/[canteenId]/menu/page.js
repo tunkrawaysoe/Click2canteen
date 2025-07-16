@@ -2,11 +2,11 @@
 import { Suspense } from "react";
 import MenuContent from "@/components/MenuContent";
 
-export default async function Menu({ params }) {
-  const {canteenId} = await params;
+export default async function Menu({ params, searchParams }) {
+  const { canteenId } = await params;
   return (
     <Suspense fallback={<MenuFallback />}>
-      <MenuContent canteenId={canteenId} />
+      <MenuContent canteenId={canteenId} searchParams={searchParams} />
     </Suspense>
   );
 }
