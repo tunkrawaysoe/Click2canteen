@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
-import Logo from "../../public/logo&icon/click2canteenLogo(1).svg";
+import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
 
 export default function Navbar() {
@@ -60,7 +60,7 @@ export default function Navbar() {
   const linkStyle = (path) =>
     `pb-1 border-b-2 transition-all duration-300 ${
       pathname === path
-        ? "border-purple-500 text-white"
+        ? "border-white text-white"
         : "border-transparent hover:border-purple-300 text-white"
     }`;
 
@@ -105,7 +105,7 @@ export default function Navbar() {
               href="/cart"
               className={`relative md:hidden flex items-center transition hover:text-gray-300 ${
                 pathname === "/cart"
-                  ? "text-white border-b-2 border-purple-500"
+                  ? "text-white border-b-2 border-white"
                   : "border-transparent hover:border-purple-300"
               }`}
             >
@@ -123,7 +123,7 @@ export default function Navbar() {
                 href="/profile"
                 className={`flex items-center gap-2 pb-1 border-b-2 transition-all duration-300 ${
                   pathname.startsWith("/profile")
-                    ? "border-purple-500 text-white"
+                    ? "border-white text-white"
                     : "border-transparent hover:border-purple-300 text-white"
                 }`}
               >
@@ -145,7 +145,11 @@ export default function Navbar() {
 
             {/* Mobile Menu Toggle */}
             <button onClick={toggleMenu} className="md:hidden text-white z-50">
-              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {menuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -177,7 +181,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             className={`pb-1 border-b-2 transition-all duration-300 ${
               pathname.startsWith("/profile")
-                ? "border-purple-500 text-white"
+                ? "border-white text-white"
                 : "border-transparent hover:border-purple-300 text-white"
             }`}
           >
