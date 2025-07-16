@@ -24,17 +24,17 @@ export default function AboutUs() {
     },
   ];
 
-  const images = ["canteen.jpeg", "canteen1.jpeg", "canteen2.jpeg"];
+  const images = ["eating.jpg", "restaurant.png", "canteens.jpg", "deli.jpg"];
 
   return (
     <div className="bg-[#FFF8E7] min-h-screen py-12 px-4 sm:px-8 lg:px-20">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold text-red-600 tracking-wide">
+          <h2 className="text-4xl sm:text-5xl font-bold text-blue-950 tracking-wide">
             About Us
           </h2>
-          <p className="text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 mt-4 max-w-2xl mx-auto">
             Making your campus food experience easier, faster, and tastier.
           </p>
         </div>
@@ -42,20 +42,20 @@ export default function AboutUs() {
         {/* Main Section */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10 items-start">
           {/* Image Column */}
-          <div className="flex flex-col space-y-4 md:col-span-2">
+          <div className="grid grid-cols-2 gap-4 md:col-span-2">
             {images.map((img, i) => (
               <img
                 key={i}
                 src={`/images/${img}`}
                 alt={`canteen-${i}`}
-                className="rounded-2xl shadow-md h-36 w-full object-cover transition-transform hover:scale-105 duration-300"
+                className="rounded-2xl shadow-md w-full h-50 object-cover transition-transform hover:scale-105 duration-300"
               />
             ))}
           </div>
 
           {/* Text + Features */}
           <div className="md:col-span-3 space-y-6">
-            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            <h3 className="text-2xl sm:text-3xl font-semibold text-red-700">
               Why Choose Us
             </h3>
             <p className="text-gray-700 text-base sm:text-lg">
@@ -69,7 +69,7 @@ export default function AboutUs() {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl shadow hover:shadow-xl p-5 flex items-start gap-4 transition-transform hover:scale-[1.02]"
+                  className="bg-white shadow hover:shadow-xl p-5 flex items-start gap-4 transition-transform hover:scale-[1.02]"
                 >
                   <div className="text-3xl">{feature.icon}</div>
                   <div>
@@ -118,7 +118,6 @@ export default function AboutUs() {
                     <p className="text-sm text-gray-300">Lead Developer</p>
                   </div>
                 </div>
-
               </div>
             </div>
 

@@ -1,3 +1,7 @@
 export default function Home() {
-  return <div>Hello from admin side</div>;
+  return (
+    <div>
+      <h1>This is Admin Side Page</h1>
+    </div>
+  );
 }

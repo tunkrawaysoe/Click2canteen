@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
-import Logo from "../../public/logo&icon/click2canteenLogo(1).svg";
+import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
 
 export default function Navbar() {
@@ -145,7 +145,11 @@ export default function Navbar() {
 
             {/* Mobile Menu Toggle */}
             <button onClick={toggleMenu} className="md:hidden text-white z-50">
-              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {menuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
