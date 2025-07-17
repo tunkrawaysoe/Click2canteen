@@ -1,33 +1,59 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { UploadDropzone } from "@/lib/utils/uploadthing";
+import { useFormStatus } from "react-dom";
+
+function SubmitButton({ label }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className={`px-4 py-2 rounded text-white ${
+        pending ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600"
+      }`}
+    >
+      {pending ? "Saving..." : label}
+    </button>
+  );
+}
 
 export default function MenuFormClient({
   canteenId,
-  menu = null,          // existing menu object for update, or null for add
-  onSubmit,             // server action or handler function
-  submitLabel = "Save Menu"
+  menu = null,
+  onSubmit,
+  submitLabel = "Save Menu",
 }) {
   const [addons, setAddons] = useState([{ name: "", price: "" }]);
   const [isSpecial, setIsSpecial] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  // Initialize form fields state with menu data if editing
   useEffect(() => {
     if (menu) {
-      setAddons(menu.addOns?.length ? menu.addOns.map(a => ({
-        name: a.name,
-        price: a.price.toString()
-      })) : [{ name: "", price: "" }]);
+      setAddons(
+        menu.addOns?.length
+          ? menu.addOns.map((a) => ({
+              name: a.name,
+              price: a.price.toString(),
+            }))
+          : [{ name: "", price: "" }]
+      );
       setIsSpecial(menu.isSpecial ?? false);
+      if (menu.imageUrl) setImageUrl(menu.imageUrl);
     }
   }, [menu]);
 
-  const handleAddAddOn = () => setAddons([...addons, { name: "", price: "" }]);
+  const handleAddAddOn = () => {
+    setAddons([...addons, { name: "", price: "" }]);
+  };
+
   const handleRemoveAddOn = (index) => {
     const updated = [...addons];
     updated.splice(index, 1);
     setAddons(updated);
   };
+
   const handleAddOnChange = (index, field, value) => {
     const updated = [...addons];
     updated[index][field] = value;
@@ -36,10 +62,14 @@ export default function MenuFormClient({
 
   return (
     <form action={onSubmit} className="space-y-4 p-4 max-w-md">
-      {menu?.id && (
-        <input type="hidden" name="menuId" value={menu.id} />
-      )}
+      {menu?.id && <input type="hidden" name="menuId" value={menu.id} />}
       <input type="hidden" name="restaurantId" value={canteenId} />
+      {imageUrl && <input type="hidden" name="imageUrl" value={imageUrl} />}
+      <input
+        type="hidden"
+        name="addOns"
+        value={JSON.stringify(addons.filter((a) => a.name && a.price))}
+      />
 
       <div>
         <label>Name</label>
@@ -88,12 +118,28 @@ export default function MenuFormClient({
       </div>
 
       <div>
-        <label>Image URL</label>
-        <input
-          name="imageUrl"
-          defaultValue={menu?.imageUrl || ""}
-          className="w-full p-2 border rounded"
+        <p className="mb-2 font-semibold text-gray-700">Upload Image</p>
+        <UploadDropzone
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            const url =
+              res?.[0]?.fileUrl || res?.[0]?.url || res?.[0]?.ufsUrl;
+            if (url) setImageUrl(url);
+            alert("Upload Completed");
+          }}
+          onUploadError={(error) => {
+            alert(`ERROR! ${error.message}`);
+          }}
         />
+        {imageUrl && (
+          <div className="mt-3 w-32 h-32 border rounded overflow-hidden shadow-sm">
+            <img
+              src={imageUrl}
+              alt="Uploaded"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex items-center space-x-2">
@@ -101,9 +147,8 @@ export default function MenuFormClient({
           type="checkbox"
           name="isActive"
           defaultChecked={menu?.isActive ?? true}
-          className="mr-2"
         />
-        <label>Is Active</label>
+        <label>Instock</label>
       </div>
 
       <div className="flex items-center space-x-2">
@@ -112,26 +157,25 @@ export default function MenuFormClient({
           name="isSpecial"
           checked={isSpecial}
           onChange={(e) => setIsSpecial(e.target.checked)}
-          className="mr-2"
         />
-        <label>Is Special</label>
+        <label>Special Menu</label>
       </div>
 
       <div>
         <label className="font-semibold">Add-Ons</label>
         {addons.map((addon, index) => (
-          <div key={index} className="flex space-x-2 mb-2">
+          <div key={index} className="flex gap-2 mb-2">
             <input
               type="text"
-              name="addOnName"
               placeholder="Add-On Name"
               value={addon.name}
-              onChange={(e) => handleAddOnChange(index, "name", e.target.value)}
+              onChange={(e) =>
+                handleAddOnChange(index, "name", e.target.value)
+              }
               className="flex-1 p-2 border rounded"
             />
             <input
               type="number"
-              name="addOnPrice"
               placeholder="Price"
               step="0.01"
               value={addon.price}
@@ -158,12 +202,7 @@ export default function MenuFormClient({
         </button>
       </div>
 
-      <button
-        type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        {submitLabel}
-      </button>
+      <SubmitButton label={submitLabel} />
     </form>
   );
 }

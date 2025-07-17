@@ -121,7 +121,7 @@ export default async function RestaurantsList() {
                 </Link>
               )}
               <Link
-                href={`/tests/restaurants/${rest.id}/add-menu`}
+                href={`/canteens/${rest.id}/add-menu`}
                 passHref
                 legacyBehavior
               >

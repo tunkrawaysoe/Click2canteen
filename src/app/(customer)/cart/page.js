@@ -28,7 +28,7 @@ export default async function CartPage() {
           <p className="text-sm">Looks like you haven’t added anything yet.</p>
 
           <Link
-            href="tests/restaurants"
+            href="/canteens"
             className="mt-4 inline-block px-5 py-2.5 bg-blue-900 text-white rounded-md hover:bg-blue-900 transition"
           >
             Browse Restaurants

@@ -92,10 +92,10 @@ export async function addMenuWithAddOns(formData) {
   await delKey(CACHE_KEY);
   console.log(`🗑️ Deleted cache key: ${CACHE_KEY}`);
   // Revalidate cache for the menu page
-  revalidatePath(`/tests/restaurants/${restaurantId}/menu`);
+  revalidatePath(`/canteens/${restaurantId}/menu`);
 
   // Redirect user after successful creation
-  redirect(`/tests/restaurants/${restaurantId}/menu`);
+  redirect(`/canteens/${restaurantId}/menu`);
 }
 
 export async function updateMenuWithAddOns(formData) {

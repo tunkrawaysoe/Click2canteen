@@ -65,14 +65,14 @@ export default async function RestaurantsPage() {
               <div className="flex gap-3">
                 {rest.isOpen && (
                   <Link
-                    href={`/tests/restaurants/${rest.id}/menu`}
+                    href={`/canteens/${rest.id}/menu`}
                     className="inline-block bg-[#253863] text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
                   >
                     View Menu
                   </Link>
                 )}
                 <Link
-                  href={`/tests/restaurants/${rest.id}/add-menu`}
+                  href={`/canteens/${rest.id}/add-menu`}
                   className="inline-block bg-[#409e58] text-white text-sm px-4 py-2 rounded-full shadow hover:opacity-90 transition"
                 >
                   + Add Menu
