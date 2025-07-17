@@ -6,7 +6,7 @@ import { HandPlatter } from "lucide-react";
 
 export default function RestaurantsPage() {
   return (
-    <Box sx={{ minHeight: "100vh", py: 3}}>
+    <Box sx={{ minHeight: "100vh", py: 3 }}>
       <Container maxWidth="md">
         <Box display="flex" alignItems="center" mb={3} gap={1.5}>
           <HandPlatter sx={{ color: "#001D51", fontSize: 32 }} />
@@ -38,12 +38,33 @@ export default function RestaurantsPage() {
   );
 }
 
-// Simple fallback loader using Skeleton
 function FallbackLoader() {
   return (
-    <Stack spacing={2}>
-      {[...Array(3)].map((_, i) => (
-        <Skeleton key={i} variant="rectangular" height={180} />
+    <Stack spacing={3}>
+      {[...Array(5)].map((_, i) => (
+        <Box
+          key={i}
+          sx={{
+            display: "flex",
+            gap: 2,
+            p: 2,
+            borderRadius: 3,
+            boxShadow: 1,
+            bgcolor: "background.paper",
+          }}
+        >
+          <Skeleton
+            variant="rectangular"
+            width={120}
+            height={120}
+            sx={{ borderRadius: 2 }}
+          />
+          <Box flex={1}>
+            <Skeleton width="60%" height={24} />
+            <Skeleton width="80%" height={18} sx={{ mt: 1 }} />
+            <Skeleton width="40%" height={18} sx={{ mt: 1 }} />
+          </Box>
+        </Box>
       ))}
     </Stack>
   );

@@ -71,7 +71,10 @@ export default function Navbar() {
           {/* Left: Logo and nav links */}
           <div className="flex items-center gap-6 text-base">
             <div className="relative w-45 h-10 backdrop-blur-3xl">
-              <Link href="/" className="flex items-center whitespace-nowrap">
+              <Link
+                href="/"
+                className="flex items-center whitespace-nowrap w-45 h-10"
+              >
                 <Image src={Logo} alt="Clicked2Canteen Logo" priority />
               </Link>
             </div>

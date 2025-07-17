@@ -3,14 +3,25 @@ import { MapPin, Phone } from "lucide-react";
 import MenuCard from "@/components/MenuCard";
 import { getAllMenus } from "@/lib/data/menu/menu";
 import { getRestaurantById } from "@/lib/data/restaurant/restaurant";
+import { Stack, Button } from "@mui/material";
+import { CupSoda, Sandwich, Utensils, Sparkles } from "lucide-react";
 
 const defaultImageUrl =
   "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=800&q=80";
 
-const categories = ["All", "DRINK", "SNACK", "MAIN"];
+const categories = [
+  { label: "All", icon: <Sparkles size={16} /> },
+  { label: "MAIN", icon: <Utensils size={16} /> },
+  { label: "DRINK", icon: <CupSoda size={16} /> },
+  { label: "SNACK", icon: <Sandwich size={16} /> },
+];
 
-export default async function MenuContent({ canteenId, searchParams }) {
-  const selectedCategory = searchParams?.category || "All";
+export default async function MenuContent({
+  canteenId,
+  searchParams,
+  category,
+}) {
+  const selectedCategory = category || "All";
 
   const restaurant = await getRestaurantById(canteenId);
 
@@ -51,21 +62,42 @@ export default async function MenuContent({ canteenId, searchParams }) {
       </div>
 
       {/* Category Buttons */}
-      <div className="flex flex-wrap gap-3 justify-center mb-6">
-        {categories.map((cat) => (
-          <a
-            key={cat}
-            href={`?category=${encodeURIComponent(cat)}`}
-            className={`px-4 py-2 rounded-full text-sm font-medium border ${
-              selectedCategory === cat
-                ? "bg-black text-white"
-                : "bg-white text-black"
-            }`}
-          >
-            {cat}
-          </a>
-        ))}
-      </div>
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="center"
+        flexWrap="wrap"
+        sx={{ mb: 4 }}
+      >
+        {categories.map(({ label, icon }) => {
+          const isSelected = selectedCategory === label;
+          return (
+            <Button
+              key={label}
+              href={`?category=${encodeURIComponent(label)}`}
+              size="small"
+              startIcon={icon}
+              sx={{
+                textTransform: "capitalize",
+                borderRadius: "999px",
+                px: 2.5,
+                py: 1.2,
+                fontWeight: 500,
+                fontSize: "0.85rem",
+                color: isSelected ? "#fff" : "#001D51",
+                backgroundColor: isSelected ? "#001D51" : "#fff",
+                border: isSelected ? "1px solid #001D51" : "1px solid #ddd",
+                boxShadow: isSelected ? "0 2px 8px rgba(0,0,0,0.15)" : "none",
+                "&:hover": {
+                  backgroundColor: isSelected ? "#001A45" : "#f1f1f1",
+                },
+              }}
+            >
+              {label}
+            </Button>
+          );
+        })}
+      </Stack>
 
       {/* Grid: Special menus first */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

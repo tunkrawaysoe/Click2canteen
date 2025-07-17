@@ -4,9 +4,11 @@ import MenuContent from "@/components/MenuContent";
 
 export default async function Menu({ params, searchParams }) {
   const { canteenId } = await params;
+  const {category} = await searchParams;
+  console.log(category)
   return (
     <Suspense fallback={<MenuFallback />}>
-      <MenuContent canteenId={canteenId} searchParams={searchParams} />
+      <MenuContent canteenId={canteenId} searchParams={searchParams} category={category} />
     </Suspense>
   );
 }
