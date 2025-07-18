@@ -24,7 +24,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'utfs.io', // 
+        hostname: 'utfs.io',
+      },
+      {
+        protocol: 'https',
+        hostname: '1l6srq7nmh.ufs.sh', // 👈 Add this line
       },
     ],
   },

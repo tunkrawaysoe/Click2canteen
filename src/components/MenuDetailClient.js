@@ -15,16 +15,17 @@ import {
   Button,
   Stack,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { useFormStatus } from "react-dom";
-import { CircularProgress } from "@mui/material";
+import { ArrowLeft } from "lucide-react";
 
 export default function MenuDetailClient({ menu, cart }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const userId = "guest";
-  const { pending } = useFormStatus;
+  const { pending } = useFormStatus();
   const router = useRouter();
 
   const defaultImageUrl =
@@ -67,6 +68,27 @@ export default function MenuDetailClient({ menu, cart }) {
 
   return (
     <Paper elevation={3} sx={{ maxWidth: 600, mx: "auto", p: 2, mt: 4 }}>
+      {/* Back Button */}
+      <Box className="mb-6">
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<ArrowLeft />}
+          onClick={() => router.back()}
+          sx={{
+            textTransform: "none",
+            borderRadius: 20,
+            px: 3,
+            py: 1,
+            backgroundColor: "#0D47A1",
+            "&:hover": { backgroundColor: "#0B3C91" },
+          }}
+        >
+          Back to Menu
+        </Button>
+      </Box>
+
+      {/* Image */}
       <Box
         sx={{
           position: "relative",
@@ -85,6 +107,7 @@ export default function MenuDetailClient({ menu, cart }) {
         />
       </Box>
 
+      {/* Name & Description */}
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         {menu.name}
       </Typography>
@@ -97,6 +120,7 @@ export default function MenuDetailClient({ menu, cart }) {
         Price: {menu.price.toLocaleString()} MMK
       </Typography>
 
+      {/* Quantity */}
       <Box sx={{ mt: 3 }}>
         <Typography fontWeight={500}>Quantity</Typography>
         <TextField
@@ -109,6 +133,7 @@ export default function MenuDetailClient({ menu, cart }) {
         />
       </Box>
 
+      {/* Add-ons */}
       {menu.addOns?.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Typography fontWeight={500} gutterBottom>
@@ -131,11 +156,14 @@ export default function MenuDetailClient({ menu, cart }) {
         </Box>
       )}
 
+      {/* Error */}
       {errorMessage && (
         <Alert severity="error" sx={{ mt: 3 }}>
           {errorMessage}
         </Alert>
       )}
+
+      {/* Add to Cart Button */}
       <Button
         onClick={handleAddToCart}
         variant="contained"

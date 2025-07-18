@@ -51,7 +51,6 @@ export async function addRestaurant(formData) {
  * @param {FormData} formData - data submitted from the form
  */
 export async function addMenuWithAddOns(formData) {
-  // Extract main menu fields
   const name = formData.get("name");
   const price = parseFloat(formData.get("price"));
   const category = formData.get("category");
@@ -60,11 +59,10 @@ export async function addMenuWithAddOns(formData) {
   const isActive = formData.get("isActive") === "on";
   const restaurantId = formData.get("restaurantId");
 
-  // Extract Add-On arrays (multiple values)
+  // Get all add-ons
   const addOnNames = formData.getAll("addOnName");
   const addOnPrices = formData.getAll("addOnPrice");
 
-  // Map Add-Ons to objects
   const addOns = addOnNames
     .map((name, i) => ({
       name: name.trim(),
@@ -72,10 +70,8 @@ export async function addMenuWithAddOns(formData) {
     }))
     .filter((addOn) => addOn.name !== "" && !isNaN(addOn.price));
 
-  // Debugging: log Add-Ons to server console
   console.log("🧩 AddOns submitted:", addOns);
 
-  // Create menu with nested addOns creation
   await prisma.menu.create({
     data: {
       name,
@@ -88,16 +84,15 @@ export async function addMenuWithAddOns(formData) {
       addOns: addOns.length > 0 ? { create: addOns } : undefined,
     },
   });
+
   const CACHE_KEY = `menu:all:${restaurantId}`;
   await delKey(CACHE_KEY);
   console.log(`🗑️ Deleted cache key: ${CACHE_KEY}`);
-  // Revalidate cache for the menu page
+
   revalidatePath(`/canteens/${restaurantId}/menu`);
 
-  // Redirect user after successful creation
   redirect(`/canteens/${restaurantId}/menu`);
 }
-
 export async function updateMenuWithAddOns(formData) {
   const menuId = formData.get("menuId");
   const restaurantId = formData.get("restaurantId");

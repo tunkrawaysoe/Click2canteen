@@ -65,11 +65,6 @@ export default function MenuFormClient({
       {menu?.id && <input type="hidden" name="menuId" value={menu.id} />}
       <input type="hidden" name="restaurantId" value={canteenId} />
       {imageUrl && <input type="hidden" name="imageUrl" value={imageUrl} />}
-      <input
-        type="hidden"
-        name="addOns"
-        value={JSON.stringify(addons.filter((a) => a.name && a.price))}
-      />
 
       <div>
         <label>Name</label>
@@ -167,6 +162,7 @@ export default function MenuFormClient({
           <div key={index} className="flex gap-2 mb-2">
             <input
               type="text"
+              name="addOnName"
               placeholder="Add-On Name"
               value={addon.name}
               onChange={(e) =>
@@ -176,6 +172,7 @@ export default function MenuFormClient({
             />
             <input
               type="number"
+              name="addOnPrice"
               placeholder="Price"
               step="0.01"
               value={addon.price}

@@ -1,10 +1,18 @@
 import Image from "next/image";
-import { MapPin, Phone } from "lucide-react";
+import Link from "next/link";
+import {
+  MapPin,
+  Phone,
+  ArrowLeft,
+  CupSoda,
+  Sandwich,
+  Utensils,
+  Sparkles,
+} from "lucide-react";
 import MenuCard from "@/components/MenuCard";
 import { getAllMenus } from "@/lib/data/menu/menu";
 import { getRestaurantById } from "@/lib/data/restaurant/restaurant";
 import { Stack, Button } from "@mui/material";
-import { CupSoda, Sandwich, Utensils, Sparkles } from "lucide-react";
 
 const defaultImageUrl =
   "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=800&q=80";
@@ -24,13 +32,11 @@ export default async function MenuContent({
   const selectedCategory = category || "All";
 
   const restaurant = await getRestaurantById(canteenId);
-
   const menus = await getAllMenus(
     canteenId,
     selectedCategory === "All" ? null : selectedCategory
   );
 
-  // Separate special and normal menus
   const specialMenus = menus.filter((item) => item.isSpecial);
   const normalMenus = menus.filter((item) => !item.isSpecial);
 
@@ -100,18 +106,15 @@ export default async function MenuContent({
       </Stack>
 
       {/* Grid: Special menus first */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {/* Render special menus first */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
         {specialMenus.map((item) => (
           <div
             key={item.id}
             className="relative rounded-xl overflow-hidden hover:shadow-md transition-shadow"
           >
-            {/* 🔥 Sticker-Style Special Badge */}
             <div className="absolute top-3 left-2 bg-red-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow-md rotate-[-9deg] z-10">
               SPECIAL
             </div>
-
             <MenuCard
               id={item.id}
               title={item.name}
@@ -124,7 +127,6 @@ export default async function MenuContent({
           </div>
         ))}
 
-        {/* Then render normal menus */}
         {normalMenus.map((item) => (
           <div
             key={item.id}
@@ -142,12 +144,31 @@ export default async function MenuContent({
           </div>
         ))}
 
-        {/* If no menus */}
         {menus.length === 0 && (
           <p className="col-span-full text-center text-gray-500">
             No menu items found.
           </p>
         )}
+      </div>
+      {/* Back Button */}
+      <div className="mb-6">
+        <Link href="/canteens" passHref>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ArrowLeft />}
+            sx={{
+              textTransform: "none",
+              borderRadius: 20,
+              px: 3,
+              py: 1,
+              backgroundColor: "#0D47A1",
+              "&:hover": { backgroundColor: "#0B3C91" },
+            }}
+          >
+            Back to Canteens
+          </Button>
+        </Link>
       </div>
     </div>
   );
