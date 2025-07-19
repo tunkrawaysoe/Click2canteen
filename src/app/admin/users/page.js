@@ -1,5 +1,8 @@
 import UsersDisplay from "@/components/UsersDisplay/UsersDisplay";
 import styles from "@/components/UsersDisplay/UsersDisplay.module.css";
+
+import Link from "next/link";
+
 export const metadata = {
   title: "Users Page",
   description: "View and manage all users",
@@ -4547,7 +4550,10 @@ const mockUsers = [
 export default function UsersPage() {
   return (
     <div className="usersPage">
-      <div className={styles.pageHeader}>
+      <div
+        className={`${styles.pageHeader} ${styles.textColor}`}
+        // className={styles.pageHeader}
+      >
         <input
           type="text"
           placeholder="Search by name or email…"
@@ -4555,7 +4561,9 @@ export default function UsersPage() {
           // onChange={(e) => setSearchTerm(e.target.value)}
           className={styles.searchInput}
         />
-        <button className={styles.addUserButton}>+ Add Admin</button>
+        <Link passHref href="/admin/users/create">
+          <button className={styles.addUserButton}>+ Add Admin</button>
+        </Link>
       </div>
       <UsersDisplay users={mockUsers} />
     </div>

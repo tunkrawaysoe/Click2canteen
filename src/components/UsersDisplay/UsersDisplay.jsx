@@ -36,7 +36,8 @@ const UsersDisplay = ({ users }) => {
             {currentUsers.map((user) => (
               <tr key={user.id}>
                 <td>
-                  <div className={styles.userInfo}>
+                  {/* <div className={styles.userInfo,styles.textColor}> */}
+                  <div className={`${styles.userInfo} ${styles.textColor}`}>
                     <Image
                       src={user.avatar || "/default-avatar.svg"}
                       alt={user.name}
@@ -47,8 +48,8 @@ const UsersDisplay = ({ users }) => {
                     <span>{user.name}</span>
                   </div>
                 </td>
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
+                <td className={styles.textColor}>{user.email}</td>
+                <td className={styles.textColor}>{user.phone}</td>
                 <td>
                   <span
                     className={`${styles.badge} ${

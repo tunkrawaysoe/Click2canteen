@@ -1,3 +1,7 @@
+.textColor{
+  color:black;
+}
+
 .pageHeader{
   display: flex;
   justify-content: space-between;
@@ -33,6 +37,7 @@
 
 .addUserButton:hover{
   box-shadow: 0px 2px 4px #e0e7ff;
+  background-color: #337536 !important;
 }
 
 .addUserButton:active {

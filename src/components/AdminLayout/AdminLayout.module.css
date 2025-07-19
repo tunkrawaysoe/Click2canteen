@@ -2,7 +2,9 @@
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh;/*original code*/
+  height: 100vh; /*add by tho*/
+  overflow: hidden;/*add by tho*/
 }
 
 /* Top Bar Styles */
@@ -39,6 +41,8 @@
 .mainContent {
   display: flex;
   flex: 1;
+  height: calc(100vh - 72px); /* 72px is height of .topbar added by tho*/
+  overflow: hidden; /*  added by tho*/
 }
 
 /* Sidebar Navigation */
@@ -104,6 +108,7 @@
   flex: 1;
   padding: 2rem;
   background: #fff;
+  overflow-y: auto; /*added by tho*/
 }
 
 /* Mobile Responsiveness */
