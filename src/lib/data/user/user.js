@@ -22,7 +22,6 @@ export async function getUser() {
 
   const user = await prisma.user.findUnique({
     where: { id: kindeUser.id },
-    select: { id: true, name: true, role: true },
   });
 
   // If user not found in DB, fallback to guest as well
@@ -35,4 +34,11 @@ export async function getUser() {
   }
 
   return user;
+}
+
+export async function getAdminUsers() {
+  return prisma.user.findMany({
+    where: { role: "ADMIN" },
+    select: { id: true, name: true },
+  });
 }

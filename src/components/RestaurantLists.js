@@ -1,4 +1,3 @@
-// app/(customer)/canteens/page.jsx or .tsx
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -20,14 +19,39 @@ export default async function RestaurantsList() {
   const user = await getUser();
   console.log("Current user:", user);
 
-  const restaurants = await getAllRestaurants();
+  let restaurants = await getAllRestaurants();
+  console.log("Fetched restaurants:", restaurants);
 
   if (!user) {
+    console.log("No user logged in");
     return <Typography>Please sign in to view restaurants.</Typography>;
   }
 
   if (restaurants.length === 0) {
+    console.log("No restaurants found in DB");
     return <Typography>No restaurants found.</Typography>;
+  }
+
+  // FILTER restaurants based on permission and ownership (for ADMIN)
+  restaurants = restaurants.filter((rest) => {
+    if (user.role === "SYSTEM_ADMIN") {
+      console.log(`SYSTEM_ADMIN has access to restaurant ${rest.id}`);
+      return true; // full access
+    }
+
+    // Check if user has read:restaurant permission and (if ADMIN) ownership
+    const allowed = hasPermission(user, "read", "restaurant", rest.id);
+    console.log(
+      `User role ${user.role} access check for restaurant ${rest.id}: ${allowed}`
+    );
+    return allowed;
+  });
+
+  console.log("Accessible restaurants after filtering:", restaurants);
+
+  if (restaurants.length === 0) {
+    console.log("User has no accessible restaurants");
+    return <Typography>No accessible restaurants found.</Typography>;
   }
 
   return (
@@ -47,8 +71,11 @@ export default async function RestaurantsList() {
             pointerEvents: rest.isOpen ? "auto" : "none",
           }}
         >
-          {hasPermission(user, "delete", "restaurant") && (
-            <DeleteRestaurantButton restaurantId={rest.id} />
+          {hasPermission(user, "delete", "restaurant", rest.id) && (
+            <>
+              {console.log(`User can delete restaurant ${rest.id}`)}
+              <DeleteRestaurantButton restaurantId={rest.id} />
+            </>
           )}
 
           <Box
@@ -113,7 +140,8 @@ export default async function RestaurantsList() {
                     component="a"
                     variant="contained"
                     sx={{
-                      background: "linear-gradient(to bottom, #00022E, #001D51)",
+                      background:
+                        "linear-gradient(to bottom, #00022E, #001D51)",
                       color: "#ffffff",
                       px: 3,
                       py: 1,
@@ -130,12 +158,19 @@ export default async function RestaurantsList() {
                 </Link>
               )}
 
-              {hasPermission(user, "create", "menu") && (
-                <Link href={`/canteens/${rest.id}/add-menu`} passHref legacyBehavior>
-                  <Button component="a" variant="contained" color="success">
-                    + Add Menu
-                  </Button>
-                </Link>
+              {hasPermission(user, "create", "menu", rest.id) && (
+                <>
+                  {console.log(`User can create menu for restaurant ${rest.id}`)}
+                  <Link
+                    href={`/canteens/${rest.id}/add-menu`}
+                    passHref
+                    legacyBehavior
+                  >
+                    <Button component="a" variant="contained" color="success">
+                      + Add Menu
+                    </Button>
+                  </Link>
+                </>
               )}
             </Stack>
           </CardContent>
