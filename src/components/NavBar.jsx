@@ -22,11 +22,12 @@ export default function Navbar() {
   console.log("nae user", user);
   useEffect(() => {
     async function fetchCart() {
-      if (!user?.id) return;
+      // Fetch if user has an id or fallback to "guest"
+      const userId = user?.id || "guest";
 
       try {
         const res = await fetch(
-          `/api/cart?userId=${encodeURIComponent(user.id)}`,
+          `/api/cart?userId=${encodeURIComponent(userId)}`,
           { cache: "no-store" }
         );
         const cart = await res.json();
@@ -50,7 +51,7 @@ export default function Navbar() {
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
-  }, [user?.id]); // re-run when user is available
+  }, [user]); // rerun when user object changes
 
   useEffect(() => {
     const html = document.documentElement;

@@ -3,6 +3,7 @@ export const roles = {
   SYSTEM_ADMIN: ["*"], // full access
   ADMIN: ["create:menu", "read:menu", "update:menu", "delete:menu"],
   CUSTOMER: ["read:menu"],
+  GUEST: [], // no permissions or minimal permissions
 };
 
 /**

@@ -5,7 +5,7 @@ import { getCartAction } from "@/actions/cart";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
+  const userId = searchParams.get("userId") || "guest";
 
   if (!userId) {
     return NextResponse.json({ error: "Missing userId" }, { status: 400 });

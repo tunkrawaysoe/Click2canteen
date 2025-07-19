@@ -6,7 +6,7 @@ import { Restaurant } from "@mui/icons-material";
 import { getUserProfile } from "@/lib/data/user/user";
 export default async function CartPage() {
  const user = await getUserProfile()
- const userId = user.id;
+ const userId = user?.id  || "guest";
   const cart = await getCartAction(userId);
 
   const menuDetails = await Promise.all(
