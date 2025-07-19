@@ -20,11 +20,12 @@ import {
 import { useFormStatus } from "react-dom";
 import { ArrowLeft } from "lucide-react";
 
-export default function MenuDetailClient({ menu, cart }) {
+export default function MenuDetailClient({ menu, cart, userId }) {
+  console.log("userIdd ",userId)
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const userId = "guest";
+
   const { pending } = useFormStatus();
   const router = useRouter();
 

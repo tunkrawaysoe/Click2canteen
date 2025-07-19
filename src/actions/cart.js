@@ -9,7 +9,7 @@ const getCartKey = (userId) => `cart:${userId}`;
  * Add an item to the user's cart in Redis.
  */
 export async function addToCartAction(
-  userId = 123,
+  userId,
   menuId,
   quantity,
   addOns = [],

@@ -3,9 +3,10 @@ import Link from "next/link";
 import CartListClient from "./app/cart/CartListClient";
 import prisma from "@/lib/prisma";
 import { Restaurant } from "@mui/icons-material";
-
+import { getUserProfile } from "@/lib/data/user/user";
 export default async function CartPage() {
-  const userId = "guest";
+ const user = await getUserProfile()
+ const userId = user.id;
   const cart = await getCartAction(userId);
 
   const menuDetails = await Promise.all(

@@ -4,6 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import {
+  LoginLink,
+  LogoutLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
@@ -12,31 +17,41 @@ export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [totalQuantity, setTotalQuantity] = useState(0);
+  const { user, isAuthenticated } = useKindeBrowserClient();
 
-  // Fetch cart quantity
+  console.log("nae user", user);
   useEffect(() => {
     async function fetchCart() {
+      if (!user?.id) return;
+
       try {
-        const res = await fetch("/api/cart", { cache: "no-store" });
+        const res = await fetch(
+          `/api/cart?userId=${encodeURIComponent(user.id)}`,
+          { cache: "no-store" }
+        );
         const cart = await res.json();
-        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const total = Array.isArray(cart)
+          ? cart.reduce((sum, item) => sum + item.quantity, 0)
+          : 0;
         setTotalQuantity(total);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
       }
     }
 
-    fetchCart();
+    fetchCart(); // initial load when user loads
 
-    const handleCartUpdate = () => fetchCart();
+    const handleCartUpdate = () => {
+      fetchCart(); // re-fetch when cart updates
+    };
+
     window.addEventListener("cartUpdated", handleCartUpdate);
 
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
-  }, []);
+  }, [user?.id]); // re-run when user is available
 
-  // Lock scroll on mobile menu open
   useEffect(() => {
     const html = document.documentElement;
     const scrollBarWidth = window.innerWidth - html.clientWidth;
@@ -70,16 +85,10 @@ export default function Navbar() {
         <div className="w-full max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
           {/* Left: Logo and nav links */}
           <div className="flex items-center gap-6 text-base">
-            <div className="relative w-45 h-10 backdrop-blur-3xl">
-              <Link
-                href="/"
-                className="flex items-center whitespace-nowrap w-45 h-10"
-              >
-                <Image src={Logo} alt="Clicked2Canteen Logo" priority />
-              </Link>
-            </div>
+            <Link href="/" className="flex items-center w-45 h-10">
+              <Image src={Logo} alt="Clicked2Canteen Logo" priority />
+            </Link>
 
-            {/* Desktop links */}
             <div className="hidden md:flex gap-6 ml-4">
               <Link href="/canteens" className={linkStyle("/canteens")}>
                 Canteens
@@ -101,7 +110,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right: Cart + Profile + Toggle */}
+          {/* Right: Profile + Auth */}
           <div className="flex items-center gap-4 text-base">
             {/* Mobile cart icon */}
             <Link
@@ -120,30 +129,49 @@ export default function Navbar() {
               <ShoppingCart className="w-6 h-6" />
             </Link>
 
-            {/* Profile + Login (Desktop only) */}
+            {/* Desktop Profile + Auth */}
             <div className="hidden md:flex items-center gap-4">
               <Link
                 href="/profile"
-                className={`flex items-center gap-2 pb-1 border-b-2 transition-all duration-300 ${
+                className={`flex items-center justify-center gap-2 pb-1 border-b-2 transition-all duration-300 ${
                   pathname.startsWith("/profile")
                     ? "border-white text-white"
                     : "border-transparent hover:border-purple-300 text-white"
                 }`}
               >
-                <div className="relative rounded-full size-8 overflow-hidden">
+                <div className="relative rounded-full size-8 overflow-hidden flex items-center justify-center">
                   <Image
-                    src={background}
+                    src={
+                      isAuthenticated && user?.picture
+                        ? user.picture
+                        : background
+                    }
                     alt="User Profile"
                     fill
                     className="object-cover"
                   />
                 </div>
-                <span className="text-white text-sm font-medium">Guest</span>
+
+                <span className="text-white text-sm font-medium">
+                  {isAuthenticated
+                    ? `${user?.given_name} ${user?.family_name}`
+                    : "Guest"}
+                </span>
               </Link>
 
-              <button className="bg-white text-[#00022E] px-4 py-1 rounded-lg font-medium">
-                Login
-              </button>
+              {isAuthenticated ? (
+                <LogoutLink>
+                  <button className="bg-white text-[#00022E] px-4 py-1 rounded-lg font-medium cursor-pointer">
+                    Logout
+                  </button>
+                </LogoutLink>
+              ) : (
+                <LoginLink>
+                  <button className="bg-white text-[#00022E] px-4 py-1 rounded-lg font-medium cursor-pointer">
+                    Login
+                  </button>
+                </LoginLink>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -173,29 +201,38 @@ export default function Navbar() {
             Home
           </Link>
           <Link
-            href="/tests/restaurants"
+            href="/canteens"
             onClick={() => setMenuOpen(false)}
-            className={linkStyle("/tests/restaurants")}
+            className={linkStyle("/canteens")}
           >
-            Restaurants
+            Canteens
           </Link>
           <Link
             href="/profile"
             onClick={() => setMenuOpen(false)}
-            className={`pb-1 border-b-2 transition-all duration-300 ${
-              pathname.startsWith("/profile")
-                ? "border-white text-white"
-                : "border-transparent hover:border-purple-300 text-white"
-            }`}
+            className={linkStyle("/profile")}
           >
             Profile
           </Link>
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="bg-white text-[#00022E] w-full py-2 rounded-full font-medium"
-          >
-            Login
-          </button>
+          {isAuthenticated ? (
+            <LogoutLink>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="bg-white text-[#00022E] w-full py-2 rounded-full font-medium"
+              >
+                Logout
+              </button>
+            </LogoutLink>
+          ) : (
+            <LoginLink>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="bg-white text-[#00022E] w-full py-2 rounded-full font-medium"
+              >
+                Login
+              </button>
+            </LoginLink>
+          )}
         </div>
       </div>
     </>

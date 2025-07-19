@@ -4,10 +4,13 @@ import { getMenuWithAddons } from "@/lib/data/menu/menu";
 import MenuDetailClient from "@/components/MenuDetailClient";
 import { getCartAction } from "@/actions/cart";
 import prisma from "@/lib/prisma";
+import { getUserProfile } from "@/lib/data/user/user";
 
 export default async function MenuDetailPage({ params }) {
   const { menuId } = await params;
-  const userId = "guest";
+  const user = await getUserProfile()
+  const userId = user?.id;
+
 
   // Get current cart
   const cart = await getCartAction(userId);
@@ -32,7 +35,7 @@ export default async function MenuDetailPage({ params }) {
 
   return (
     <Suspense fallback={<MenuDetailFallback />}>
-      <MenuDetailClient menu={menu} cart={cartDetails} />
+      <MenuDetailClient menu={menu} cart={cartDetails} userId={userId} />
     </Suspense>
   );
 }

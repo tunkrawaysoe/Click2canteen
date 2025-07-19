@@ -24,15 +24,24 @@ enum MenuCategory {
   SNACK
 }
 
+enum Role {
+  SYSTEM_ADMIN
+  ADMIN
+  CUSTOMER
+}
+
 model User {
-  id           String      @id @default(cuid())
+  id           String      @id @unique
   name         String
   email        String      @unique
-  role         String?
+  role         Role?
+  profileImage String?      
   restaurantId String?
   restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
   orders       Order[]
 }
+
+
 
 model Restaurant {
   id        String   @id @default(cuid())

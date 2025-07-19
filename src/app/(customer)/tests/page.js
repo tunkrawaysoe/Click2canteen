@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import { addRestaurant } from "@/actions/action";
 import { UploadDropzone } from "@/lib/utils/uploadthing";
+import { addRestaurant } from "@/actions/restaurant";
 
 export default function AddRestaurantPage() {
   const [status, setStatus] = useState(null);

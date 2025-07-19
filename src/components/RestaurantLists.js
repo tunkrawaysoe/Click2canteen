@@ -1,4 +1,4 @@
-// components/RestaurantsList.tsx
+// app/(customer)/canteens/page.jsx or .tsx
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -12,9 +12,19 @@ import {
 } from "@mui/material";
 
 import { getAllRestaurants } from "@/lib/data/restaurant/restaurant";
+import DeleteRestaurantButton from "./DeleteRestaurantButton";
+import { hasPermission } from "@/lib/rbac";
+import { getUser } from "@/lib/data/user/user";
 
 export default async function RestaurantsList() {
+  const user = await getUser();
+  console.log("Current user:", user);
+
   const restaurants = await getAllRestaurants();
+
+  if (!user) {
+    return <Typography>Please sign in to view restaurants.</Typography>;
+  }
 
   if (restaurants.length === 0) {
     return <Typography>No restaurants found.</Typography>;
@@ -26,6 +36,7 @@ export default async function RestaurantsList() {
         <Card
           key={rest.id}
           sx={{
+            position: "relative",
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             gap: { xs: 0.5, md: 1 },
@@ -36,6 +47,10 @@ export default async function RestaurantsList() {
             pointerEvents: rest.isOpen ? "auto" : "none",
           }}
         >
+          {hasPermission(user, "delete", "restaurant") && (
+            <DeleteRestaurantButton restaurantId={rest.id} />
+          )}
+
           <Box
             sx={{
               position: "relative",
@@ -93,25 +108,19 @@ export default async function RestaurantsList() {
 
             <Stack direction="row" spacing={2}>
               {rest.isOpen && (
-                <Link
-                  href={`/canteens/${rest.id}/menu`}
-                  passHref
-                  legacyBehavior
-                >
+                <Link href={`/canteens/${rest.id}/menu`} passHref legacyBehavior>
                   <Button
                     component="a"
                     variant="contained"
                     sx={{
-                      background:
-                        "linear-gradient(to bottom, #00022E, #001D51)",
+                      background: "linear-gradient(to bottom, #00022E, #001D51)",
                       color: "#ffffff",
                       px: 3,
                       py: 1,
                       borderRadius: 1,
                       textTransform: "none",
                       "&:hover": {
-                        background:
-                          "linear-gradient(to bottom, #00022E, #001D51)",
+                        background: "linear-gradient(to bottom, #00022E, #001D51)",
                         opacity: 0.9,
                       },
                     }}
@@ -120,15 +129,14 @@ export default async function RestaurantsList() {
                   </Button>
                 </Link>
               )}
-              <Link
-                href={`/canteens/${rest.id}/add-menu`}
-                passHref
-                legacyBehavior
-              >
-                <Button component="a" variant="contained" color="success">
-                  + Add Menu
-                </Button>
-              </Link>
+
+              {hasPermission(user, "create", "menu") && (
+                <Link href={`/canteens/${rest.id}/add-menu`} passHref legacyBehavior>
+                  <Button component="a" variant="contained" color="success">
+                    + Add Menu
+                  </Button>
+                </Link>
+              )}
             </Stack>
           </CardContent>
         </Card>

@@ -5,46 +5,7 @@ import { redirect } from "next/navigation";
 import { delKey } from "@/lib/utils/cached";
 import prisma from "@/lib/prisma";
 
-const CACHE_KEY = "restaurants:all";
-/**
- * Server action to add a new Restaurant
- * @param {FormData} formData - data submitted from the form
- * @returns {Object} success or error response
- */
-export async function addRestaurant(formData) {
-  try {
-    // Extract form fields
-    const name = formData.get("name");
-    const phone = formData.get("phone");
-    const address = formData.get("address");
-    const imageUrl = formData.get("imageUrl") || null;
-    const isOpen = formData.get("isOpen") === "on"; // Checkbox value
-    const isActive = formData.get("isActive") === "on"; // Checkbox value
 
-    // Validate required fields
-    if (!name || !phone || !address) {
-      return { error: "Missing required fields" };
-    }
-
-    // Create restaurant record in DB
-    await prisma.restaurant.create({
-      data: {
-        name,
-        phone,
-        address,
-        imageUrl,
-        isOpen,
-        isActive,
-      },
-    });
-    await delKey(CACHE_KEY);
-
-    return { success: true };
-  } catch (err) {
-    console.error("Create failed:", err);
-    return { error: "Something went wrong" };
-  }
-}
 
 /**
  * Server action to add a new Menu item with optional Add-Ons
