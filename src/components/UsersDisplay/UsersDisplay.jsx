@@ -1,10 +1,18 @@
 "use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import styles from "./UsersDisplay.module.css";
 
 const UsersDisplay = ({ users }) => {
   const [expandedUserId, setExpandedUserId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const usersPerPage = 5;
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(users.length / usersPerPage);
 
   const toggleExpand = (userId) => {
     setExpandedUserId(expandedUserId === userId ? null : userId);
@@ -12,21 +20,20 @@ const UsersDisplay = ({ users }) => {
 
   return (
     <div className={styles.container}>
-      {/* Desktop Table View */}
+      {/* Desktop View */}
       <div className={styles.desktopView}>
         <table className={styles.usersTable}>
           <thead>
             <tr>
               <th>User</th>
-              <th>Role</th>
-              <th>Meal Plan</th>
-              <th>Balance</th>
-              <th>Status</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>User Type</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {currentUsers.map((user) => (
               <tr key={user.id}>
                 <td>
                   <div className={styles.userInfo}>
@@ -40,33 +47,22 @@ const UsersDisplay = ({ users }) => {
                     <span>{user.name}</span>
                   </div>
                 </td>
+                <td>{user.email}</td>
+                <td>{user.phone}</td>
                 <td>
                   <span
                     className={`${styles.badge} ${
-                      styles[user.role.toLowerCase()]
+                      styles[user.user_type?.toLowerCase()]
                     }`}
                   >
-                    {user.role}
-                  </span>
-                </td>
-                <td>{user.mealPlan}</td>
-                <td>₹{user.balance.toLocaleString("en-IN")}</td>
-                <td>
-                  <span
-                    className={`${styles.status} ${
-                      styles[user.status.toLowerCase()]
-                    }`}
-                  >
-                    {user.status}
+                    {user.user_type}
                   </span>
                 </td>
                 <td>
-                  <button
-                    className={styles.actionButton}
-                    onClick={() => toggleExpand(user.id)}
-                  >
-                    {expandedUserId === user.id ? "▲" : "▼"}
-                  </button>
+                  <div className={styles.desktopActions}>
+                    <button className={styles.editButton}>Edit</button>
+                    <button className={styles.deleteButton}>Delete</button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -74,9 +70,10 @@ const UsersDisplay = ({ users }) => {
         </table>
       </div>
 
-      {/* Mobile Card View */}
+      {/* Mobile View */}
+
       <div className={styles.mobileView}>
-        {users.map((user) => (
+        {currentUsers.map((user) => (
           <div
             key={user.id}
             className={`${styles.userCard} ${
@@ -98,10 +95,10 @@ const UsersDisplay = ({ users }) => {
                 <h3>{user.name}</h3>
                 <span
                   className={`${styles.badge} ${
-                    styles[user.role.toLowerCase()]
+                    styles[user.user_type?.toLowerCase()]
                   }`}
                 >
-                  {user.role}
+                  {user.user_type}
                 </span>
               </div>
               <span className={styles.expandIcon}>
@@ -112,31 +109,56 @@ const UsersDisplay = ({ users }) => {
             {expandedUserId === user.id && (
               <div className={styles.cardDetails}>
                 <div className={styles.detailRow}>
-                  <span>Meal Plan:</span>
-                  <span>{user.mealPlan}</span>
+                  <span>Email:</span>
+                  <span>{user.email}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span>Balance:</span>
-                  <span>₹{user.balance.toLocaleString("en-IN")}</span>
+                  <span>Phone:</span>
+                  <span>{user.phone}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span>Status:</span>
+                  <span>User Type:</span>
                   <span
-                    className={`${styles.status} ${
-                      styles[user.status.toLowerCase()]
+                    className={`${styles.badge} ${
+                      styles[user.user_type?.toLowerCase()]
                     }`}
                   >
-                    {user.status}
+                    {user.user_type}
                   </span>
                 </div>
                 <div className={styles.cardActions}>
                   <button className={styles.editButton}>Edit</button>
-                  <button className={styles.viewButton}>View Details</button>
+                  <button className={styles.deleteButton}>Delete</button>
                 </div>
               </div>
             )}
           </div>
         ))}
+      </div>
+
+      {/* ✅ Pagination goes here */}
+      <div className={styles.pagination}>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className={styles.pageButton}
+        >
+          Previous
+        </button>
+
+        <span className={styles.pageInfo}>
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className={styles.pageButton}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
