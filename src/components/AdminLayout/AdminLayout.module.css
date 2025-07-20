@@ -2,9 +2,9 @@
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;/*original code*/
-  height: 100vh; /*add by tho*/
-  overflow: hidden;/*add by tho*/
+  min-height: 100vh; /* original code */
+  height: 100vh; /* added by tho */
+  overflow: hidden; /* added by tho */
 }
 
 /* Top Bar Styles */
@@ -37,12 +37,23 @@
   object-fit: cover;
 }
 
+/* NEW: Profile Container for image + name inline */
+.profileContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* space between profile image and username */
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap; /* prevent username wrapping */
+}
+
 /* Main Content Area */
 .mainContent {
   display: flex;
   flex: 1;
-  height: calc(100vh - 72px); /* 72px is height of .topbar added by tho*/
-  overflow: hidden; /*  added by tho*/
+  height: calc(100vh - 72px); /* 72px is height of .topbar added by tho */
+  overflow: hidden; /* added by tho */
 }
 
 /* Sidebar Navigation */
@@ -51,30 +62,24 @@
   background: #f8f9fa;
   padding: 1rem;
   border-right: 1px solid #e0e0e0;
-  /* transition: transform 0.3s ease; */
-
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+  will-change: transform;
 }
 
 /* Loading state coordination */
 .layout:has(.loading) .sidebar {
-  transition-duration: 0.5s;
-  /* Slower when loading */
+  transition-duration: 0.5s; /* Slower when loading */
 }
 
 .navLink {
   display: flex;
   align-items: center;
-  /* padding: 0.75rem 1rem;  orginial code */
   padding: 0.75rem;
-    /* Uniform padding  added by THO*/
   margin-bottom: 0.5rem;
   border-radius: 4px;
   color: #333;
   text-decoration: none;
-  transition: background 0.2s, transform 0.2s;/* Add transform */
-    
+  transition: background 0.2s, transform 0.2s; /* Add transform */
 }
 
 .navLink:hover {
@@ -88,27 +93,19 @@
 }
 
 .navLink:active {
-  transform: scale(0.98);/* Subtle tap feedback */
+  transform: scale(0.98); /* Subtle tap feedback */
 }
 
 .navIcon {
   margin-right: 0.75rem;
-  /* width:24px;
-  height: 24px; */
 }
-
-/* .navIcon img {
-  width: 100%;
-  height: 100%; */
-  /* object-fit: contain; Ensures icons scale properly */
-/* } */
 
 /* Dynamic Content Area */
 .content {
   flex: 1;
   padding: 2rem;
   background: #fff;
-  overflow-y: auto; /*added by tho*/
+  overflow-y: auto; /* added by tho */
 }
 
 /* Mobile Responsiveness */
@@ -124,14 +121,12 @@
 @media (max-width: 768px) {
   .mobileMenuButton {
     display: block;
-
-    /* Add transition for smooth animations */
     transition: transform 0.3s ease;
   }
 
   .sidebar {
     position: fixed;
-    top: 72px;/* Height of topbar */
+    top: 72px; /* Height of topbar */
     left: 0;
     bottom: 0;
     transform: translateX(-100%);
@@ -152,14 +147,8 @@
     padding: 1rem;
   }
 
-  /* .navText {
-    display: none; 
-  } */  /* Original Code  if use only icon*/
-
   .sidebar {
-    /* width: 72px; Original Code if use only icon */
     width: 180px;
     padding: 1rem 0.75rem;
-      /* Reduce side padding */
-  }  /*Fixed by THO */
+  }
 }

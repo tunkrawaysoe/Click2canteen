@@ -19,16 +19,17 @@ export default function Navbar() {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const { user, isAuthenticated } = useKindeBrowserClient();
 
-  console.log("nae user", user);
+  // Fetch cart total quantity for current user or guest
   useEffect(() => {
     async function fetchCart() {
-      // Fetch if user has an id or fallback to "guest"
       const userId = user?.id || "guest";
 
       try {
         const res = await fetch(
           `/api/cart?userId=${encodeURIComponent(userId)}`,
-          { cache: "no-store" }
+          {
+            cache: "no-store",
+          }
         );
         const cart = await res.json();
         const total = Array.isArray(cart)
@@ -40,19 +41,17 @@ export default function Navbar() {
       }
     }
 
-    fetchCart(); // initial load when user loads
+    fetchCart();
 
-    const handleCartUpdate = () => {
-      fetchCart(); // re-fetch when cart updates
-    };
-
+    const handleCartUpdate = () => fetchCart();
     window.addEventListener("cartUpdated", handleCartUpdate);
 
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
-  }, [user]); // rerun when user object changes
+  }, [user]);
 
+  // Lock scroll when mobile menu is open
   useEffect(() => {
     const html = document.documentElement;
     const scrollBarWidth = window.innerWidth - html.clientWidth;
@@ -80,13 +79,27 @@ export default function Navbar() {
         : "border-transparent hover:border-purple-300 text-white"
     }`;
 
+  // Cart badge UI reused for mobile and desktop
+  const CartBadge = totalQuantity > 0 && (
+    <span
+      aria-label={`${totalQuantity} items in cart`}
+      className="absolute -top-3 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-600 rounded-full"
+    >
+      {totalQuantity}
+    </span>
+  );
+
   return (
     <>
       <nav className="sticky top-0 z-50 shadow-md text-white bg-gradient-to-b from-[#00022E] to-[#001D51]">
         <div className="w-full max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
           {/* Left: Logo and nav links */}
           <div className="flex items-center gap-6 text-base">
-            <Link href="/" className="flex items-center w-45 h-10">
+            <Link
+              href="/"
+              aria-label="Home"
+              className="flex items-center w-45 h-10"
+            >
               <Image src={Logo} alt="Clicked2Canteen Logo" priority />
             </Link>
 
@@ -100,12 +113,9 @@ export default function Navbar() {
               <Link
                 href="/cart"
                 className={`${linkStyle("/cart")} relative flex items-center`}
+                aria-label="Cart"
               >
-                {totalQuantity > 0 && (
-                  <span className="absolute -top-3 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-600 rounded-full">
-                    {totalQuantity}
-                  </span>
-                )}
+                {CartBadge}
                 <ShoppingCart className="w-6 h-6" />
               </Link>
             </div>
@@ -116,17 +126,14 @@ export default function Navbar() {
             {/* Mobile cart icon */}
             <Link
               href="/cart"
+              aria-label="Cart"
               className={`relative md:hidden flex items-center transition hover:text-gray-300 ${
                 pathname === "/cart"
                   ? "text-white border-b-2 border-white"
                   : "border-transparent hover:border-purple-300"
               }`}
             >
-              {totalQuantity > 0 && (
-                <span className="absolute -top-3 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-600 rounded-full">
-                  {totalQuantity}
-                </span>
-              )}
+              {CartBadge}
               <ShoppingCart className="w-6 h-6" />
             </Link>
 
@@ -134,13 +141,14 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-4">
               <Link
                 href="/profile"
+                aria-label="Profile"
                 className={`flex items-center justify-center gap-2 pb-1 border-b-2 transition-all duration-300 ${
                   pathname.startsWith("/profile")
                     ? "border-white text-white"
                     : "border-transparent hover:border-purple-300 text-white"
                 }`}
               >
-                <div className="relative rounded-full size-8 overflow-hidden flex items-center justify-center">
+                <div className="relative rounded-full w-8 h-8 overflow-hidden flex items-center justify-center">
                   <Image
                     src={
                       isAuthenticated && user?.picture
@@ -176,7 +184,11 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Menu Toggle */}
-            <button onClick={toggleMenu} className="md:hidden text-white z-50">
+            <button
+              onClick={toggleMenu}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              className="md:hidden text-white z-50"
+            >
               {menuOpen ? (
                 <X className="w-6 h-6" />
               ) : (
@@ -192,6 +204,8 @@ export default function Navbar() {
         className={`fixed top-0 right-0 h-full bg-[#001D51] shadow-lg z-50 w-2/3 max-w-xs transform transition-transform duration-300 ease-in-out ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        role="dialog"
+        aria-modal="true"
       >
         <div className="flex flex-col px-6 py-6 space-y-6 text-white text-base">
           <Link

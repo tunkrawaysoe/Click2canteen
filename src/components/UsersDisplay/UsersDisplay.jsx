@@ -36,10 +36,9 @@ const UsersDisplay = ({ users }) => {
             {currentUsers.map((user) => (
               <tr key={user.id}>
                 <td>
-                  {/* <div className={styles.userInfo,styles.textColor}> */}
                   <div className={`${styles.userInfo} ${styles.textColor}`}>
                     <Image
-                      src={user.avatar || "/default-avatar.svg"}
+                      src={user.profileImage || "/default-avatar.svg"}
                       alt={user.name}
                       width={40}
                       height={40}
@@ -49,14 +48,14 @@ const UsersDisplay = ({ users }) => {
                   </div>
                 </td>
                 <td className={styles.textColor}>{user.email}</td>
-                <td className={styles.textColor}>{user.phone}</td>
+                <td className={styles.textColor}>-</td> {/* No phone in model */}
                 <td>
                   <span
                     className={`${styles.badge} ${
-                      styles[user.user_type?.toLowerCase()]
+                      styles[user.role?.toLowerCase() || "user"]
                     }`}
                   >
-                    {user.user_type}
+                    {user.role || "User"}
                   </span>
                 </td>
                 <td>
@@ -72,7 +71,6 @@ const UsersDisplay = ({ users }) => {
       </div>
 
       {/* Mobile View */}
-
       <div className={styles.mobileView}>
         {currentUsers.map((user) => (
           <div
@@ -86,7 +84,7 @@ const UsersDisplay = ({ users }) => {
               onClick={() => toggleExpand(user.id)}
             >
               <Image
-                src={user.avatar || "/default-avatar.svg"}
+                src={user.profileImage || "/default-avatar.svg"}
                 alt={user.name}
                 width={48}
                 height={48}
@@ -96,10 +94,10 @@ const UsersDisplay = ({ users }) => {
                 <h3>{user.name}</h3>
                 <span
                   className={`${styles.badge} ${
-                    styles[user.user_type?.toLowerCase()]
+                    styles[user.role?.toLowerCase() || "user"]
                   }`}
                 >
-                  {user.user_type}
+                  {user.role || "User"}
                 </span>
               </div>
               <span className={styles.expandIcon}>
@@ -115,16 +113,16 @@ const UsersDisplay = ({ users }) => {
                 </div>
                 <div className={styles.detailRow}>
                   <span>Phone:</span>
-                  <span>{user.phone}</span>
+                  <span>-</span> {/* No phone */}
                 </div>
                 <div className={styles.detailRow}>
                   <span>User Type:</span>
                   <span
                     className={`${styles.badge} ${
-                      styles[user.user_type?.toLowerCase()]
+                      styles[user.role?.toLowerCase() || "user"]
                     }`}
                   >
-                    {user.user_type}
+                    {user.role || "User"}
                   </span>
                 </div>
                 <div className={styles.cardActions}>
@@ -137,7 +135,7 @@ const UsersDisplay = ({ users }) => {
         ))}
       </div>
 
-      {/* ✅ Pagination goes here */}
+      {/* Pagination */}
       <div className={styles.pagination}>
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

@@ -42,3 +42,7 @@ export async function getAdminUsers() {
     select: { id: true, name: true },
   });
 }
+
+export async function getAllUsers(params) {
+  return prisma.user.findMany();
+}

@@ -91,3 +91,60 @@ export async function updateCartQuantity(userId, menuId, quantity) {
   // Save updated cart to Redis
   await redis.set(key, JSON.stringify(updatedCart));
 }
+
+
+export async function placeOrder(formData) {
+  const userId = formData.get("userId");
+  if (!userId) throw new Error("User ID missing");
+
+  const cartRaw = await redis.get(getCartKey(userId));
+  if (!cartRaw) throw new Error("Cart is empty");
+
+  const cart = cartRaw;
+  if (!cart.length) throw new Error("Cart is empty");
+
+  // Fetch full menu info for each cart item
+  const enrichedCart = await Promise.all(
+    cart.map(async (item) => {
+      const menu = await prisma.menu.findUnique({
+        where: { id: item.menuId },
+        include: { addOns: true },
+      });
+      return { ...item, menu };
+    })
+  );
+
+  const restaurantId = enrichedCart[0].menu.restaurantId;
+
+  let totalPrice = 0;
+  for (const item of enrichedCart) {
+    const addons = item.addOns
+      .map((id) => item.menu.addOns.find((a) => a.id === id))
+      .filter(Boolean);
+    const addonTotal = addons.reduce((sum, a) => sum + (a?.price || 0), 0);
+    totalPrice += (item.menu.price + addonTotal) * item.quantity;
+  }
+
+  const order = await prisma.order.create({
+    data: {
+      userId,
+      restaurantId,
+      totalPrice,
+      status: "PENDING",
+      orderItems: {
+        create: enrichedCart.map((item) => ({
+          menuId: item.menuId,
+          quantity: item.quantity,
+          price: item.menu.price,
+          orderItemAddOns: {
+            create: item.addOns.map((addOnId) => ({ addOnId })),
+          },
+        })),
+      },
+    },
+  });
+
+  await redis.del(getCartKey(userId));
+
+  return order;
+}
