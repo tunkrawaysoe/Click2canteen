@@ -8,7 +8,7 @@ export default async function Menu({ params, searchParams }) {
   console.log(category)
   return (
     <Suspense fallback={<MenuFallback />}>
-      <MenuContent canteenId={canteenId} searchParams={searchParams} category={category} />
+      <MenuContent canteenId={canteenId} searchParams={searchParams} category={category} isAdmin={true} />
     </Suspense>
   );
 }

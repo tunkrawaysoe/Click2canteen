@@ -31,7 +31,7 @@ export default function RestaurantsPage() {
         </Box>
 
         <Suspense fallback={<FallbackLoader />}>
-          <RestaurantsList />
+          <RestaurantsList isAdmin={false} />
         </Suspense>
       </Container>
     </Box>

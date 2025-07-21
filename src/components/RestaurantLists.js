@@ -15,7 +15,7 @@ import DeleteRestaurantButton from "./DeleteRestaurantButton";
 import { hasPermission } from "@/lib/rbac";
 import { getUser } from "@/lib/data/user/user";
 
-export default async function RestaurantsList() {
+export default async function RestaurantsList({isAdmin}) {
   const user = await getUser();
   console.log("Current user:", user);
 
@@ -135,7 +135,7 @@ export default async function RestaurantsList() {
 
             <Stack direction="row" spacing={2}>
               {rest.isOpen && (
-                <Link href={`/canteens/${rest.id}/menu`} passHref legacyBehavior>
+                <Link href={isAdmin ? `/admin/canteens/${rest.id}/menu` : `/canteens/${rest.id}/menu`} passHref legacyBehavior>
                   <Button
                     component="a"
                     variant="contained"

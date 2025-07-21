@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import BackButton from "./BackButton";
 import {
   MapPin,
   Phone,
@@ -28,6 +29,7 @@ export default async function MenuContent({
   canteenId,
   searchParams,
   category,
+  isAdmin
 }) {
   const selectedCategory = category || "All";
 
@@ -140,6 +142,7 @@ export default async function MenuContent({
               price={`MMK ${item.price.toLocaleString()}`}
               imageUrl={item.imageUrl || defaultImageUrl}
               canteenId={canteenId}
+              isAdmin={isAdmin}
             />
           </div>
         ))}
@@ -151,25 +154,8 @@ export default async function MenuContent({
         )}
       </div>
       {/* Back Button */}
-      <div className="mb-6">
-        <Link href="/canteens" passHref>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<ArrowLeft />}
-            sx={{
-              textTransform: "none",
-              borderRadius: 20,
-              px: 3,
-              py: 1,
-              backgroundColor: "#0D47A1",
-              "&:hover": { backgroundColor: "#0B3C91" },
-            }}
-          >
-            Back to Canteens
-          </Button>
-        </Link>
-      </div>
+      <BackButton/>
+     
     </div>
   );
 }

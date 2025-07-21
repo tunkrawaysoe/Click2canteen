@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./UsersDisplay.module.css";
 
 const UsersDisplay = ({ users }) => {
@@ -29,6 +30,7 @@ const UsersDisplay = ({ users }) => {
               <th>Email</th>
               <th>Phone</th>
               <th>User Type</th>
+              <th>Restaurant</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -48,7 +50,7 @@ const UsersDisplay = ({ users }) => {
                   </div>
                 </td>
                 <td className={styles.textColor}>{user.email}</td>
-                <td className={styles.textColor}>-</td> {/* No phone in model */}
+                <td className={styles.textColor}>-</td>
                 <td>
                   <span
                     className={`${styles.badge} ${
@@ -58,9 +60,17 @@ const UsersDisplay = ({ users }) => {
                     {user.role || "User"}
                   </span>
                 </td>
+                <td className={styles.textColor}>
+                  {user.restaurant?.name || "-"}
+                </td>
                 <td>
                   <div className={styles.desktopActions}>
-                    <button className={styles.editButton}>Edit</button>
+                    <Link
+                      href={`/admin/users/${user.id}/edit`}
+                      className={styles.editButton}
+                    >
+                      Edit
+                    </Link>
                     <button className={styles.deleteButton}>Delete</button>
                   </div>
                 </td>
@@ -113,7 +123,7 @@ const UsersDisplay = ({ users }) => {
                 </div>
                 <div className={styles.detailRow}>
                   <span>Phone:</span>
-                  <span>-</span> {/* No phone */}
+                  <span>-</span>
                 </div>
                 <div className={styles.detailRow}>
                   <span>User Type:</span>
@@ -125,8 +135,17 @@ const UsersDisplay = ({ users }) => {
                     {user.role || "User"}
                   </span>
                 </div>
+                <div className={styles.detailRow}>
+                  <span>Restaurant:</span>
+                  <span>{user.restaurant?.name || "-"}</span>
+                </div>
                 <div className={styles.cardActions}>
-                  <button className={styles.editButton}>Edit</button>
+                  <Link
+                    href={`/admin/users/${user.id}/edit`}
+                    className={styles.editButton}
+                  >
+                    Edit
+                  </Link>
                   <button className={styles.deleteButton}>Delete</button>
                 </div>
               </div>

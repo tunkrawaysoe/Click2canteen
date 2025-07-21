@@ -9,7 +9,7 @@ export default function CanteensPage() {
     <div>
       {/* <h1>Canteens Management</h1> */}
       {/* Canteens content here */}
-      <RestaurantsList />
+      <RestaurantsList isAdmin={true} />
     </div>
   );
 }

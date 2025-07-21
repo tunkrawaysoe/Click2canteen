@@ -10,6 +10,7 @@ export default function MenuCard({
   imageUrl,
   canteenId,
   isActive,
+  
 }) {
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";

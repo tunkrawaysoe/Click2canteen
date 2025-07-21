@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Restaurant } from "@mui/icons-material";
 
 export async function getUserProfile() {
   const { getUser } = getKindeServerSession();
@@ -44,5 +45,9 @@ export async function getAdminUsers() {
 }
 
 export async function getAllUsers(params) {
-  return prisma.user.findMany();
+  return prisma.user.findMany({
+    include : {
+      restaurant : true,
+    }
+  });
 }
