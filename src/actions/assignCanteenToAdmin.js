@@ -1,4 +1,3 @@
-// /lib/actions/assignCanteenToAdmin.js
 "use server";
 
 import prisma from "@/lib/prisma";

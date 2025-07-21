@@ -36,7 +36,7 @@ export default async function RestaurantsList({isAdmin}) {
   restaurants = restaurants.filter((rest) => {
     if (user.role === "SYSTEM_ADMIN") {
       console.log(`SYSTEM_ADMIN has access to restaurant ${rest.id}`);
-      return true; // full access
+      return true; 
     }
 
     // Check if user has read:restaurant permission and (if ADMIN) ownership

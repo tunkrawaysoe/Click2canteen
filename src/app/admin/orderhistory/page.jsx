@@ -1,4 +1,5 @@
-import { getAllOrders } from "@/lib/data/order/orders";
+"use client";
+
 import {
   Table,
   TableBody,
@@ -7,16 +8,13 @@ import {
   TableHead,
   TableRow,
   Paper,
-  List,
-  ListItem,
   Typography,
+  IconButton,
   Box,
 } from "@mui/material";
-
-export const metadata = {
-  title: "Orders Page",
-  description: "View and manage all orders",
-};
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { getAllOrders } from "@/lib/data/order/orders";
+import Link from "next/link";
 
 export default async function OrdersPage() {
   const orders = await getAllOrders();
@@ -31,20 +29,26 @@ export default async function OrdersPage() {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-              <TableCell>User</TableCell>
-              <TableCell>Restaurant</TableCell>
+              <TableCell>Customer Name</TableCell>
+              <TableCell>Order Time</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Total Price</TableCell>
+              <TableCell>Total Amount (MMK)</TableCell>
               <TableCell>Delivery Address</TableCell>
-              <TableCell>Items</TableCell>
+              <TableCell>Details</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {orders.map((order) => (
               <TableRow key={order.id} hover>
-                <TableCell>{order.user.name}</TableCell>
-                <TableCell>{order.restaurant.name}</TableCell>
+                <TableCell>{order.user?.name || "Unknown"}</TableCell>
+                <TableCell>
+                  {new Intl.DateTimeFormat("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  }).format(new Date(order.createdAt))}
+                </TableCell>
                 <TableCell>
                   <Typography
                     variant="body2"
@@ -54,22 +58,22 @@ export default async function OrdersPage() {
                         ? "warning.main"
                         : order.status === "DELIVERED"
                         ? "success.main"
+                        : order.status === "CANCELLED"
+                        ? "error.main"
                         : "info.main"
                     }
                   >
                     {order.status}
                   </Typography>
                 </TableCell>
-                <TableCell>${order.totalPrice.toFixed(2)}</TableCell>
+                <TableCell>{order.totalPrice.toLocaleString()} MMK</TableCell>
                 <TableCell>{order.deliveryAddress || "-"}</TableCell>
                 <TableCell>
-                  <List dense disablePadding>
-                    {order.orderItems.map((item) => (
-                      <ListItem key={item.id} sx={{ px: 0, py: 0.5 }}>
-                        {item.quantity} × {item.name} (${item.price.toFixed(2)})
-                      </ListItem>
-                    ))}
-                  </List>
+                  <Link href={`/admin/orders/${order.id}`}>
+                    <IconButton aria-label="View Details">
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}

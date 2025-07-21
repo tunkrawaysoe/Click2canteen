@@ -1,6 +1,7 @@
 "use server";
 
 import { redis } from "@/lib/redis";
+import { redirect } from "next/navigation";
 
 // Helper function to generate Redis cart key for a user
 const getCartKey = (userId) => `cart:${userId}`;
@@ -146,5 +147,5 @@ export async function placeOrder(formData) {
 
   await redis.del(getCartKey(userId));
 
-  return order;
+  redirect(`/order/confirmation?orderId=${order.id}`)
 }

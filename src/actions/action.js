@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 import { delKey } from "@/lib/utils/cached";
 import prisma from "@/lib/prisma";
 
-
-
 /**
  * Server action to add a new Menu item with optional Add-Ons
  * @param {FormData} formData - data submitted from the form
@@ -18,6 +16,7 @@ export async function addMenuWithAddOns(formData) {
   const description = formData.get("description");
   const imageUrl = formData.get("imageUrl");
   const isActive = formData.get("isActive") === "on";
+  const isSpecial = formData.get("isSpecial") === "on";
   const restaurantId = formData.get("restaurantId");
 
   // Get all add-ons
@@ -41,8 +40,10 @@ export async function addMenuWithAddOns(formData) {
       description,
       imageUrl,
       isActive,
+      isSpecial,
       restaurantId,
       addOns: addOns.length > 0 ? { create: addOns } : undefined,
+      // DO NOT include a `restaurant` field here
     },
   });
 
@@ -54,6 +55,7 @@ export async function addMenuWithAddOns(formData) {
 
   redirect(`/canteens/${restaurantId}/menu`);
 }
+
 export async function updateMenuWithAddOns(formData) {
   const menuId = formData.get("menuId");
   const restaurantId = formData.get("restaurantId");
@@ -122,6 +124,6 @@ export async function updateMenuWithAddOns(formData) {
   await delKey(`menu:all:${restaurantId}`);
   await delKey(`menu:single:${menuId}`);
 
-  revalidatePath(`/tests/restaurants/${restaurantId}/menu`);
-  redirect(`/tests/restaurants/${restaurantId}/menu`);
+  revalidatePath(`/canteens/${restaurantId}/menu`);
+  redirect(`/canteens/${restaurantId}/menu`);
 }

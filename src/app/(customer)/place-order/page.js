@@ -8,13 +8,14 @@ import {
   Paper,
   Divider,
   Chip,
+  Grid,
 } from "@mui/material";
 import ConfirmOrderButton from "@/components/ConfirmOrderButton";
 
 export default async function PlaceOrderPage({ searchParams }) {
-  const userId = searchParams?.userId || "guest";
-  const cartItems = await getCartAction(userId);
+  const { userId } = await searchParams;
 
+  const cartItems = await getCartAction(userId);
   if (!cartItems?.length) return notFound();
 
   const enrichedCart = (
@@ -34,9 +35,9 @@ export default async function PlaceOrderPage({ searchParams }) {
   let grandTotal = 0;
 
   return (
-    <Box maxWidth="700px" mx="auto" my={4} px={2}>
-      <Typography variant="h4" mb={3} fontWeight="bold" textAlign="center">
-        Order Summary
+    <Box maxWidth="800px" mx="auto" my={5} px={2}>
+      <Typography variant="h4" fontWeight="bold" textAlign="center" mb={4}>
+        🧾 Order Summary
       </Typography>
 
       <Stack spacing={3}>
@@ -49,6 +50,7 @@ export default async function PlaceOrderPage({ searchParams }) {
             (sum, addon) => sum + (addon?.price || 0),
             0
           );
+
           const itemPrice = item.menu.price + addonTotal;
           const totalForItem = itemPrice * item.quantity;
           grandTotal += totalForItem;
@@ -56,44 +58,53 @@ export default async function PlaceOrderPage({ searchParams }) {
           return (
             <Paper
               key={idx}
-              elevation={3}
-              sx={{ p: 2, borderRadius: 2, position: "relative" }}
+              elevation={2}
+              sx={{ p: 3, borderRadius: 3, backgroundColor: "#f9f9f9" }}
             >
-              <Typography variant="h6" fontWeight="600" gutterBottom noWrap>
-                {item.menu.name} x {item.quantity}
-              </Typography>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} sm={8}>
+                  <Typography variant="h6" fontWeight={600}>
+                    {item.menu.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Quantity: {item.quantity}
+                  </Typography>
+                  {selectedAddOns.length > 0 && (
+                    <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
+                      {selectedAddOns.map((addon) =>
+                        addon ? (
+                          <Chip
+                            key={addon.id}
+                            label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
+                            size="small"
+                            variant="outlined"
+                            color="primary"
+                          />
+                        ) : null
+                      )}
+                    </Stack>
+                  )}
+                </Grid>
 
-              {selectedAddOns.length > 0 && (
-                <Stack direction="row" spacing={1} flexWrap="wrap" mb={1}>
-                  {selectedAddOns.map((addon) => (
-                    <Chip
-                      key={addon.id}
-                      label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  ))}
-                </Stack>
-              )}
-
-              <Divider sx={{ mb: 1 }} />
-
-              <Typography variant="body1" fontWeight="bold">
-                Item total: {totalForItem.toLocaleString()} MMK
-              </Typography>
+                <Grid item xs={12} sm={4} textAlign="right">
+                  <Typography fontWeight="bold" color="primary">
+                    {totalForItem.toLocaleString()} MMK
+                  </Typography>
+                </Grid>
+              </Grid>
             </Paper>
           );
         })}
       </Stack>
 
-      <Divider sx={{ my: 3 }} />
+      <Divider sx={{ my: 4 }} />
 
-      <Typography variant="h5" fontWeight="bold" textAlign="right" mb={3}>
-        Grand Total: {grandTotal.toLocaleString()} MMK
-      </Typography>
-
-      <ConfirmOrderButton userId={userId} />
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Typography variant="h5" fontWeight="bold">
+          Total: {grandTotal.toLocaleString()} MMK
+        </Typography>
+        <ConfirmOrderButton userId={userId} />
+      </Stack>
     </Box>
   );
 }

@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Container, Typography, Skeleton, Stack, Box } from "@mui/material";
 import RestaurantsList from "@/components/RestaurantLists";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
 import { HandPlatter } from "lucide-react";
 
 export default function RestaurantsPage() {
