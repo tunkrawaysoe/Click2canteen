@@ -3,7 +3,14 @@ import Link from "next/link";
 import pizza from "../../../public/images/pizza123.png";
 import AnimatedButton from "@/components/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
-export default function HeroSection() {
+import { PrismaClient } from "@/generated/prisma"; // adjust as needed
+const prisma = new PrismaClient();
+export default async function HeroSection() {
+  const specialMenus = await prisma.menu.findMany({
+    where: { isSpecial: true },
+    take: 5, // limit how many to show
+  });
+
   return (
     <>
       <section
@@ -78,59 +85,52 @@ export default function HeroSection() {
           </div>
         </div>
       </section>
-      <section className="bg-[#FFF8E7] py-16 px-4 sm:px-8 lg:px-16 text-[#000212]">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-extrabold mb-12">Featured Menus</h2>
+      {/* Special menu */}
+      <section className="bg-[#FFF8E7] py-10 px-4 sm:px-8 lg:px-16 text-[#1d2941]">
+        <div className="max-w-7xl mx-auto px-4" >
+          <h2 className="text-4xl font-extrabold text-center mb-4">
+            Today's Specials
+          </h2>
+          <p className="text-center text-lg text-gray-600 mb-10">
+            Hand-picked meals cooked fresh, just for you!
+          </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[
-              {
-                id: 1,
-                name: "Spicy Chicken Curry",
-                description:
-                  "A flavorful curry with tender chicken and spices.",
-                image:
-                  "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=600&q=80",
-                price: "$8.99",
-              },
-              {
-                id: 2,
-                name: "Vegan Buddha Bowl",
-                description:
-                  "Healthy bowl packed with fresh veggies and grains.",
-                image:
-                  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
-                price: "$7.50",
-              },
-              {
-                id: 3,
-                name: "Classic Cheeseburger",
-                description:
-                  "Juicy beef patty with cheese, lettuce, and tomato.",
-                image:
-                  "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80",
-                price: "$9.99",
-              },
-            ].map((menu) => (
+          {/* Scrollable Card Container */}
+          <div className="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide">
+            {specialMenus.map((menu) => (
               <div
                 key={menu.id}
-                className="bg-white text-gray-900 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+                className="min-w-[400px] bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 relative"
               >
-                <div className="relative h-48 w-full">
+                {/* Special sentence banner */}
+                <div className="absolute top-0 left-0 bg-red-500 text-white text-s font-bold px-3 py-1 rounded-br-2xl z-10">
+                  ⭐ Special
+                </div>
+
+                {/* Image */}
+                <div className="relative h-48 w-full rounded-t-3xl overflow-hidden">
                   <Image
-                    src={menu.image}
+                    src={
+                      menu.imageUrl ||
+                      "https://images.unsplash.com/photo-1600891964599-f61ba0e24092"
+                    }
                     alt={menu.name}
                     fill
                     className="object-cover"
-                    priority={false}
                   />
                 </div>
-                <div className="p-6 text-left">
-                  <h3 className="text-xl font-semibold mb-1">{menu.name}</h3>
-                  <p className="text-green-600 font-semibold mb-2">
-                    {menu.price}
+
+                {/* Content */}
+                <div className="p-5 text-left">
+                  <h3 className="text-xl font-semibold mb-2">{menu.name}</h3>
+                  <p className="text-green-700 font-semibold mb-1">
+                    MMK {menu.price.toLocaleString()}
                   </p>
-                  <p>{menu.description}</p>
+                  <p className="text-gray-600 text-sm">
+                    {menu.description.length > 80
+                      ? `${menu.description.slice(0, 80)}...`
+                      : menu.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -138,11 +138,12 @@ export default function HeroSection() {
         </div>
       </section>
 
-      <section 
-      style={{
+      <section
+        style={{
           background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
         }}
-      className="py-12 px-4 sm:px-8 lg:px-16">
+        className="py-12 px-4 sm:px-8 lg:px-16"
+      >
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold mb-12 text-white">
             How It Works
@@ -160,9 +161,7 @@ export default function HeroSection() {
               >
                 <ClipboardList className="h-10 w-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">
-                Browse
-              </h3>
+              <h3 className="text-xl font-semibold mb-2 text-white">Browse</h3>
               <p className="text-[#d9d9d9]">
                 Discover a wide variety of delicious meals from your favorite
                 canteens.

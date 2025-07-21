@@ -41,7 +41,7 @@ export default function AddMenuFormClient({ canteenId }) {
       <div>
         <label>Category</label>
         <select name="category" className="w-full p-2 border rounded">
-          <option value="MAIN">Main</option>
+          <option value="MEAL">Meal</option>
           <option value="DRINK">Drink</option>
           <option value="SNACK">Snack</option>
         </select>

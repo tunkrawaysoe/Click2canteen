@@ -101,7 +101,7 @@ export default function MenuDetailClient({ menu, cart, userId }) {
         }}
       >
         <Image
-          src={menu.image || defaultImageUrl}
+          src={menu.imageUrl || defaultImageUrl}
           alt={menu.name}
           fill
           style={{ objectFit: "cover" }}
