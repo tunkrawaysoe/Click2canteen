@@ -11,46 +11,24 @@ import {
 } from "@mui/material";
 
 import { getAllRestaurants } from "@/lib/data/restaurant/restaurant";
-import DeleteRestaurantButton from "./DeleteRestaurantButton";
 import { hasPermission } from "@/lib/rbac";
 import { getUser } from "@/lib/data/user/user";
+import RestaurantActions from "./RestaurantActions";
 
-export default async function RestaurantsList({isAdmin}) {
+export default async function RestaurantsList({ isAdmin }) {
   const user = await getUser();
-  console.log("Current user:", user);
-
   let restaurants = await getAllRestaurants();
-  console.log("Fetched restaurants:", restaurants);
 
   if (!user) {
-    console.log("No user logged in");
     return <Typography>Please sign in to view restaurants.</Typography>;
   }
 
-  if (restaurants.length === 0) {
-    console.log("No restaurants found in DB");
-    return <Typography>No restaurants found.</Typography>;
-  }
-
-  // FILTER restaurants based on permission and ownership (for ADMIN)
   restaurants = restaurants.filter((rest) => {
-    if (user.role === "SYSTEM_ADMIN") {
-      console.log(`SYSTEM_ADMIN has access to restaurant ${rest.id}`);
-      return true; 
-    }
-
-    // Check if user has read:restaurant permission and (if ADMIN) ownership
-    const allowed = hasPermission(user, "read", "restaurant", rest.id);
-    console.log(
-      `User role ${user.role} access check for restaurant ${rest.id}: ${allowed}`
-    );
-    return allowed;
+    if (user.role === "SYSTEM_ADMIN") return true;
+    return hasPermission(user, "read", "restaurant", rest.id);
   });
 
-  console.log("Accessible restaurants after filtering:", restaurants);
-
   if (restaurants.length === 0) {
-    console.log("User has no accessible restaurants");
     return <Typography>No accessible restaurants found.</Typography>;
   }
 
@@ -71,12 +49,7 @@ export default async function RestaurantsList({isAdmin}) {
             pointerEvents: rest.isOpen ? "auto" : "none",
           }}
         >
-          {hasPermission(user, "delete", "restaurant", rest.id) && (
-            <>
-              {console.log(`User can delete restaurant ${rest.id}`)}
-              <DeleteRestaurantButton restaurantId={rest.id} />
-            </>
-          )}
+          <RestaurantActions user={user} restaurantId={rest.id} />
 
           <Box
             sx={{
@@ -135,7 +108,15 @@ export default async function RestaurantsList({isAdmin}) {
 
             <Stack direction="row" spacing={2}>
               {rest.isOpen && (
-                <Link href={isAdmin ? `/admin/canteens/${rest.id}/menu` : `/canteens/${rest.id}/menu`} passHref legacyBehavior>
+                <Link
+                  href={
+                    isAdmin
+                      ? `/admin/canteens/${rest.id}/menu`
+                      : `/canteens/${rest.id}/menu`
+                  }
+                  passHref
+                  legacyBehavior
+                >
                   <Button
                     component="a"
                     variant="contained"
@@ -148,7 +129,8 @@ export default async function RestaurantsList({isAdmin}) {
                       borderRadius: 1,
                       textTransform: "none",
                       "&:hover": {
-                        background: "linear-gradient(to bottom, #00022E, #001D51)",
+                        background:
+                          "linear-gradient(to bottom, #00022E, #001D51)",
                         opacity: 0.9,
                       },
                     }}
@@ -159,18 +141,15 @@ export default async function RestaurantsList({isAdmin}) {
               )}
 
               {hasPermission(user, "create", "menu", rest.id) && (
-                <>
-                  {console.log(`User can create menu for restaurant ${rest.id}`)}
-                  <Link
-                    href={`/canteens/${rest.id}/add-menu`}
-                    passHref
-                    legacyBehavior
-                  >
-                    <Button component="a" variant="contained" color="success">
-                      + Add Menu
-                    </Button>
-                  </Link>
-                </>
+                <Link
+                  href={`/canteens/${rest.id}/add-menu`}
+                  passHref
+                  legacyBehavior
+                >
+                  <Button component="a" variant="contained" color="success">
+                    + Add Menu
+                  </Button>
+                </Link>
               )}
             </Stack>
           </CardContent>

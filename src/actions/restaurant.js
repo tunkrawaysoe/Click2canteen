@@ -51,6 +51,45 @@ export async function addRestaurant(formData) {
   }
 }
 
+export async function updateRestaurant(formData) {
+  try {
+    const id = formData.get("id");
+    const name = formData.get("name");
+    const phone = formData.get("phone");
+    const address = formData.get("address");
+    const imageUrl = formData.get("imageUrl") || null;
+    const isOpen = formData.get("isOpen") === "on";
+    const isActive = formData.get("isActive") === "on";
+
+    // Validation
+    if (!id || !name || !phone || !address) {
+      return { error: "Missing required fields" };
+    }
+
+    // Update restaurant record
+    await prisma.restaurant.update({
+      where: { id },
+      data: {
+        name,
+        phone,
+        address,
+        imageUrl,
+        isOpen,
+        isActive,
+      },
+    });
+
+    // Invalidate and revalidate
+    await delKey(CACHE_KEY);
+    revalidatePath("/canteens");
+
+    return { success: true };
+  } catch (err) {
+    console.error("❌ Update failed:", err);
+    return { error: "Something went wrong while updating restaurant" };
+  }
+}
+
 /**
  * Deletes a restaurant and all related data
  * @param {string} restaurantId
