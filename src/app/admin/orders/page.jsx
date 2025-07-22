@@ -38,14 +38,11 @@ export default async function OrdersPage() {
     );
   }
 
-  const orders = await getOrdersByRestaurantId(restaurantId);
+  // Fetch orders, with 'true' to get today's orders only (if your function supports that)
+  const orders = await getOrdersByRestaurantId(restaurantId, true);
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h5" gutterBottom fontWeight={600}>
-        Orders for Your Restaurant
-      </Typography>
-
       <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table>
           <TableHead>
@@ -66,6 +63,7 @@ export default async function OrdersPage() {
           <TableBody>
             {orders.map((order) => (
               <TableRow key={order.id} hover>
+                {/* Format order creation date & time */}
                 <TableCell>
                   {new Intl.DateTimeFormat("en-GB", {
                     year: "numeric",
@@ -76,11 +74,19 @@ export default async function OrdersPage() {
                     hour12: true,
                   }).format(new Date(order.createdAt))}
                 </TableCell>
+
+                {/* Customer name */}
                 <TableCell>{order.user?.name || "Unknown"}</TableCell>
+
+                {/* Delivery address */}
                 <TableCell>{order.deliveryAddress || "-"}</TableCell>
+
+                {/* Total price, formatted */}
                 <TableCell align="right">
                   {order.totalPrice?.toLocaleString() || 0}
                 </TableCell>
+
+                {/* Status with color */}
                 <TableCell>
                   <Typography
                     variant="body2"
@@ -98,6 +104,8 @@ export default async function OrdersPage() {
                     {order.status}
                   </Typography>
                 </TableCell>
+
+                {/* Link to order detail page with eye icon */}
                 <TableCell>
                   <Link href={`/admin/orders/${order.id}`}>
                     <IconButton aria-label="View Details">

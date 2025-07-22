@@ -1,4 +1,3 @@
-
 import prisma from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
@@ -11,23 +10,26 @@ export async function GET(request) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const existingUser = await prisma.user.findUnique({
+  let user = await prisma.user.findUnique({
     where: { id: kindeUser.id },
   });
 
-  if (!existingUser) {
-    await prisma.user.create({
+  if (!user) {
+    user = await prisma.user.create({
       data: {
         id: kindeUser.id,
-        name: `${kindeUser.given_name}${
-          kindeUser.family_name ? " " + kindeUser.family_name : ""
-        }`,
+        name: `${kindeUser.given_name}${kindeUser.family_name ? " " + kindeUser.family_name : ""}`,
         email: kindeUser.email,
         profileImage: kindeUser.picture || null,
-        role: "CUSTOMER",
+        role: "CUSTOMER", // Default for new users
       },
     });
   }
 
-  return NextResponse.redirect(new URL("/", request.url));
+  // ✅ Redirect based on role
+  if (user.role === "CUSTOMER") {
+    return NextResponse.redirect(new URL("/", request.url));
+  } else {
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
 }

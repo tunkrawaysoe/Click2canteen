@@ -1,108 +1,123 @@
 import {
-  Avatar,
-  Box,
-  Chip,
-  Container,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
   Typography,
+  IconButton,
+  Box,
+  Container,
+  Alert,
 } from "@mui/material";
-import { getAllOrders } from "@/lib/data/order/orders";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import Link from "next/link";
 
-export default async function OrderHistoryPage() {
-  const orders = await getAllOrders();
+import { getUser } from "@/lib/data/user/user";
+import { getOrdersByRestaurantId } from "@/lib/data/order/orders";
+
+export default async function OrdersHistoryPage() {
+  const user = await getUser();
+  const restaurantId = user.restaurantId;
+
+  if (!restaurantId) {
+    return (
+      <Container maxWidth="sm" sx={{ mt: 10 }}>
+        <Alert severity="warning">
+          <Typography variant="h6" gutterBottom>
+            No Restaurant Assigned
+          </Typography>
+          <Typography variant="body2">
+            You are not associated with any restaurant. Please contact your
+            administrator to be assigned one.
+          </Typography>
+        </Alert>
+      </Container>
+    );
+  }
+
+  // Fetch orders, with 'true' to get today's orders only (if your function supports that)
+  const orders = await getOrdersByRestaurantId(restaurantId);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        Order History
-      </Typography>
-
-      <TableContainer component={Paper}>
+    <Box sx={{ p: 4 }}>
+      <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>User</TableCell>
-              <TableCell>Restaurant</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Total Price</TableCell>
-              <TableCell>Created At</TableCell>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Customer Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>
+                Delivery Address
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold" }} align="right">
+                Total Amount (MMK)
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Details</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Avatar
-                      src={order.user?.profileImage || ""}
-                      alt={order.user?.name || "User"}
-                      sx={{ width: 30, height: 30 }}
-                    />
-                    <Box>
-                      <Typography fontWeight="bold">
-                        {order.user?.name || "Unknown"}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {order.user?.email || "N/A"}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </TableCell>
-
-                <TableCell>
-                  <Typography fontWeight="bold">
-                    {order.restaurant?.name || "N/A"}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {order.restaurant?.address || ""}
-                  </Typography>
-                </TableCell>
-
-                <TableCell>
-                  <Chip
-                    label={order.status}
-                    color={getStatusColor(order.status)}
-                    size="small"
-                  />
-                </TableCell>
-
-                <TableCell>{(order.totalPrice / 100).toFixed(2)} MMK</TableCell>
-
+              <TableRow key={order.id} hover>
+                {/* Format order creation date & time */}
                 <TableCell>
                   {new Intl.DateTimeFormat("en-GB", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
                   }).format(new Date(order.createdAt))}
+                </TableCell>
+
+                {/* Customer name */}
+                <TableCell>{order.user?.name || "Unknown"}</TableCell>
+
+                {/* Delivery address */}
+                <TableCell>{order.deliveryAddress || "-"}</TableCell>
+
+                {/* Total price, formatted */}
+                <TableCell align="right">
+                  {order.totalPrice?.toLocaleString() || 0}
+                </TableCell>
+
+                {/* Status with color */}
+                <TableCell>
+                  <Typography
+                    variant="body2"
+                    fontWeight={500}
+                    color={
+                      order.status === "PENDING"
+                        ? "warning.main"
+                        : order.status === "DELIVERED"
+                        ? "success.main"
+                        : order.status === "CANCELLED"
+                        ? "error.main"
+                        : "info.main"
+                    }
+                  >
+                    {order.status}
+                  </Typography>
+                </TableCell>
+
+                {/* Link to order detail page with eye icon */}
+                <TableCell>
+                  <Link href={`/admin/orders/${order.id}`}>
+                    <IconButton aria-label="View Details">
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+    </Box>
   );
-}
-
-// 🔧 Helper function to set chip color based on status
-function getStatusColor(status) {
-  switch (status) {
-    case "PENDING":
-      return "warning";
-    case "CONFIRMED":
-      return "info";
-    case "PREPARING":
-      return "primary";
-    case "DELIVERED":
-      return "success";
-    case "CANCELLED":
-      return "error";
-    default:
-      return "default";
-  }
 }

@@ -54,7 +54,11 @@ export default function RestaurantActions({ user, restaurantId }) {
         <MoreVertIcon />
       </IconButton>
 
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
         <MenuItem
           onClick={() => {
             handleMenuClose();
@@ -62,7 +66,7 @@ export default function RestaurantActions({ user, restaurantId }) {
           }}
         >
           <ListItemIcon>
-            <EditSquare sx={{ color: "#fbc02d" }} /> {/* Yellow edit */}
+            <EditSquare sx={{ color: "#fbc02d" }} />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>

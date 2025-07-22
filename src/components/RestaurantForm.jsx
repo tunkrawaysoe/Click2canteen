@@ -2,11 +2,37 @@
 
 import { useState } from "react";
 import { UploadDropzone } from "@/lib/utils/uploadthing";
-import { addRestaurant, updateRestaurant } from "@/actions/restaurant";
+import { useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
 
-export default function RestaurantForm({ initialData = null, mode = "add" }) {
+function SubmitButton({ label, mode }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className={`w-full p-2 rounded text-white hover:opacity-90 ${
+        pending
+          ? "bg-gray-400 cursor-not-allowed"
+          : mode === "edit"
+          ? "bg-yellow-600"
+          : "bg-[linear-gradient(to_bottom,_#00022E,_#001D51)]"
+      }`}
+    >
+      {pending ? "Saving..." : label}
+    </button>
+  );
+}
+
+export default function RestaurantForm({
+  initialData = null,
+  mode = "add",
+  onSubmit,
+}) {
   const [status, setStatus] = useState(null);
   const [imageUrl, setImageUrl] = useState(initialData?.imageUrl || null);
+  const router = useRouter();
 
   async function handleFormAction(formData) {
     if (imageUrl) {
@@ -14,20 +40,21 @@ export default function RestaurantForm({ initialData = null, mode = "add" }) {
     }
 
     if (mode === "edit") {
-      formData.set("id", initialData.id); // ensure ID is passed
-      const result = await updateRestaurant(formData);
+      formData.set("id", initialData.id);
+    }
+
+    try {
+      const result = await onSubmit(formData);
+
       if (result?.error) {
         setStatus(`❌ ${result.error}`);
       } else {
-        setStatus("✅ Restaurant updated!");
+        setStatus(`✅ Restaurant ${mode === "edit" ? "updated" : "added"}!`);
+        router.push("/admin/canteens"); // ✅ Redirect after success
       }
-    } else {
-      const result = await addRestaurant(formData);
-      if (result?.error) {
-        setStatus(`❌ ${result.error}`);
-      } else {
-        setStatus("✅ Restaurant added!");
-      }
+    } catch (error) {
+      setStatus("❌ Something went wrong.");
+      console.error(error);
     }
   }
 
@@ -43,28 +70,29 @@ export default function RestaurantForm({ initialData = null, mode = "add" }) {
           name="name"
           placeholder="Name"
           defaultValue={initialData?.name || ""}
-          className="w-full p-2 border rounded"
           required
+          className="w-full p-2 border rounded"
         />
+
         <input
           type="text"
           name="phone"
           placeholder="Phone"
           defaultValue={initialData?.phone || ""}
-          className="w-full p-2 border rounded"
           required
+          className="w-full p-2 border rounded"
         />
+
         <input
           type="text"
           name="address"
           placeholder="Address"
           defaultValue={initialData?.address || ""}
-          className="w-full p-2 border rounded"
           required
+          className="w-full p-2 border rounded"
         />
 
-        {/* UploadThing image upload */}
-        <div className="mb-4">
+        <div>
           <p className="mb-2 font-semibold text-gray-700">Upload Image</p>
           <UploadDropzone
             endpoint="imageUploader"
@@ -101,6 +129,7 @@ export default function RestaurantForm({ initialData = null, mode = "add" }) {
           />
           <span>Is Open</span>
         </label>
+
         <label className="flex items-center space-x-2">
           <input
             type="checkbox"
@@ -110,14 +139,10 @@ export default function RestaurantForm({ initialData = null, mode = "add" }) {
           <span>Is Active</span>
         </label>
 
-        <button
-          type="submit"
-          className={`w-full p-2 rounded text-white ${
-            mode === "edit" ? "bg-yellow-600" : "bg-blue-600"
-          } hover:opacity-90`}
-        >
-          {mode === "edit" ? "Update Restaurant" : "Add Restaurant"}
-        </button>
+        <SubmitButton
+          label={mode === "edit" ? "Update Restaurant" : "Add Restaurant"}
+          mode={mode}
+        />
       </form>
 
       {status && <p className="mt-4 text-center">{status}</p>}

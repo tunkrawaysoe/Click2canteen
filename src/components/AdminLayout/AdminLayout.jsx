@@ -6,11 +6,12 @@ import { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import Link from "next/link";
 
 export default function AdminLayout({ children }) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const pathname = usePathname();
-  const { user, isAuthenticated } = useKindeBrowserClient();
+  const { user, isAuthenticated, logout } = useKindeBrowserClient();
 
   const navLinks = [
     { name: "Users", href: "/admin/users" },
@@ -73,11 +74,16 @@ export default function AdminLayout({ children }) {
               alt="Hamburger"
             />
           </button>
-          <img src="/logo/logo.svg" alt="Logo" className={styles.logo} />
+          <Link href={'/admin'}>
+            <img src="/logo/logo.svg" alt="Logo" className={styles.logo} />
+          </Link>
         </div>
 
-        {/* User Profile + Name */}
-        <div className={styles.profileContainer}>
+        {/* User Profile + Name + Logout */}
+        <div
+          className={styles.profileContainer}
+          style={{ display: "flex", alignItems: "center", gap: "10px" }}
+        >
           {isAuthenticated && user ? (
             <>
               <Image
@@ -92,16 +98,22 @@ export default function AdminLayout({ children }) {
                   ? `${user.given_name} ${user.family_name || ""}`.trim()
                   : user.name || "User"}
               </span>
+              <button
+                onClick={() => logout()}
+                className="ml-4 px-3 py-1 bg-white text-black border border-black hover:bg-black hover:text-white rounded transition"
+                aria-label="Logout"
+                type="button"
+              >
+                Logout
+              </button>
             </>
           ) : (
-            <>
-              <img
-                src="/userProfilePhoto/userPhoto1.svg"
-                alt="Profile"
-                className={styles.profile}
-              />
-              <span>Guest</span>
-            </>
+            <a
+              href="/login"
+              className="ml-4 px-3 py-1 bg-white text-black border border-black hover:bg-black hover:text-white rounded transition"
+            >
+              Login
+            </a>
           )}
         </div>
       </header>

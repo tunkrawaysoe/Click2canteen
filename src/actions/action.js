@@ -43,7 +43,6 @@ export async function addMenuWithAddOns(formData) {
       isSpecial,
       restaurantId,
       addOns: addOns.length > 0 ? { create: addOns } : undefined,
-      // DO NOT include a `restaurant` field here
     },
   });
 

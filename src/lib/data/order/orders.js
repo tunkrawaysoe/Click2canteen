@@ -81,28 +81,45 @@ export async function getOrderById(orderId, forceRefresh = false) {
 }
 
 // 🔵 Get orders BY restaurant ID (cached)
+
 export async function getOrdersByRestaurantId(
   restaurantId,
+  todayOnly = false,
   forceRefresh = false
 ) {
-  const key = `orders:restaurant:${restaurantId}`;
+  const key = todayOnly
+    ? `orders:restaurant:${restaurantId}:today`
+    : `orders:restaurant:${restaurantId}`;
 
   if (forceRefresh) {
     await delKey(key);
-    console.log("🗑️ Restaurant orders cache cleared:", restaurantId);
+    console.log("🗑️ Restaurant orders cache cleared:", key);
   }
 
   const cached = await getCachedData(key);
   if (cached) {
-    console.log(
-      "✅ [Redis] Restaurant orders loaded from cache:",
-      restaurantId
-    );
+    console.log("✅ [Redis] Restaurant orders loaded from cache:", key);
     return cached;
   }
 
+  let whereCondition = { restaurantId };
+
+  if (todayOnly) {
+    // Calculate today's start and end times
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    whereCondition.createdAt = {
+      gte: startOfDay,
+      lte: endOfDay,
+    };
+  }
+
   const orders = await prisma.order.findMany({
-    where: { restaurantId },
+    where: whereCondition,
     include: {
       user: true,
       restaurant: true,
@@ -120,10 +137,7 @@ export async function getOrdersByRestaurantId(
     },
   });
 
-  console.log(
-    "⚡ [Database] Restaurant orders loaded and cached:",
-    restaurantId
-  );
+  console.log("⚡ [Database] Restaurant orders loaded and cached:", key);
   await setCachedData(key, orders, CACHE_TTL);
 
   return orders;

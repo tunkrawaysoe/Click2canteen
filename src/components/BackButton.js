@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@mui/material";
 import { ArrowLeft } from "lucide-react";
 
-export default function BackButton() {
+export default function BackButton({buttonName = "Back"}) {
   const router = useRouter();
 
   return (
@@ -22,7 +22,7 @@ export default function BackButton() {
           "&:hover": { backgroundColor: "#0B3C91" },
         }}
       >
-        Back
+        {buttonName}
       </Button>
     </div>
   );

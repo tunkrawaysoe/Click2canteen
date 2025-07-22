@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { delKey } from "@/lib/utils/cached";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // Use consistent cache key for restaurant list caching
 const CACHE_KEY = "restaurants:all";
@@ -12,21 +13,20 @@ const CACHE_KEY = "restaurants:all";
  * @param {FormData} formData
  * @returns {Object} success or error object
  */
+
 export async function addRestaurant(formData) {
+  const name = formData.get("name");
+  const phone = formData.get("phone");
+  const address = formData.get("address");
+  const imageUrl = formData.get("imageUrl") || null;
+  const isOpen = formData.get("isOpen") === "on";
+  const isActive = formData.get("isActive") === "on";
+
+  if (!name || !phone || !address) {
+    return { error: "Missing required fields" };
+  }
+
   try {
-    const name = formData.get("name");
-    const phone = formData.get("phone");
-    const address = formData.get("address");
-    const imageUrl = formData.get("imageUrl") || null;
-    const isOpen = formData.get("isOpen") === "on";
-    const isActive = formData.get("isActive") === "on";
-
-    // Validate required fields
-    if (!name || !phone || !address) {
-      return { error: "Missing required fields" };
-    }
-
-    // Create restaurant record
     await prisma.restaurant.create({
       data: {
         name,
@@ -38,17 +38,15 @@ export async function addRestaurant(formData) {
       },
     });
 
-    // Invalidate cache to reflect new restaurant
-    await delKey(CACHE_KEY);
-
-    // Optionally revalidate pages showing restaurants
-    revalidatePath("/canteens");
-
-    return { success: true };
+    await delKey("restaurants:all");
+    revalidatePath("/admin/canteens");
+    return { success : true}
   } catch (err) {
     console.error("❌ Create failed:", err);
     return { error: "Something went wrong while creating restaurant" };
   }
+
+  
 }
 
 export async function updateRestaurant(formData) {
@@ -61,12 +59,10 @@ export async function updateRestaurant(formData) {
     const isOpen = formData.get("isOpen") === "on";
     const isActive = formData.get("isActive") === "on";
 
-    // Validation
     if (!id || !name || !phone || !address) {
       return { error: "Missing required fields" };
     }
 
-    // Update restaurant record
     await prisma.restaurant.update({
       where: { id },
       data: {
@@ -79,11 +75,10 @@ export async function updateRestaurant(formData) {
       },
     });
 
-    // Invalidate and revalidate
     await delKey(CACHE_KEY);
-    revalidatePath("/canteens");
+    revalidatePath("/admin/canteens");
 
-    return { success: true };
+    return { success: true }; // ✅ success response
   } catch (err) {
     console.error("❌ Update failed:", err);
     return { error: "Something went wrong while updating restaurant" };
