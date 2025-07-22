@@ -41,9 +41,7 @@ export default function AddMenuFormClient({ canteenId }) {
       <div>
         <label>Category</label>
         <select name="category" className="w-full p-2 border rounded">
-          <option value="APPETIZER">Appetizer</option>
-          <option value="MAIN">Main</option>
-          <option value="DESSERT">Dessert</option>
+          <option value="MEAL">Meal</option>
           <option value="DRINK">Drink</option>
           <option value="SNACK">Snack</option>
         </select>
@@ -71,11 +69,7 @@ export default function AddMenuFormClient({ canteenId }) {
 
       {/* New isSpecial checkbox */}
       <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="isSpecial"
-          className="mr-2"
-        />
+        <input type="checkbox" name="isSpecial" className="mr-2" />
         <label>Is Special</label>
       </div>
 

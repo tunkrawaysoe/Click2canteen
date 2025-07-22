@@ -17,7 +17,7 @@ export async function getUser() {
     return {
       id: null,
       name: "Guest",
-      role: "GUEST", // define a GUEST role in your RBAC roles
+      role: "GUEST",
     };
   }
 
@@ -46,8 +46,8 @@ export async function getAdminUsers() {
 
 export async function getAllUsers(params) {
   return prisma.user.findMany({
-    include : {
-      restaurant : true,
-    }
+    include: {
+      restaurant: true,
+    },
   });
 }

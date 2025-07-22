@@ -9,6 +9,8 @@ import {
   Typography,
   IconButton,
   Box,
+  Container,
+  Alert,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Link from "next/link";
@@ -19,6 +21,23 @@ import { getOrdersByRestaurantId } from "@/lib/data/order/orders";
 export default async function OrdersPage() {
   const user = await getUser();
   const restaurantId = user.restaurantId;
+
+  if (!restaurantId) {
+    return (
+      <Container maxWidth="sm" sx={{ mt: 10 }}>
+        <Alert severity="warning">
+          <Typography variant="h6" gutterBottom>
+            No Restaurant Assigned
+          </Typography>
+          <Typography variant="body2">
+            You are not associated with any restaurant. Please contact your
+            administrator to be assigned one.
+          </Typography>
+        </Alert>
+      </Container>
+    );
+  }
+
   const orders = await getOrdersByRestaurantId(restaurantId);
 
   return (

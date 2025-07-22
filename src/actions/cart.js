@@ -23,7 +23,7 @@ export async function addToCartAction(
   let cart = [];
 
   try {
-    cart = raw  || [];
+    cart = raw || [];
   } catch (err) {
     console.error("Failed to parse cart from Redis:", err);
   }
@@ -93,7 +93,6 @@ export async function updateCartQuantity(userId, menuId, quantity) {
   await redis.set(key, JSON.stringify(updatedCart));
 }
 
-
 export async function placeOrder(formData) {
   const userId = formData.get("userId");
   if (!userId) throw new Error("User ID missing");
@@ -145,7 +144,5 @@ export async function placeOrder(formData) {
     },
   });
 
-  await redis.del(getCartKey(userId));
-
-  redirect(`/order/confirmation?orderId=${order.id}`)
+  redirect(`/order/confirmation?orderId=${order.id}`);
 }
