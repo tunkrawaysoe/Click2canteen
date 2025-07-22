@@ -15,7 +15,7 @@ import SubmitButton from "./SubmitButton";
 import { updateUserAction } from "@/actions/users";
 
 export default function UserEditForm({ user, restaurants }) {
-  const [role, setRole] = useState(user.role || "USER");
+  const [role, setRole] = useState(user.role || "CUSTOMER");
   const [restaurantId, setRestaurantId] = useState(user.restaurantId || "");
 
   return (
@@ -47,7 +47,7 @@ export default function UserEditForm({ user, restaurants }) {
           label="Role"
           onChange={(e) => setRole(e.target.value)}
         >
-          <MenuItem value="USER">User</MenuItem>
+          <MenuItem value="CUSTOMER">CUSTOMER</MenuItem>
           <MenuItem value="ADMIN">Admin</MenuItem>
         </Select>
       </FormControl>

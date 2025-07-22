@@ -10,6 +10,11 @@ export const metadata = {
 
 export default async function UsersPage() {
   const users = await getAllUsers();
+  if(!users) {
+    return (
+      <div>There is no users</div>
+    )
+  }
 
   return (
     <div className="usersPage">
