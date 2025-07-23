@@ -1,6 +1,9 @@
 "use server";
 
+import prisma from "@/lib/prisma";
+import { pusherServer } from "@/lib/pusher";
 import { redis } from "@/lib/redis";
+import { delKey } from "@/lib/utils/cached";
 import { redirect } from "next/navigation";
 
 // Helper function to generate Redis cart key for a user
@@ -143,6 +146,36 @@ export async function placeOrder(formData) {
       },
     },
   });
+
+  // Clear related Redis caches
+  await delKey(`orders:restaurant:${restaurantId}`);
+  await delKey(`orders:restaurant:${restaurantId}:today`);
+  await redis.del(getCartKey(userId));
+
+  // Fetch full enriched order with user and nested relations
+  const fullOrder = await prisma.order.findUnique({
+    where: { id: order.id },
+    include: {
+      user: true,
+      orderItems: {
+        include: {
+          menu: true,
+          orderItemAddOns: {
+            include: {
+              addOn: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Trigger Pusher event with full order data
+  await pusherServer.trigger(
+    `restaurant-${restaurantId}`,
+    "order:new",
+    fullOrder
+  );
 
   redirect(`/order/confirmation?orderId=${order.id}`);
 }
