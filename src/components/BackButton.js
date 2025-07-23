@@ -14,13 +14,15 @@ export default function BackButton({buttonName = "Back"}) {
         startIcon={<ArrowLeft />}
         onClick={() => router.back()}
         sx={{
-          textTransform: "none",
-          borderRadius: 20,
-          px: 3,
-          py: 1,
-          backgroundColor: "#0D47A1",
-          "&:hover": { backgroundColor: "#0B3C91" },
-        }}
+            background: "linear-gradient(180deg, #00022E 0%, #001D51 100%)",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius :'15px',
+            textTransform: "none",
+            "&:hover": {
+              background: "linear-gradient(180deg, #001D51 0%, #00022E 100%)",
+            },
+          }}
       >
         {buttonName}
       </Button>

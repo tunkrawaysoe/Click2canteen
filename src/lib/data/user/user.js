@@ -37,6 +37,54 @@ export async function getUser() {
   return user;
 }
 
+export async function getUserWithOrders() {
+  const kindeUser = await getUserProfile();
+
+  if (!kindeUser) {
+    return {
+      id: null,
+      name: "Guest",
+      role: "GUEST",
+      orders: [],
+    };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: kindeUser.id },
+    include: {
+      orders: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          orderItems: {
+            include: {
+              menu: true,
+              orderItemAddOns: {
+                include: {
+                  addOn: true,
+                },
+              },
+            },
+          },
+          restaurant: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    return {
+      id: null,
+      name: "Guest",
+      role: "GUEST",
+      orders: [],
+    };
+  }
+
+  return user;
+}
+
 export async function getAdminUsers() {
   return prisma.user.findMany({
     where: { role: "ADMIN" },

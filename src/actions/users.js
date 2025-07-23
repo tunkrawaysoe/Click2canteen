@@ -25,3 +25,22 @@ export async function updateUserAction(formData) {
   }
   redirect("/admin/users");
 }
+
+export async function updateProfile(formData) {
+  const name = formData.get("name");
+  const userId = formData.get("userId");
+  const profileImage = formData.get("profileImage");
+
+  if (!userId || !name) return;
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      name,
+      profileImage: profileImage || undefined,
+    },
+  });
+
+  revalidatePath('/profile')
+  redirect('/profile')
+}

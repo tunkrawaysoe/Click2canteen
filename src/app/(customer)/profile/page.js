@@ -1,41 +1,38 @@
-// app/profile/page.tsx or any server component file
+// app/profile/page.tsx
+
 import React from "react";
-import Image from "next/image";
-import { getUser } from "@/lib/data/user/user";
+import { getUserWithOrders } from "@/lib/data/user/user";
+import { Container, Box, Typography } from "@mui/material";
 
-export default async function Profile() {
-  const user = await getUser();
+import OrderHistory from "@/components/UserOrderHistory";
+import ProfileCard from "@/components/ProfileCard";
 
-  if (!user) {
+export default async function ProfilePage() {
+  const user = await getUserWithOrders();
+
+  if (!user || user.role === "GUEST") {
     return (
-      <div className="p-6 text-center text-xl text-gray-700">
-        User not found or not authenticated.
-      </div>
+      <Container sx={{ py: 6, textAlign: "center" }}>
+        <Typography variant="h6" color="text.secondary">
+          Please log in to view your profile.
+        </Typography>
+      </Container>
     );
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-md rounded-xl">
-      <div className="flex flex-col items-center">
-        <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4">
-          <Image
-            src={user.profileImage || "/images/defaultAvatar.png"} // fallback image path
-            alt="Profile"
-            width={96}
-            height={96}
-            className="object-cover rounded-full"
-          />
-        </div>
+    <Container maxWidth="lg" sx={{ py: 10 }}>
+      <Box sx={{ position: "relative", mb: 6 }}>
+        <ProfileCard user={user} />
+      </Box>
 
-        <h2 className="text-xl font-semibold text-gray-800 mb-1">
-          {user.name || "No name"}
-        </h2>
-        <p className="text-gray-500 mb-1">{user.email}</p>
-        <p className="text-gray-500 mb-1">Role: {user.role}</p>
-        {user.restaurantId && (
-          <p className="text-gray-500">Restaurant ID: {user.restaurantId}</p>
-        )}
-      </div>
-    </div>
+      <Box>
+        <Typography variant="h5" gutterBottom fontWeight="semibold" mb={3}>
+          Order History
+        </Typography>
+
+        <OrderHistory orders={user.orders} />
+      </Box>
+    </Container>
   );
 }

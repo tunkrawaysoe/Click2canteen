@@ -31,9 +31,7 @@ export async function addToCartAction(
     console.error("Failed to parse cart from Redis:", err);
   }
 
-  // Debug logs
-  console.log("Existing cart:", cart);
-  console.log("Incoming item:", { menuId, quantity, addOns });
+
 
   const existingIndex = cart.findIndex(
     (item) =>
@@ -61,7 +59,6 @@ export async function addToCartAction(
  */
 export async function getCartAction(userId = "guest") {
   const cart = await redis.get(getCartKey(userId));
-  console.log("Cart data", cart);
   return cart || [];
 }
 
