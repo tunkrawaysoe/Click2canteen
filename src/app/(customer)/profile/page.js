@@ -31,7 +31,7 @@ export default async function ProfilePage() {
           Order History
         </Typography>
 
-        <OrderHistory orders={user.orders} />
+        <OrderHistory orders={user.orders} userId={user.id}/>
       </Box>
     </Container>
   );

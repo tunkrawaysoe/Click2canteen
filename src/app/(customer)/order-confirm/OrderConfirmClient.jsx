@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Pusher from "pusher-js";
 import { Box, Paper, Stack, Typography, Divider, Chip } from "@mui/material";
 
-export default function OrderConfirmPage({ orderId, initialStatus }) {
+export default function OrderConfirmClient({ orderId, initialStatus }) {
   const [status, setStatus] = useState(initialStatus);
 
   useEffect(() => {
@@ -29,7 +29,6 @@ export default function OrderConfirmPage({ orderId, initialStatus }) {
     };
   }, [orderId]);
 
-  // Map your status to MUI chip colors
   const chipColor =
     status === "PENDING"
       ? "warning"
@@ -38,6 +37,17 @@ export default function OrderConfirmPage({ orderId, initialStatus }) {
       : status === "CANCELLED"
       ? "error"
       : "default";
+
+  const statusMessages = {
+    PENDING:
+      "Your order has been placed and is waiting for the restaurant to accept it. We’ll notify you once it’s confirmed.",
+    DELIVERED: "Your order has been successfully delivered. Bon appétit!",
+    CANCELLED:
+      "Your order has been cancelled. If you have any questions, please contact support.",
+    DEFAULT: "We’ll notify you as soon as the order status changes.",
+  };
+
+  const displayMessage = statusMessages[status] || statusMessages.DEFAULT;
 
   return (
     <Box maxWidth="600px" mx="auto" mt={10} px={2}>
@@ -70,8 +80,7 @@ export default function OrderConfirmPage({ orderId, initialStatus }) {
             textAlign="center"
             maxWidth={400}
           >
-            We will notify you once your order is ready for pickup or delivery.
-            Thank you for choosing us!
+            {displayMessage}
           </Typography>
         </Stack>
       </Paper>

@@ -1,169 +1,198 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Paper, Stack, Typography, Chip, Divider, Box } from "@mui/material";
+import { Paper, Stack, Typography, Divider, Box } from "@mui/material";
+import Pusher from "pusher-js";
 
-export default function OrderHistory({ orders }) {
-  if (!orders || orders.length === 0) {
+const formatDate = (dateStr) =>
+  new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(dateStr));
+
+const formatMMK = (amount) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "MMK",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+
+export default function OrderHistory({ orders: initialOrders, userId }) {
+  const [orders, setOrders] = useState(
+    initialOrders.map((order) => ({ ...order, _justUpdated: false })) || []
+  );
+
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: "ap1",
+    });
+
+    const channel = pusher.subscribe(`user-${userId}`);
+
+    channel.bind("order:updated", (data) => {
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === data.id
+            ? { ...order, status: data.status, _justUpdated: true }
+            : order
+        )
+      );
+
+      setTimeout(() => {
+        setOrders((prev) =>
+          prev.map((order) =>
+            order.id === data.id
+              ? { ...order, _justUpdated: false }
+              : order
+          )
+        );
+      }, 1200);
+    });
+
+    return () => {
+      pusher.unsubscribe(`user-${userId}`);
+      pusher.disconnect();
+    };
+  }, [userId]);
+
+  if (!orders.length) {
     return (
-      <Typography color="text.secondary" textAlign="center" mt={4}>
+      <Box textAlign="center" mt={4} color="text.secondary">
         You have no orders yet.
-      </Typography>
+      </Box>
     );
   }
 
-  const formatDate = (dateStr) =>
-    new Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(dateStr));
-
-  const formatMMK = (amount) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "MMK",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+  const getStatusStyles = (status) => {
+    switch (status) {
+      case "DELIVERED":
+        return { bg: "#e6ffed", text: "#007b34" };
+      case "PREPARING":
+        return { bg: "#fff4e5", text: "#b45309" };
+      case "CANCELLED":
+        return { bg: "#ffe6e6", text: "#d32f2f" };
+      case "PENDING":
+        return { bg: "#e0e0e0", text: "#555" };
+      default:
+        return { bg: "#e0e0e0", text: "#555" };
+    }
+  };
 
   return (
     <Stack spacing={3}>
       {orders.map((order) => {
-        const showStatus = order.status !== "PENDING";
+        const { bg, text } = getStatusStyles(order.status);
 
         return (
           <Paper
             key={order.id}
-            elevation={2}
+            elevation={3}
             sx={{
               p: 3,
               borderRadius: 4,
-              backgroundColor: "#fff",
+              backgroundColor: order._justUpdated ? "#f0fdfa" : "#fff",
+              transition: "background-color 0.4s ease",
             }}
           >
             <Stack spacing={2}>
-              {/* Header: Image + Restaurant + Status */}
+              {/* Header */}
               <Stack direction="row" alignItems="center" spacing={2}>
-                {/* Restaurant image */}
-                {order.restaurant?.imageUrl ? (
-                  <Box
-                    sx={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 2,
-                      overflow: "hidden",
-                      flexShrink: 0,
-                      backgroundColor: "#f0f0f0",
-                      position: "relative",
-                    }}
-                  >
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    backgroundColor: "#f0f0f0",
+                    position: "relative",
+                    flexShrink: 0,
+                  }}
+                >
+                  {order.restaurant?.imageUrl ? (
                     <Image
                       src={order.restaurant.imageUrl}
                       alt={order.restaurant.name}
                       fill
-                      style={{ objectFit: "cover" }}
                       sizes="56px"
+                      style={{ objectFit: "cover" }}
                     />
-                  </Box>
-                ) : (
+                  ) : (
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#ccc",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                        color: "#666",
+                      }}
+                    >
+                      ?
+                    </Box>
+                  )}
+                </Box>
+
+                <Box flex={1}>
                   <Box
-                    sx={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 2,
-                      backgroundColor: "#ccc",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#666",
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      userSelect: "none",
-                      flexShrink: 0,
-                    }}
-                  >
-                    ?
-                  </Box>
-                )}
-
-                {/* Restaurant name and status */}
-                <Typography
-                  variant="h6"
-                  fontWeight={600}
-                  component={Link}
-                  href={`/canteens/${order.restaurant?.id}/menu`}
-                  sx={{
-                    textDecoration: "none",
-                    "&:hover": {
-                      textDecoration: "none",
-                    },
-                  }}
-                >
-                  {order.restaurant?.name || "Unknown"}
-                </Typography>
-
-                {showStatus && (
-                  <Chip
-                    label={order.status}
-                    size="small"
+                    component={Link}
+                    href={`/canteens/${order.restaurant?.id}/menu`}
                     sx={{
                       fontWeight: 600,
-                      bgcolor:
-                        order.status === "DELIVERED"
-                          ? "success.light"
-                          : order.status === "PREPARING"
-                          ? "warning.light"
-                          : order.status === "CANCELLED"
-                          ? "error.light"
-                          : "grey.300",
-                      color:
-                        order.status === "DELIVERED"
-                          ? "success.main"
-                          : order.status === "PREPARING"
-                          ? "warning.main"
-                          : order.status === "CANCELLED"
-                          ? "error.main"
-                          : "text.primary",
-                      flexShrink: 0,
+                      fontSize: "1rem",
+                      color: "primary.main",
+                      textDecoration: "none",
+                      "&:hover": { textDecoration: "underline" },
                     }}
-                  />
-                )}
+                  >
+                    {order.restaurant?.name || "Unknown"}
+                  </Box>
+                </Box>
+
+                <Box
+                  px={1.5}
+                  py={0.5}
+                  borderRadius={2}
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: 13,
+                    bgcolor: bg,
+                    color: text,
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {order.status}
+                </Box>
               </Stack>
 
-              {/* Order Date */}
-              <Typography variant="caption" color="text.secondary">
+              <Box fontSize={13} color="text.secondary">
                 Ordered on {formatDate(order.createdAt)}
-              </Typography>
+              </Box>
 
               <Divider />
 
-              {/* Items */}
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ whiteSpace: "pre-line" }}
-              >
+              <Box sx={{ color: "text.secondary", whiteSpace: "pre-line" }}>
                 {order.orderItems
                   .map(
                     (item) =>
                       `${item.menu.name} x${item.quantity}` +
-                      (item.orderItemAddOns.length > 0
+                      (item.orderItemAddOns.length
                         ? ` (+${item.orderItemAddOns
-                            .map((addOn) => addOn.addOn.name)
+                            .map((a) => a.addOn.name)
                             .join(", ")})`
                         : "")
                   )
                   .join(", ")}
-              </Typography>
+              </Box>
 
-              {/* Total */}
-              <Typography
-                variant="subtitle1"
-                fontWeight="bold"
-                sx={{ color: "text.primary", mt: 1 }}
-              >
+              <Box fontWeight={700} mt={1}>
                 Total: {formatMMK(order.totalPrice)}
-              </Typography>
+              </Box>
             </Stack>
           </Paper>
         );

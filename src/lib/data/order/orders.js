@@ -43,13 +43,14 @@ export async function getAllOrders(forceRefresh = false) {
 }
 
 // 🔵 Get order BY ID (cached)
-export async function getOrderById(orderId, forceRefresh = false) {
-  const key = `order:${orderId}`;
 
-  if (forceRefresh) {
-    await delKey(key);
-    console.log("🗑️ Order cache cleared:", orderId);
-  }
+/**
+ * Get order by ID, optionally including user and nested order items.
+ * @param {string} orderId
+ * @param {boolean} includeItems - if true, include user and order items; if false, fetch only order
+ */
+export async function getOrderById(orderId, includeItems = true) {
+  const key = `order:${orderId}:${includeItems ? "full" : "minimal"}`;
 
   const cached = await getCachedData(key);
   if (cached) {
@@ -57,9 +58,10 @@ export async function getOrderById(orderId, forceRefresh = false) {
     return cached;
   }
 
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    include: {
+  let includeOption = {};
+
+  if (includeItems) {
+    includeOption = {
       user: true,
       orderItems: {
         include: {
@@ -69,7 +71,12 @@ export async function getOrderById(orderId, forceRefresh = false) {
           },
         },
       },
-    },
+    };
+  }
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: includeOption,
   });
 
   if (order) {

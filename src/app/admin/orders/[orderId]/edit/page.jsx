@@ -1,8 +1,8 @@
 'use server'
 import { updateOrderStatus } from "@/actions/orders";
 
-export default function EditOrder({ params }) {
-  const orderId = params.orderId;
+export default  async function EditOrder({ params }) {
+  const orderId =  await params.orderId;
 
   return (
     <form action={updateOrderStatus} className="space-y-4">

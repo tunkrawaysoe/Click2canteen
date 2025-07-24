@@ -174,5 +174,5 @@ export async function placeOrder(formData) {
     fullOrder
   );
 
-  redirect(`/order/confirmation?orderId=${order.id}`);
+  redirect(`/order-confirm?orderId=${order.id}`);
 }
