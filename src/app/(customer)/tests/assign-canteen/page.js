@@ -1,6 +1,6 @@
 AssignCanteenForm
 import { assignCanteenToAdmin } from "@/actions/assignCanteenToAdmin";
-import AssignCanteenForm from "@/components/AssignCanteenForm";
+import AssignCanteenForm from "@/components/form/AssignCanteenForm";
 import { getAllRestaurants } from "@/lib/data/restaurant/restaurant";
 import { getAdminUsers } from "@/lib/data/user/user";
 

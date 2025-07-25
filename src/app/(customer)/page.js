@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import pizza from "../../../public/images/pizza123.png";
-import AnimatedButton from "@/components/AnimatedButton";
+import AnimatedButton from "@/components/buttons/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 import { PrismaClient } from "@/generated/prisma"; // adjust as needed
 const prisma = new PrismaClient();

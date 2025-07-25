@@ -1,7 +1,7 @@
 import { getOrderById } from "@/lib/data/order/orders";
 import { notFound } from "next/navigation";
 import { Box, Typography, Chip, Divider } from "@mui/material";
-import OrderItemsTable from "@/components/OrderItemTable";
+import OrderItemsTable from "@/components/orders/OrderItemTable";
 
 export default async function OrderDetailPage({ params }) {
   const { orderId } = await params;

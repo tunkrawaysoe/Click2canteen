@@ -4,14 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "@/actions/users";
 import { UploadDropzone } from "@/lib/utils/uploadthing";
+import SubmitButton from "../buttons/SubmitButton";
 
 export default function UpdateProfileForm({ user }) {
   const [name, setName] = useState(user.name || "");
   const [imageUrl, setImageUrl] = useState(user.profileImage || "");
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const router = useRouter();
 
   return (
-    <div className=" flex items-center justify-center bg-gray-50 px-4 py-15">
+    <div className="flex items-center justify-center bg-gray-50 px-4 py-15">
       <form
         action={updateProfile}
         className="w-full max-w-md bg-white p-6 rounded-xl shadow space-y-5"
@@ -48,31 +50,32 @@ export default function UpdateProfileForm({ user }) {
                 res?.[0]?.fileUrl || res?.[0]?.url || res?.[0]?.ufsUrl;
               if (url) {
                 setImageUrl(url);
-                alert("Upload Completed");
+                setUploadSuccess(true);
               }
             }}
             onUploadError={(error) => {
               alert(`ERROR! ${error.message}`);
             }}
           />
-
-          {imageUrl && (
-            <div className="mt-3 w-24 h-24 border rounded overflow-hidden">
-              <img
-                src={imageUrl}
-                alt="Uploaded"
-                className="w-full h-full object-cover"
-              />
-            </div>
+          {/* Underline blue success message */}
+          {uploadSuccess && (
+            <p className="mt-6 text-green-700 text-sm font-medium pb-1 select-none">
+              Upload completed successfully
+            </p>
           )}
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-2 bg-gradient-to-b from-[#00022E] to-[#001D51] text-white font-semibold rounded-md hover:bg-blue-700 transition"
-        >
-          Save Changes
-        </button>
+        {imageUrl && (
+          <div className="mt-1 w-24 h-24 border rounded overflow-hidden">
+            <img
+              src={imageUrl}
+              alt="Uploaded"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
+        <SubmitButton label="Edit" />
       </form>
     </div>
   );

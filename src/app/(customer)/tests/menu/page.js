@@ -1,4 +1,4 @@
-import MenuCard from "@/components/MenuCard";
+import MenuCard from "@/components/menu/MenuCard";
 import { PrismaClient } from "@/generated/prisma";
 
 const prisma = new PrismaClient();

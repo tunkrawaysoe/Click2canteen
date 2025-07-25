@@ -1,4 +1,4 @@
-import MenuCard from "@/components/MenuCard";
+import MenuCard from "@/components/menu/MenuCard";
 import { getAllMenus } from "@/lib/data/menu/menu";
 
 export default async function Menu({ params }) {

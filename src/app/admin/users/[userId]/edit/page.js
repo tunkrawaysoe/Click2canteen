@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import UserEditForm from "@/components/UserEditForm";
+import UserEditForm from "@/components/form/UserEditForm";
 
 export default async function UserEditPage({ params }) {
   const { userId } = await params;

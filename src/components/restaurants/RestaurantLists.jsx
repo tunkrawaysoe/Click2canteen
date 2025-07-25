@@ -15,6 +15,9 @@ import { hasPermission } from "@/lib/rbac";
 import { getUser } from "@/lib/data/user/user";
 import RestaurantActions from "./RestaurantActions";
 
+const defaultImageUrl =
+  "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
+
 export default async function RestaurantsList({ isAdmin }) {
   const user = await getUser();
   let restaurants = await getAllRestaurants();
@@ -62,10 +65,7 @@ export default async function RestaurantsList({ isAdmin }) {
             }}
           >
             <Image
-              src={
-                rest.imageUrl ||
-                "https://images.unsplash.com/photo-1555992336-03a23c1f5c54?auto=format&fit=crop&w=800&q=80"
-              }
+              src={rest.imageUrl || defaultImageUrl}
               alt={rest.name}
               fill
               style={{ objectFit: "cover" }}

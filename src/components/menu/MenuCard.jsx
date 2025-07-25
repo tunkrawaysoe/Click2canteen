@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, Typography, Button, Chip, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Chip,
+  Box,
+} from "@mui/material";
 
 export default function MenuCard({
   id,
@@ -10,7 +17,6 @@ export default function MenuCard({
   imageUrl,
   canteenId,
   isActive,
-  
 }) {
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
@@ -60,8 +66,8 @@ export default function MenuCard({
       <Box
         sx={{
           position: "relative",
-          width: { xs: "40%", sm: "100%" },    // 40% width on xs, full on sm+
-          height: { xs: 140, sm: 180 },       // fixed height on small screens
+          width: { xs: "40%", sm: "100%" }, // 40% width on xs, full on sm+
+          height: { xs: 140, sm: 180 }, // fixed height on small screens
           borderRadius: 1,
           overflow: "hidden",
           flexShrink: 0,
@@ -112,11 +118,15 @@ export default function MenuCard({
         </div>
 
         <Box sx={{ mt: 1, display: "flex", gap: 1, flexWrap: "wrap" }}>
-          <Link href={`/canteens/${canteenId}/menu/${id}`} passHref legacyBehavior>
+          <Link
+            href={`/canteens/${canteenId}/menu/${id}`}
+            passHref
+            legacyBehavior
+          >
             <Button
               component="a"
               sx={{
-                backgroundColor: "#253863",
+                background: "linear-gradient(to bottom, #00022E, #001D51)",
                 color: "white",
                 px: 2,
                 py: 0.5,
@@ -124,7 +134,7 @@ export default function MenuCard({
                 fontSize: "0.8rem",
                 textTransform: "none",
                 "&:hover": {
-                  backgroundColor: "#1e2b4f",
+                  background: "#253863",
                 },
               }}
               size="small"

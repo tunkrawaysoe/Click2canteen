@@ -4,7 +4,7 @@ import React from "react";
 import { getUserWithOrders } from "@/lib/data/user/user";
 import { Container, Box, Typography } from "@mui/material";
 
-import OrderHistory from "@/components/UserOrderHistory";
+import OrderHistory from "@/components/orders/UserOrderHistory";
 import ProfileCard from "@/components/ProfileCard";
 
 export default async function ProfilePage() {

@@ -1,5 +1,5 @@
 import { updateRestaurant } from "@/actions/restaurant";
-import RestaurantForm from "@/components/RestaurantForm";
+import RestaurantForm from "@/components/restaurants/RestaurantForm";
 import { getRestaurantById } from "@/lib/data/restaurant/restaurant";
 
 export default async function EditRestaurantPage({ params }) {

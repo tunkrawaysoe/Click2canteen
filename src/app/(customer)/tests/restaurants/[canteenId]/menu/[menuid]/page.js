@@ -1,5 +1,5 @@
 import { getMenuWithAddons } from "@/lib/data/menu/menu";
-import MenuDetailClient from "@/components/MenuDetailClient";
+import MenuDetailClient from "@/components/menu/MenuDetailClient";
 import { getCartAction } from "@/actions/cart";
 import prisma from "@/lib/prisma";
 

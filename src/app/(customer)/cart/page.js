@@ -1,6 +1,6 @@
 import { getCartAction } from "@/actions/cart";
 import Link from "next/link";
-import CartListClient from "./app/cart/CartListClient";
+import CartListClient from "../../../components/CartListClient";
 import prisma from "@/lib/prisma";
 import { Restaurant } from "@mui/icons-material";
 import { getUserProfile } from "@/lib/data/user/user";

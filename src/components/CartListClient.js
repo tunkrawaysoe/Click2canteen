@@ -55,7 +55,10 @@ export default function CartListClient({ cartItems, userId }) {
             .filter(Boolean);
 
           const basePrice = item.menu.price;
-          const addonTotal = itemAddons.reduce((sum, a) => sum + (a?.price || 0), 0);
+          const addonTotal = itemAddons.reduce(
+            (sum, a) => sum + (a?.price || 0),
+            0
+          );
           const itemPrice = basePrice + addonTotal;
 
           return (
@@ -103,7 +106,12 @@ export default function CartListClient({ cartItems, userId }) {
                 <IconButton
                   aria-label="Remove item"
                   onClick={() => handleRemove(item.menuId)}
-                  sx={{ position: "absolute", top: 8, right: 8, color: "error.main" }}
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    color: "error.main",
+                  }}
                 >
                   <Trash2 size={20} strokeWidth={2} />
                 </IconButton>
@@ -113,13 +121,22 @@ export default function CartListClient({ cartItems, userId }) {
                     {item.menu.name}
                   </Typography>
                   {item.menu.restaurant?.name && (
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      gutterBottom
+                    >
                       from <strong>{item.menu.restaurant.name}</strong>
                     </Typography>
                   )}
 
                   {/* Quantity Input */}
-                  <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1}
+                    sx={{ mb: 1 }}
+                  >
                     <Typography variant="body2">Quantity:</Typography>
                     <TextField
                       type="number"
@@ -139,7 +156,9 @@ export default function CartListClient({ cartItems, userId }) {
                       {itemAddons.map((addon) => (
                         <Chip
                           key={addon.id}
-                          label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
+                          label={`${
+                            addon.name
+                          } (+${addon.price.toLocaleString()} MMK)`}
                           size="small"
                           color="primary"
                           variant="outlined"
@@ -153,7 +172,11 @@ export default function CartListClient({ cartItems, userId }) {
 
                 {/* Price Summary */}
                 <Box>
-                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.5 }}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    sx={{ mb: 0.5 }}
+                  >
                     <Typography variant="body2" color="text.secondary">
                       Regular price:
                     </Typography>
@@ -198,9 +221,16 @@ export default function CartListClient({ cartItems, userId }) {
       <Box display="flex" justifyContent="flex-end" mt={3}>
         <Button
           variant="contained"
-          color="primary"
           size="large"
           onClick={() => router.push(`/place-order?userId=${userId}`)}
+          sx={{
+            background: "linear-gradient(to bottom, #00022E, #001D51)",
+            color: "white",
+            textTransform: "none",
+            "&:hover": {
+              background: "#253863",
+            },
+          }}
         >
           Place Order
         </Button>

@@ -1,9 +1,9 @@
 "use client";
 
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
 import {
   LoginLink,
   LogoutLink,
@@ -13,14 +13,16 @@ import { Menu, X, ShoppingCart } from "lucide-react";
 import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
 
-export default function Navbar() {
+function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const { user, isAuthenticated } = useKindeBrowserClient();
 
-  // Fetch cart total quantity for current user or guest
+  // Optional: Skip fetch if user not loaded yet
   useEffect(() => {
+    if (!user) return;
+
     async function fetchCart() {
       const userId = user?.id || "guest";
 
@@ -79,15 +81,16 @@ export default function Navbar() {
         : "border-transparent hover:border-purple-300 text-white"
     }`;
 
-  // Cart badge UI reused for mobile and desktop
-  const CartBadge = totalQuantity > 0 && (
-    <span
-      aria-label={`${totalQuantity} items in cart`}
-      className="absolute -top-3 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-600 rounded-full"
-    >
-      {totalQuantity}
-    </span>
-  );
+  const CartBadge = useMemo(() => {
+    return totalQuantity > 0 ? (
+      <span
+        aria-label={`${totalQuantity} items in cart`}
+        className="absolute -top-3 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-600 rounded-full"
+      >
+        {totalQuantity}
+      </span>
+    ) : null;
+  }, [totalQuantity]);
 
   return (
     <>
@@ -157,6 +160,7 @@ export default function Navbar() {
                     }
                     alt="User Profile"
                     fill
+                    sizes="32px"
                     className="object-cover"
                   />
                 </div>
@@ -253,3 +257,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export default React.memo(Navbar);

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import RestaurantsList from "@/components/RestaurantLists";
+import RestaurantsList from "@/components/restaurants/RestaurantLists";
 import { Plus } from "lucide-react"; // or any icon library you use
-import BackButton from "@/components/BackButton";
+import BackButton from "@/components/buttons/BackButton";
 
 export const metadata = {
   title: "Canteens Page",

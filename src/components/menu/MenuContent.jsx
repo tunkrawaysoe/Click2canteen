@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import BackButton from "./BackButton";
+import BackButton from "../buttons/BackButton";
 import {
   MapPin,
   Phone,
@@ -10,7 +10,7 @@ import {
   Utensils,
   Sparkles,
 } from "lucide-react";
-import MenuCard from "@/components/MenuCard";
+import MenuCard from "@/components/menu/MenuCard";
 import { getAllMenus } from "@/lib/data/menu/menu";
 import { getRestaurantById } from "@/lib/data/restaurant/restaurant";
 import { Stack, Button } from "@mui/material";

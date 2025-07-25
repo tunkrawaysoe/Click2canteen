@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { useFormStatus } from "react-dom";
 import { ArrowLeft } from "lucide-react";
-import BackButton from "./BackButton";
+import BackButton from "../buttons/BackButton";
 
 export default function MenuDetailClient({ menu, cart, userId }) {
   console.log("Menuuu is",menu);

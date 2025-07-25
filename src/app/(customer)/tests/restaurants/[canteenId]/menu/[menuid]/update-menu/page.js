@@ -1,6 +1,6 @@
 import { getMenuWithAddons } from "@/lib/data/menu/menu";
 import { updateMenuWithAddOns } from "@/actions/action";
-import MenuFormClient from "@/components/MenuFormClient";
+import MenuFormClient from "@/components/form/MenuFormClient";
 
 export default async function AddMenuPage({ params }) {
   const { menuid } = params;

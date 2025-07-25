@@ -1,6 +1,6 @@
 // app/canteens/[canteenId]/menu/page.tsx
 import { Suspense } from "react";
-import MenuContent from "@/components/MenuContent";
+import MenuContent from "@/components/menu/MenuContent";
 
 export default async function Menu({ params, searchParams }) {
   const { canteenId } = await params;

@@ -10,7 +10,7 @@ import {
   Chip,
   Grid,
 } from "@mui/material";
-import ConfirmOrderButton from "@/components/ConfirmOrderButton";
+import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
 
 export default async function PlaceOrderPage({ searchParams }) {
   const { userId } = await searchParams;

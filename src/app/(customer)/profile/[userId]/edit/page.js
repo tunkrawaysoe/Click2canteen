@@ -1,5 +1,5 @@
-import BackButton from "@/components/BackButton";
-import UpdateProfileForm from "@/components/UpdateProfileForm";
+import BackButton from "@/components/buttons/BackButton";
+import UpdateProfileForm from "@/components/form/UpdateProfileForm";
 import { getUser } from "@/lib/data/user/user";
 
 export default async function EditPage({ params }) {

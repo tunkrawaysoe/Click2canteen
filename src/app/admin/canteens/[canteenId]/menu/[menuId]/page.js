@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Box, Stack, Skeleton } from "@mui/material";
 import { getMenuWithAddons } from "@/lib/data/menu/menu";
-import MenuDetailClient from "@/components/MenuDetailClient";
+import MenuDetailClient from "@/components/menu/MenuDetailClient";
 import { getCartAction } from "@/actions/cart";
 import prisma from "@/lib/prisma";
 import { getUserProfile } from "@/lib/data/user/user";

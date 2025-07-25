@@ -11,7 +11,7 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import SubmitButton from "./SubmitButton";
+import SubmitButton from "../buttons/SubmitButton";
 import { updateUserAction } from "@/actions/users";
 
 export default function UserEditForm({ user, restaurants }) {
