@@ -5,7 +5,7 @@ import { pusherServer } from "@/lib/pusher";
 import { redis } from "@/lib/redis";
 import { delKey } from "@/lib/utils/cached";
 import { redirect } from "next/navigation";
-
+import { enrichCart,calculateTotal } from "@/lib/data/cart/enrichedcart";
 // Helper function to generate Redis cart key for a user
 const getCartKey = (userId) => `cart:${userId}`;
 
@@ -17,7 +17,7 @@ export async function addToCartAction(
   menuId,
   quantity,
   addOns = [],
-  CACHE_ttl = 300
+  CACHE_ttl = 600
 ) {
   const key = getCartKey(userId);
 
@@ -93,6 +93,8 @@ export async function updateCartQuantity(userId, menuId, quantity) {
   await redis.set(key, JSON.stringify(updatedCart));
 }
 
+
+
 export async function placeOrder(formData) {
   const userId = formData.get("userId");
   if (!userId) throw new Error("User ID missing");
@@ -103,27 +105,10 @@ export async function placeOrder(formData) {
   const cart = cartRaw;
   if (!cart.length) throw new Error("Cart is empty");
 
-  // Fetch full menu info for each cart item
-  const enrichedCart = await Promise.all(
-    cart.map(async (item) => {
-      const menu = await prisma.menu.findUnique({
-        where: { id: item.menuId },
-        include: { addOns: true },
-      });
-      return { ...item, menu };
-    })
-  );
+  const enrichedCart = await enrichCart(cart);
 
   const restaurantId = enrichedCart[0].menu.restaurantId;
-
-  let totalPrice = 0;
-  for (const item of enrichedCart) {
-    const addons = item.addOns
-      .map((id) => item.menu.addOns.find((a) => a.id === id))
-      .filter(Boolean);
-    const addonTotal = addons.reduce((sum, a) => sum + (a?.price || 0), 0);
-    totalPrice += (item.menu.price + addonTotal) * item.quantity;
-  }
+  const totalPrice = calculateTotal(enrichedCart);
 
   const order = await prisma.order.create({
     data: {
@@ -149,7 +134,7 @@ export async function placeOrder(formData) {
   await delKey(`orders:restaurant:${restaurantId}:today`);
   await redis.del(getCartKey(userId));
 
-  // Fetch full enriched order with user and nested relations
+  // Fetch full enriched order with nested relations
   const fullOrder = await prisma.order.findUnique({
     where: { id: order.id },
     include: {
@@ -167,7 +152,6 @@ export async function placeOrder(formData) {
     },
   });
 
-  // Trigger Pusher event with full order data
   await pusherServer.trigger(
     `restaurant-${restaurantId}`,
     "order:new",
@@ -176,3 +160,4 @@ export async function placeOrder(formData) {
 
   redirect(`/order-confirm?orderId=${order.id}`);
 }
+

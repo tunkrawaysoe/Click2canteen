@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCartAction } from "@/actions/cart";
-import prisma from "@/lib/prisma";
+import { enrichCart, calculateTotal } from "@/lib/data/cart/enrichedcart";
+
 import {
   Box,
   Typography,
@@ -10,7 +11,9 @@ import {
   Chip,
   Grid,
 } from "@mui/material";
-import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
+import PaymentSelectorWrapper from "@/components/PaymentSelectorWrapper";
+
+
 
 export default async function PlaceOrderPage({ searchParams }) {
   const { userId } = await searchParams;
@@ -18,21 +21,10 @@ export default async function PlaceOrderPage({ searchParams }) {
   const cartItems = await getCartAction(userId);
   if (!cartItems?.length) return notFound();
 
-  const enrichedCart = (
-    await Promise.all(
-      cartItems.map(async (item) => {
-        const menu = await prisma.menu.findUnique({
-          where: { id: item.menuId },
-          include: { addOns: true },
-        });
-        return menu ? { ...item, menu } : null;
-      })
-    )
-  ).filter(Boolean);
-
+  const enrichedCart = await enrichCart(cartItems);
   if (!enrichedCart.length) return notFound();
 
-  let grandTotal = 0;
+  const grandTotal = calculateTotal(enrichedCart);
 
   return (
     <Box maxWidth="800px" mx="auto" my={5} px={2}>
@@ -53,7 +45,6 @@ export default async function PlaceOrderPage({ searchParams }) {
 
           const itemPrice = item.menu.price + addonTotal;
           const totalForItem = itemPrice * item.quantity;
-          grandTotal += totalForItem;
 
           return (
             <Paper
@@ -75,7 +66,9 @@ export default async function PlaceOrderPage({ searchParams }) {
                         addon ? (
                           <Chip
                             key={addon.id}
-                            label={`${addon.name} (+${addon.price.toLocaleString()} MMK)`}
+                            label={`${
+                              addon.name
+                            } (+${addon.price.toLocaleString()} MMK)`}
                             size="small"
                             variant="outlined"
                             color="primary"
@@ -99,12 +92,7 @@ export default async function PlaceOrderPage({ searchParams }) {
 
       <Divider sx={{ my: 4 }} />
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h5" fontWeight="bold">
-          Total: {grandTotal.toLocaleString()} MMK
-        </Typography>
-        <ConfirmOrderButton userId={userId} />
-      </Stack>
+      <PaymentSelectorWrapper userId={userId} grandTotal={grandTotal} />
     </Box>
   );
 }
