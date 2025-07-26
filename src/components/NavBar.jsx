@@ -106,7 +106,7 @@ function Navbar() {
               <Image src={Logo} alt="Clicked2Canteen Logo" priority />
             </Link>
 
-            <div className="hidden md:flex gap-6 ml-4">
+            <div className="hidden md:flex gap-6 ml-4 mt-3">
               <Link href="/canteens" className={linkStyle("/canteens")}>
                 Canteens
               </Link>
@@ -141,7 +141,7 @@ function Navbar() {
             </Link>
 
             {/* Desktop Profile + Auth */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-4 mt-3">
               <Link
                 href="/profile"
                 aria-label="Profile"
