@@ -95,9 +95,20 @@ export async function placeOrder(formData) {
   const userId = formData.get("userId");
   const paymentMethod = formData.get("paymentMethod") || "cash";
   const paymentUrl = formData.get("paymentProofUrl") || null;
+  const serviceType = formData.get("serviceType") || "SELF_SERVICE";
+  const phoneNumber = formData.get("phoneNumber") || null;
+  const deliveryAddress = formData.get("deliveryAddress") || null;
 
   if (paymentMethod === "kbzpay" && !paymentUrl) {
-    return { error: "Payment proof Image is required for KBZ Pay." };
+    return { error: "Payment proof image is required for KBZ Pay." };
+  }
+
+  if (serviceType === "DELIVERY") {
+    if (!phoneNumber || !deliveryAddress) {
+      return {
+        error: "Phone number and delivery address are required for delivery.",
+      };
+    }
   }
 
   const cartRaw = await redis.get(getCartKey(userId));
@@ -117,6 +128,9 @@ export async function placeOrder(formData) {
       status: "PENDING",
       paymentMethod,
       paymentUrl,
+      phoneNumber,
+      deliveryAddress,
+      serviceType,
       orderItems: {
         create: enrichedCart.map((item) => ({
           menuId: item.menuId,

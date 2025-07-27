@@ -25,7 +25,7 @@ import { updateOrderStatus } from "@/actions/orders"; // Your server action
 import { toast } from "sonner";
 
 function isNewOrder(orderTimestamp) {
-  const TEN_MINUTES = 10 * 60 * 1000;
+  const TEN_MINUTES = 7 * 60 * 1000; // 7 minutes in ms
   return Date.now() - new Date(orderTimestamp).getTime() <= TEN_MINUTES;
 }
 
@@ -103,14 +103,12 @@ export default function OrdersDisplayClient({ restaurantId, initialOrders }) {
     );
 
     try {
-      // Prepare FormData like your server action expects
       const formData = new FormData();
       formData.append("orderId", orderId);
       formData.append("status", newStatus);
 
       await updateOrderStatus(formData);
 
-      // Updating flag off handled on Pusher event, but fallback:
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, updating: false } : o))
       );
@@ -134,6 +132,10 @@ export default function OrdersDisplayClient({ restaurantId, initialOrders }) {
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Customer</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>
+                Phone Number
+              </TableCell>{" "}
+              {/* Added */}
               <TableCell sx={{ fontWeight: "bold" }}>
                 Delivery Address
               </TableCell>
@@ -174,6 +176,8 @@ export default function OrdersDisplayClient({ restaurantId, initialOrders }) {
                       />
                     )}
                   </TableCell>
+                  <TableCell>{order.phoneNumber || "-"}</TableCell>{" "}
+                  {/* Added */}
                   <TableCell>{order.deliveryAddress || "-"}</TableCell>
                   <TableCell align="right">
                     {order.totalPrice?.toLocaleString() || 0}

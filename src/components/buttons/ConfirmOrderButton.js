@@ -8,6 +8,9 @@ export default function ConfirmOrderButton({
   userId,
   paymentMethod,
   paymentProofUrl,
+  phoneNumber,
+  deliveryAddress,
+  serviceType,
 }) {
   const [error, setError] = useState(null);
 
@@ -27,6 +30,13 @@ export default function ConfirmOrderButton({
       <form action={handleSubmit}>
         <input type="hidden" name="userId" value={userId} />
         <input type="hidden" name="paymentMethod" value={paymentMethod} />
+        <input type="hidden" name="serviceType" value={serviceType} />
+        {phoneNumber && (
+          <input type="hidden" name="phoneNumber" value={phoneNumber} />
+        )}
+        {deliveryAddress && (
+          <input type="hidden" name="deliveryAddress" value={deliveryAddress} />
+        )}
         {paymentProofUrl && (
           <input type="hidden" name="paymentProofUrl" value={paymentProofUrl} />
         )}

@@ -30,6 +30,7 @@ export async function updateProfile(formData) {
   const name = formData.get("name");
   const userId = formData.get("userId");
   const profileImage = formData.get("profileImage");
+  const phoneNumber = formData.get("phoneNumber");
 
   if (!userId || !name) return;
 
@@ -38,9 +39,10 @@ export async function updateProfile(formData) {
     data: {
       name,
       profileImage: profileImage || undefined,
+      phoneNumber: phoneNumber || undefined,
     },
   });
 
-  revalidatePath('/profile')
-  redirect('/profile')
+  revalidatePath("/profile");
+  redirect("/profile");
 }

@@ -56,13 +56,23 @@ export default function ProfileCard({ user }) {
             {user.email}
           </Typography>
 
+          {user.phoneNumber && (
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              fontWeight={600}
+              gutterBottom
+            >
+              Phone Number : {user.phoneNumber}
+            </Typography>
+          )}
+
           <Typography variant="body2" color="text.secondary" fontWeight={600}>
             Total Orders: {user.orders.length}
           </Typography>
         </Box>
       </Box>
 
-      {/* Button BELOW the profile info */}
       <Box mt={3} textAlign="center">
         <Button
           component={Link}

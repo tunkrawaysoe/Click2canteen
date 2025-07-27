@@ -2,7 +2,16 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Box, Typography, Stack, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Stack,
+  Paper,
+  TextField,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
 import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
 
 import cashImg from "../../public/logo/cash.png";
@@ -14,12 +23,72 @@ const paymentOptions = [
   { value: "kbzpay", label: "KBZ Pay", imgSrc: kbzImg },
 ];
 
+const serviceOptions = [
+  { value: "SELF_SERVICE", label: "Self Service" },
+  { value: "DELIVERY", label: "Delivery" },
+];
+
 export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
+  const [serviceType, setServiceType] = useState("SELF_SERVICE");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [paymentProofUrl, setPaymentProofUrl] = useState(null);
 
   return (
     <Box my={4} textAlign="center" maxWidth={600} mx="auto">
+      {/* Service Type Selection */}
+      <Box mb={4} textAlign="left" maxWidth={400} mx="auto">
+        <Typography variant="h6" mb={2}>
+          Select Service Type
+        </Typography>
+        <RadioGroup
+          row
+          value={serviceType}
+          onChange={(e) => setServiceType(e.target.value)}
+        >
+          {serviceOptions.map(({ value, label }) => (
+            <FormControlLabel
+              key={value}
+              value={value}
+              control={<Radio />}
+              label={label}
+            />
+          ))}
+        </RadioGroup>
+      </Box>
+
+      {/* Conditional Inputs for Delivery */}
+      {serviceType === "DELIVERY" && (
+        <>
+          <Box mb={3}>
+            <TextField
+              label="Phone Number"
+              fullWidth
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="09xxxxxxxxx"
+              variant="outlined"
+              required
+            />
+          </Box>
+
+          <Box mb={3}>
+            <TextField
+              label="Delivery Address"
+              fullWidth
+              multiline
+              minRows={2}
+              value={deliveryAddress}
+              onChange={(e) => setDeliveryAddress(e.target.value)}
+              placeholder="Enter your delivery address"
+              variant="outlined"
+              required
+            />
+          </Box>
+        </>
+      )}
+
       <Typography variant="h6" mb={3}>
         Choose Payment Method
       </Typography>
@@ -69,81 +138,76 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
         })}
       </Stack>
 
+      {paymentMethod === "kbzpay" && qrCodeUrl && (
+        <Box
+          mt={3}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          mb={4}
+        >
+          <Typography variant="subtitle1" mb={2}>
+            Scan this KBZPay QR Code to Pay:
+          </Typography>
+          <Image
+            src={qrCodeUrl}
+            alt="KBZ Pay QR Code"
+            width={500}
+            height={500}
+            style={{ borderRadius: 16, border: "2px solid #ccc" }}
+          />
+        </Box>
+      )}
+
       {paymentMethod === "kbzpay" && (
-        <>
-          {qrCodeUrl && (
-            <Box
-              mt={3}
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              mb={4}
-            >
-              <Typography variant="subtitle1" mb={2}>
-                Scan this KBZPay QR Code to Pay:
-              </Typography>
-              <Image
-                src={qrCodeUrl}
-                alt="KBZ Pay QR Code"
-                width={500}
-                height={500}
-                style={{ borderRadius: 16, border: "2px solid #ccc" }}
-              />
-            </Box>
-          )}
-
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="flex-start"
-            gap={3}
-            flexWrap="wrap"
-            mb={4}
-          >
-            {/* Upload Dropzone box */}
-            <Box flex="1 1 300px" minWidth={280} maxWidth={300}>
-              <Typography variant="subtitle1" mb={1} textAlign="left">
-                Upload your payment proof:
-              </Typography>
-              <UploadDropzone
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  const url = res?.[0]?.fileUrl || res?.[0]?.url || null;
-                  if (url) {
-                    setPaymentProofUrl(url);
-                    alert("Upload successful!");
-                  } else {
-                    alert("Upload failed. Please try again.");
-                  }
-                }}
-                onUploadError={(error) => {
-                  alert(`Upload error: ${error.message}`);
-                }}
-              />
-            </Box>
-
-            {/* Uploaded proof container */}
-            {paymentProofUrl && (
-              <Paper
-                sx={{
-                  borderRadius: 2,
-                  border: "1px solid #ccc",
-
-                  textAlign: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <Image
-                  src={paymentProofUrl}
-                  alt="Payment Proof"
-                  width={200}
-                  height={200}
-                  style={{ objectFit: "cover", borderRadius: 8 }}
-                />
-              </Paper>
-            )}
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="flex-start"
+          gap={3}
+          flexWrap="wrap"
+          mb={4}
+        >
+          <Box flex="1 1 300px" minWidth={280} maxWidth={300}>
+            <Typography variant="subtitle1" mb={1} textAlign="left">
+              Upload your payment proof:
+            </Typography>
+            <UploadDropzone
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                const url = res?.[0]?.fileUrl || res?.[0]?.url || null;
+                if (url) {
+                  setPaymentProofUrl(url);
+                  alert("Upload successful!");
+                } else {
+                  alert("Upload failed. Please try again.");
+                }
+              }}
+              onUploadError={(error) => {
+                alert(`Upload error: ${error.message}`);
+              }}
+            />
           </Box>
-        </>
+
+          {paymentProofUrl && (
+            <Paper
+              sx={{
+                borderRadius: 2,
+                border: "1px solid #ccc",
+                textAlign: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Image
+                src={paymentProofUrl}
+                alt="Payment Proof"
+                width={200}
+                height={200}
+                style={{ objectFit: "cover", borderRadius: 8 }}
+              />
+            </Paper>
+          )}
+        </Box>
       )}
 
       <Stack
@@ -159,6 +223,9 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
           userId={userId}
           paymentMethod={paymentMethod}
           paymentProofUrl={paymentProofUrl}
+          phoneNumber={serviceType === "DELIVERY" ? phoneNumber : null}
+          deliveryAddress={serviceType === "DELIVERY" ? deliveryAddress : null}
+          serviceType={serviceType}
         />
       </Stack>
     </Box>

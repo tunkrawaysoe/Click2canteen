@@ -8,6 +8,7 @@ import SubmitButton from "../buttons/SubmitButton";
 
 export default function UpdateProfileForm({ user }) {
   const [name, setName] = useState(user.name || "");
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber || "");
   const [imageUrl, setImageUrl] = useState(user.profileImage || "");
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function UpdateProfileForm({ user }) {
           <input type="hidden" name="profileImage" value={imageUrl} />
         )}
 
+        {/* Name */}
         <div>
           <label className="block text-sm font-semibold mb-1">Name</label>
           <input
@@ -39,6 +41,22 @@ export default function UpdateProfileForm({ user }) {
           />
         </div>
 
+        {/* Phone Number */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Phone Number
+          </label>
+          <input
+            type="text"
+            name="phoneNumber"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="09xxxxxxxxx"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Upload */}
         <div>
           <label className="block text-sm font-semibold mb-2">
             Profile Image
@@ -57,7 +75,6 @@ export default function UpdateProfileForm({ user }) {
               alert(`ERROR! ${error.message}`);
             }}
           />
-          {/* Underline blue success message */}
           {uploadSuccess && (
             <p className="mt-6 text-green-700 text-sm font-medium pb-1 select-none">
               Upload completed successfully
@@ -65,6 +82,7 @@ export default function UpdateProfileForm({ user }) {
           )}
         </div>
 
+        {/* Preview */}
         {imageUrl && (
           <div className="mt-1 w-24 h-24 border rounded overflow-hidden">
             <img

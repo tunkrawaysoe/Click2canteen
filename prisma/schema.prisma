@@ -38,6 +38,7 @@ model User {
   profileImage String?
   restaurantId String?
   restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  phoneNumber  String?
   orders       Order[]
 }
 
@@ -76,6 +77,11 @@ model Menu {
   @@index([restaurantId])
 }
 
+enum ServiceType {
+  SELF_SERVICE
+  DELIVERY
+}
+
 model Order {
   id              String      @id @default(cuid())
   user            User        @relation(fields: [userId], references: [id])
@@ -86,10 +92,12 @@ model Order {
   status          OrderStatus @default(PENDING)
   totalPrice      Float
   deliveryAddress String?
-  orderItems      OrderItem[]
+  phoneNumber     String?
+  paymentMethod   String?
+  paymentUrl      String?
+  serviceType     ServiceType @default(SELF_SERVICE) 
 
-  paymentMethod String?
-  paymentUrl    String?
+  orderItems OrderItem[]
 
   @@index([restaurantId])
   @@index([userId])
