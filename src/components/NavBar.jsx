@@ -19,7 +19,6 @@ function Navbar() {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const { user, isAuthenticated } = useKindeBrowserClient();
 
-  // Optional: Skip fetch if user not loaded yet
   useEffect(() => {
     if (!user) return;
 

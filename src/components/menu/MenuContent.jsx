@@ -1,10 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import BackButton from "../buttons/BackButton";
 import {
   MapPin,
   Phone,
-  ArrowLeft,
   CupSoda,
   Sandwich,
   Utensils,
@@ -14,6 +12,7 @@ import MenuCard from "@/components/menu/MenuCard";
 import { getAllMenus } from "@/lib/data/menu/menu";
 import { getRestaurantById } from "@/lib/data/restaurant/restaurant";
 import { Stack, Button } from "@mui/material";
+import { getUser } from "@/lib/data/user/user";
 
 const defaultImageUrl =
   "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=800&q=80";
@@ -25,12 +24,7 @@ const categories = [
   { label: "SNACK", icon: <Sandwich size={16} /> },
 ];
 
-export default async function MenuContent({
-  canteenId,
-  searchParams,
-  category,
-  isAdmin
-}) {
+export default async function MenuContent({ canteenId, category, isAdmin }) {
   const selectedCategory = category || "All";
 
   const restaurant = await getRestaurantById(canteenId);
@@ -41,6 +35,7 @@ export default async function MenuContent({
 
   const specialMenus = menus.filter((item) => item.isSpecial);
   const normalMenus = menus.filter((item) => !item.isSpecial);
+  const user = await getUser();
 
   return (
     <div className="w-[95%] mx-auto py-8">
@@ -125,6 +120,7 @@ export default async function MenuContent({
               price={`MMK ${item.price.toLocaleString()}`}
               imageUrl={item.imageUrl || defaultImageUrl}
               canteenId={canteenId}
+              user={user}
             />
           </div>
         ))}
@@ -143,6 +139,7 @@ export default async function MenuContent({
               imageUrl={item.imageUrl || defaultImageUrl}
               canteenId={canteenId}
               isAdmin={isAdmin}
+              user={user}
             />
           </div>
         ))}
@@ -154,8 +151,7 @@ export default async function MenuContent({
         )}
       </div>
       {/* Back Button */}
-      <BackButton/>
-     
+      <BackButton />
     </div>
   );
 }

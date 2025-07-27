@@ -8,6 +8,7 @@ import {
   Chip,
   Box,
 } from "@mui/material";
+import { hasPermission } from "@/lib/rbac";
 
 export default function MenuCard({
   id,
@@ -17,9 +18,13 @@ export default function MenuCard({
   imageUrl,
   canteenId,
   isActive,
+  user,
 }) {
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
+
+  const canEdit = hasPermission(user, "update", "menu", user?.restaurantId);
+  const canViewDetails = user?.role === "CUSTOMER";
 
   return (
     <Card
@@ -36,8 +41,8 @@ export default function MenuCard({
         gap: { xs: 1, sm: 1.5 },
         opacity: isActive ? 1 : 0.6,
         pointerEvents: isActive ? "auto" : "none",
-        alignItems: "stretch", // for matching heights
-        minHeight: { xs: 140, sm: "auto" }, // fixed height on mobile
+        alignItems: "stretch",
+        minHeight: { xs: 140, sm: "auto" },
       }}
       elevation={3}
     >
@@ -66,8 +71,8 @@ export default function MenuCard({
       <Box
         sx={{
           position: "relative",
-          width: { xs: "40%", sm: "100%" }, // 40% width on xs, full on sm+
-          height: { xs: 140, sm: 180 }, // fixed height on small screens
+          width: { xs: "40%", sm: "100%" },
+          height: { xs: 140, sm: 180 },
           borderRadius: 1,
           overflow: "hidden",
           flexShrink: 0,
@@ -118,57 +123,62 @@ export default function MenuCard({
         </div>
 
         <Box sx={{ mt: 1, display: "flex", gap: 1, flexWrap: "wrap" }}>
-          <Link
-            href={`/canteens/${canteenId}/menu/${id}`}
-            passHref
-            legacyBehavior
-          >
-            <Button
-              component="a"
-              sx={{
-                background: "linear-gradient(to bottom, #00022E, #001D51)",
-                color: "white",
-                px: 2,
-                py: 0.5,
-                borderRadius: 1,
-                fontSize: "0.8rem",
-                textTransform: "none",
-                "&:hover": {
-                  background: "#253863",
-                },
-              }}
-              size="small"
-              variant="contained"
+          {/* CUSTOMER ONLY: Details */}
+          {canViewDetails && (
+            <Link
+              href={`/canteens/${canteenId}/menu/${id}`}
+              passHref
+              legacyBehavior
             >
-              Details
-            </Button>
-          </Link>
+              <Button
+                component="a"
+                sx={{
+                  background: "linear-gradient(to bottom, #00022E, #001D51)",
+                  color: "white",
+                  px: 2,
+                  py: 0.5,
+                  borderRadius: 1,
+                  fontSize: "0.8rem",
+                  textTransform: "none",
+                  "&:hover": {
+                    background: "#253863",
+                  },
+                }}
+                size="small"
+                variant="contained"
+              >
+                Details
+              </Button>
+            </Link>
+          )}
 
-          <Link
-            href={`/admin/canteens/${canteenId}/menu/${id}/edit`}
-            passHref
-            legacyBehavior
-          >
-            <Button
-              component="a"
-              sx={{
-                backgroundColor: "#ca8a04",
-                color: "white",
-                px: 2,
-                py: 0.5,
-                borderRadius: 1,
-                fontSize: "0.8rem",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#b77904",
-                },
-              }}
-              size="small"
-              variant="contained"
+          {canEdit && (
+            <Link
+              href={`/admin/canteens/${canteenId}/menu/${id}/edit`}
+              passHref
+              legacyBehavior
             >
-              Edit
-            </Button>
-          </Link>
+              <Button
+                component="a"
+                sx={{
+                  backgroundColor: "#ca8a04",
+                  color: "white",
+                  px: 2,
+                  py: 0.5,
+                  borderRadius: 1,
+                  fontSize: "0.8rem",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#b77904",
+                  },
+                }}
+                size="small"
+                variant="contained"
+              >
+                Edit
+              </Button>
+            </Link>
+          )}
         </Box>
       </CardContent>
     </Card>

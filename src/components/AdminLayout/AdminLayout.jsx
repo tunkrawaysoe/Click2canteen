@@ -5,19 +5,38 @@ import { useState } from "react";
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Link from "next/link";
 
-export default function AdminLayout({ children }) {
+import { hasPermission } from "@/lib/rbac";
+
+export default function AdminLayout({ children, user }) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const pathname = usePathname();
-  const { user, isAuthenticated, logout } = useKindeBrowserClient();
 
+  // Example: if you want to add an isAuthenticated flag based on user prop
+  const isAuthenticated = Boolean(user);
+
+  // Your nav links with permissions
   const navLinks = [
-    { name: "Users", href: "/admin/users" },
-    { name: "Canteens", href: "/admin/canteens" },
-    { name: "Orders", href: "/admin/orders" },
-    { name: "Order History", href: "/admin/orderhistory" },
+    { name: "Users", href: "/admin/users", action: "read", resource: "user" },
+    {
+      name: "Canteens",
+      href: "/admin/canteens",
+      action: "read",
+      resource: "restaurant",
+    },
+    {
+      name: "Orders",
+      href: "/admin/orders",
+      action: "read",
+      resource: "order",
+    },
+    {
+      name: "Order History",
+      href: "/admin/orderhistory",
+      action: "read",
+      resource: "order",
+    },
   ];
 
   const getIconByName = (name) => {
@@ -58,6 +77,12 @@ export default function AdminLayout({ children }) {
     }
   };
 
+  // Dummy logout function since you don't have useKindeBrowserClient here
+  const logout = () => {
+    // Implement logout or redirect to logout page
+    console.log("Logout clicked");
+  };
+
   return (
     <div className={styles.layout}>
       {/* Top Bar */}
@@ -66,6 +91,7 @@ export default function AdminLayout({ children }) {
           <button
             className={styles.mobileMenuButton}
             onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+            aria-label="Toggle navigation"
           >
             <Image
               width={24}
@@ -74,8 +100,14 @@ export default function AdminLayout({ children }) {
               alt="Hamburger"
             />
           </button>
-          <Link href={'/admin'}>
-            <img src="/logo/logo.svg" alt="Logo" className={styles.logo} />
+          <Link href={"/admin"} onClick={() => setIsMobileNavOpen(false)}>
+            <Image
+              src="/logo/logo.svg"
+              alt="Logo"
+              width={100}
+              height={40}
+              priority
+            />
           </Link>
         </div>
 
@@ -99,7 +131,10 @@ export default function AdminLayout({ children }) {
                   : user.name || "User"}
               </span>
               <button
-                onClick={() => logout()}
+                onClick={() => {
+                  logout();
+                  setIsMobileNavOpen(false);
+                }}
                 className="ml-4 px-3 py-1 bg-white text-black border border-black hover:bg-black hover:text-white rounded transition"
                 aria-label="Logout"
                 type="button"
@@ -108,12 +143,13 @@ export default function AdminLayout({ children }) {
               </button>
             </>
           ) : (
-            <a
+            <Link
               href="/login"
+              onClick={() => setIsMobileNavOpen(false)}
               className="ml-4 px-3 py-1 bg-white text-black border border-black hover:bg-black hover:text-white rounded transition"
             >
               Login
-            </a>
+            </Link>
           )}
         </div>
       </header>
@@ -123,20 +159,32 @@ export default function AdminLayout({ children }) {
         {/* Navigation Sidebar */}
         <nav
           className={`${styles.sidebar} ${isMobileNavOpen ? styles.open : ""}`}
+          aria-label="Main Navigation"
         >
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsMobileNavOpen(false)}
-              className={`${styles.navLink} ${
-                pathname.startsWith(link.href) ? styles.active : ""
-              }`}
-            >
-              <span className={styles.navIcon}>{getIconByName(link.name)}</span>
-              <span className={styles.navText}>{link.name}</span>
-            </a>
-          ))}
+          {navLinks
+            .filter((link) =>
+              hasPermission(
+                user,
+                link.action,
+                link.resource,
+                user?.restaurantId
+              )
+            )
+            .map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsMobileNavOpen(false)}
+                className={`${styles.navLink} ${
+                  pathname.startsWith(link.href) ? styles.active : ""
+                }`}
+              >
+                <span className={styles.navIcon}>
+                  {getIconByName(link.name)}
+                </span>
+                <span className={styles.navText}>{link.name}</span>
+              </Link>
+            ))}
         </nav>
 
         {/* Dynamic Content */}

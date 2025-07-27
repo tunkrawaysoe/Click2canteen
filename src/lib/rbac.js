@@ -1,32 +1,34 @@
 // lib/rbac.js
 
 export const roles = {
-  SYSTEM_ADMIN: ["*"], // full access
+  SYSTEM_ADMIN: [
+    "read:user",
+    "read:restaurant",
+    "create:restaurant",
+    "update:restaurant",
+  ],
   ADMIN: [
     "create:menu",
     "read:menu",
     "update:menu",
     "delete:menu",
     "read:restaurant",
-
-    // add more restaurant permissions as needed
+    "read:order"
   ],
-  CUSTOMER: [
-    "read:menu",
-    "read:restaurant", // allow customers to see restaurants
-  ],
-  GUEST: ["read:restaurant"], // no or minimal permissions
+  CUSTOMER: ["read:menu", "read:restaurant"],
+  GUEST: ["read:restaurant"],
 };
 
 /**
- * Check if user has permission for action on resource.
- * For ADMIN role, restrict access only to their assigned restaurant.
- * Other roles ignore restaurant ownership.
+ * Check if user has permission for an action on a resource.
+ * SYSTEM_ADMIN: full access as defined in the list
+ * ADMIN: can access only resources they own (by restaurantId)
+ * Others: role-based access
  *
- * @param {Object} user - user object with role and optionally restaurantId
+ * @param {Object} user - user object with `role` and optionally `restaurantId`
  * @param {string} action - e.g. 'create', 'read', 'update', 'delete'
- * @param {string} resource - e.g. 'menu', 'restaurant'
- * @param {string} [resourceRestaurantId] - the restaurant ID of the resource to verify ownership
+ * @param {string} resource - e.g. 'menu', 'restaurant', 'user'
+ * @param {string} [resourceRestaurantId] - restaurant ID of the resource, used for ADMIN role
  * @returns {boolean}
  */
 export function hasPermission(user, action, resource, resourceRestaurantId) {
@@ -36,24 +38,20 @@ export function hasPermission(user, action, resource, resourceRestaurantId) {
   const userPermissions = roles[user.role] || [];
 
   if (userPermissions.includes("*")) {
-    // SYSTEM_ADMIN or other roles with full access
     return true;
   }
 
   if (!userPermissions.includes(permission)) {
-    // User lacks this permission completely
     return false;
   }
 
   if (user.role === "ADMIN") {
-    // ADMIN must own the resource (match restaurantId)
+    // ADMINs can only access resources tied to their own restaurant
     if (resourceRestaurantId) {
       return user.restaurantId === resourceRestaurantId;
     }
-    // deny if no resourceRestaurantId provided for ownership check
     return false;
   }
 
-  // Other roles with permission granted, no ownership check
   return true;
 }

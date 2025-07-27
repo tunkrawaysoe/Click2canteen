@@ -6,6 +6,7 @@ import { redis } from "@/lib/redis";
 import { delKey } from "@/lib/utils/cached";
 import { redirect } from "next/navigation";
 import { enrichCart, calculateTotal } from "@/lib/data/cart/enrichedcart";
+import { getUserProfile } from "@/lib/data/user/user";
 // Helper function to generate Redis cart key for a user
 const getCartKey = (userId) => `cart:${userId}`;
 
@@ -98,6 +99,10 @@ export async function placeOrder(formData) {
   const serviceType = formData.get("serviceType") || "SELF_SERVICE";
   const phoneNumber = formData.get("phoneNumber") || null;
   const deliveryAddress = formData.get("deliveryAddress") || null;
+  const user = await getUserProfile();
+  if (!user) {
+    redirect("/api/auth/login?post_login_redirect_url=/place-order");
+  }
 
   if (paymentMethod === "kbzpay" && !paymentUrl) {
     return { error: "Payment proof image is required for KBZ Pay." };

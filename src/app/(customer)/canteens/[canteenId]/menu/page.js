@@ -4,11 +4,16 @@ import MenuContent from "@/components/menu/MenuContent";
 
 export default async function Menu({ params, searchParams }) {
   const { canteenId } = await params;
-  const {category} = await searchParams;
-  console.log(category)
+  const { category } = await searchParams;
+
   return (
     <Suspense fallback={<MenuFallback />}>
-      <MenuContent canteenId={canteenId} searchParams={searchParams} category={category} isadmin={false}/>
+      <MenuContent
+        canteenId={canteenId}
+        searchParams={searchParams}
+        category={category}
+        isadmin={false}
+      />
     </Suspense>
   );
 }

@@ -82,3 +82,32 @@ export async function getMenuWithAddons(menuId, forceRefresh = false) {
   console.timeEnd("🕒 getMenuWithAddons");
   return menu;
 }
+
+export async function getAllSpecialMenus() {
+  const CACHE_KEY = `menu:special:all`;
+  const CACHE_TTL = 300; // cache for 5 minutes
+
+  console.time("🕒 getAllSpecialMenus");
+
+  const cached = await getCachedData(CACHE_KEY);
+  if (cached) {
+    console.log(`✅ [Redis] All special menus loaded from cache`);
+    console.timeEnd("🕒 getAllSpecialMenus");
+    return cached;
+  }
+
+  const specialMenus = await prisma.menu.findMany({
+    where: {
+      isSpecial: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  console.log("⚡ [Database] All special menus loaded from DB and cached");
+  await setCachedData(CACHE_KEY, specialMenus, CACHE_TTL);
+
+  console.timeEnd("🕒 getAllSpecialMenus");
+  return specialMenus;
+}

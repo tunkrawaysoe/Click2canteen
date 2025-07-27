@@ -3,13 +3,12 @@ import Link from "next/link";
 import pizza from "../../../public/images/pizza123.png";
 import AnimatedButton from "@/components/buttons/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
-import { PrismaClient } from "@/generated/prisma"; // adjust as needed
-const prisma = new PrismaClient();
+import { getAllSpecialMenus } from "@/lib/data/menu/menu";
+
+
+export const revalidate = 300;
 export default async function HeroSection() {
-  const specialMenus = await prisma.menu.findMany({
-    where: { isSpecial: true },
-    take: 5, // limit how many to show
-  });
+  const specialMenus = await getAllSpecialMenus();
 
   return (
     <>
@@ -87,7 +86,7 @@ export default async function HeroSection() {
       </section>
       {/* Special menu */}
       <section className="bg-[#FFF8E7] py-10 px-4 sm:px-8 lg:px-16 text-[#1d2941]">
-        <div className="max-w-7xl mx-auto px-4" >
+        <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-4xl font-extrabold text-center mb-4">
             Today's Specials
           </h2>

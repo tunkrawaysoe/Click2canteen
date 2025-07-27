@@ -49,9 +49,14 @@ export async function addMenuWithAddOns(formData) {
   const CACHE_KEY = `menu:all:${restaurantId}`;
   await delKey(CACHE_KEY);
   console.log(`🗑️ Deleted cache key: ${CACHE_KEY}`);
+  // If this menu is special, clear special menus cache too
+  if (isSpecial) {
+    const CACHE_KEY_SPECIAL = `menu:special:all`;
+    await delKey(CACHE_KEY_SPECIAL);
+    console.log(`🗑️ Deleted cache key: ${CACHE_KEY_SPECIAL}`);
+  }
 
   revalidatePath(`/canteens/${restaurantId}/menu`);
-
   redirect(`/canteens/${restaurantId}/menu`);
 }
 
