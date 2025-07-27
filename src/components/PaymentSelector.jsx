@@ -14,9 +14,13 @@ import {
 } from "@mui/material";
 import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
 
+import StorefrontIcon from "@mui/icons-material/Storefront";
+
+
 import cashImg from "../../public/logo/cash.png";
 import kbzImg from "../../public/logo/kbz.png";
 import { UploadDropzone } from "@/lib/utils/uploadthing";
+import { DirectionsBike } from "@mui/icons-material";
 
 const paymentOptions = [
   { value: "cash", label: "Cash", imgSrc: cashImg },
@@ -24,8 +28,16 @@ const paymentOptions = [
 ];
 
 const serviceOptions = [
-  { value: "SELF_SERVICE", label: "Self Service" },
-  { value: "DELIVERY", label: "Delivery" },
+  {
+    value: "SELF_SERVICE",
+    label: "Self Service",
+    icon: <StorefrontIcon sx={{ mr: 1 }} />,
+  },
+  {
+    value: "DELIVERY",
+    label: "Delivery",
+    icon: <DirectionsBike sx={{ mr: 1 }} />,
+  },
 ];
 
 export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
@@ -37,22 +49,28 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
 
   return (
     <Box my={4} textAlign="center" maxWidth={600} mx="auto">
-      {/* Service Type Selection */}
-      <Box mb={4} textAlign="left" maxWidth={400} mx="auto">
+      {/* Centered Service Type Selection with Icons */}
+      <Box mb={4} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h6" mb={2}>
-          Select Service Type
+           Select Service Type
         </Typography>
+
         <RadioGroup
           row
           value={serviceType}
           onChange={(e) => setServiceType(e.target.value)}
         >
-          {serviceOptions.map(({ value, label }) => (
+          {serviceOptions.map(({ value, label, icon }) => (
             <FormControlLabel
               key={value}
               value={value}
               control={<Radio />}
-              label={label}
+              label={
+                <Box display="flex" alignItems="center">
+                  {icon}
+                  {label}
+                </Box>
+              }
             />
           ))}
         </RadioGroup>
@@ -89,8 +107,9 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
         </>
       )}
 
+      {/* Payment Method Selection */}
       <Typography variant="h6" mb={3}>
-        Choose Payment Method
+        💳 Choose Payment Method
       </Typography>
 
       <Stack spacing={2} mb={5} alignItems="center" maxWidth={500} mx="auto">
@@ -138,6 +157,7 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
         })}
       </Stack>
 
+      {/* QR Code for KBZ Pay */}
       {paymentMethod === "kbzpay" && qrCodeUrl && (
         <Box
           mt={3}
@@ -159,6 +179,7 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
         </Box>
       )}
 
+      {/* Upload Payment Proof */}
       {paymentMethod === "kbzpay" && (
         <Box
           display="flex"
@@ -210,6 +231,7 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
         </Box>
       )}
 
+      {/* Total & Confirm Button */}
       <Stack
         direction="row"
         justifyContent="space-between"

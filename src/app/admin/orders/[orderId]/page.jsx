@@ -2,6 +2,7 @@ import { getOrderById } from "@/lib/data/order/orders";
 import { notFound } from "next/navigation";
 import { Box } from "@mui/material";
 import OrderItemsTable from "@/components/orders/OrderItemTable";
+import BackButton from "@/components/buttons/BackButton";
 
 export default async function OrderDetailPage({ params }) {
   const { orderId } = await params;
@@ -21,6 +22,11 @@ export default async function OrderDetailPage({ params }) {
         payMentUrl={payMentUrl}
         serviceType={serviceType}
       />
+
+      {/* Add margin-top here for spacing */}
+      <Box mt={3} >
+        <BackButton />
+      </Box>
     </Box>
   );
 }

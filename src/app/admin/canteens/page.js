@@ -1,27 +1,29 @@
-import Link from "next/link";
 import RestaurantsList from "@/components/restaurants/RestaurantLists";
-import { Plus } from "lucide-react"; // or any icon library you use
-import BackButton from "@/components/buttons/BackButton";
+import { getUser } from "@/lib/data/user/user";
+import { hasPermission } from "@/lib/rbac";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 
-export const metadata = {
-  title: "Canteens Page",
-  description: "View and manage all canteens",
-};
+export default async function CanteensPage() {
+  const user = await getUser();
 
-export default function CanteensPage() {
+  const canCreateCanteen = hasPermission(user, "create", "restaurant");
+
   return (
     <div className="p-6">
-      <div className="flex  justify-end mb-6">
-        <Link
-          href="/admin/canteens/new"
-          className="flex items-center gap-2 text-white px-4 py-2 rounded transition"
-          style={{
-            background: "linear-gradient(to bottom, #00022E, #001D51)",
-          }}
-        >
-          <Plus size={18} />
-          Add New Canteen
-        </Link>
+      <div className="flex justify-end mb-6">
+        {canCreateCanteen && (
+          <Link
+            href="/admin/canteens/new"
+            className="flex items-center gap-2 text-white px-4 py-2 rounded transition"
+            style={{
+              background: "linear-gradient(to bottom, #00022E, #001D51)",
+            }}
+          >
+            <Plus size={18} />
+            Add New Canteen
+          </Link>
+        )}
       </div>
 
       <RestaurantsList isAdmin={true} />

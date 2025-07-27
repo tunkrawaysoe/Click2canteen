@@ -17,17 +17,14 @@ import {
   Paper,
   CircularProgress,
 } from "@mui/material";
-import { useFormStatus } from "react-dom";
-import { ArrowLeft } from "lucide-react";
 import BackButton from "../buttons/BackButton";
 
 export default function MenuDetailClient({ menu, cart, userId }) {
-  console.log("Menuuu is",menu);
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { pending } = useFormStatus();
   const router = useRouter();
 
   const defaultImageUrl =
@@ -48,6 +45,8 @@ export default function MenuDetailClient({ menu, cart, userId }) {
 
   const handleAddToCart = async () => {
     try {
+      setIsLoading(true);
+
       if (cart?.length > 0) {
         const existingRestaurantId = cart[0].menu?.restaurantId;
         if (
@@ -65,15 +64,15 @@ export default function MenuDetailClient({ menu, cart, userId }) {
     } catch (err) {
       console.error("Failed to add to cart:", err);
       showError("Failed to add to cart. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <Paper elevation={3} sx={{ maxWidth: 600, mx: "auto", p: 2, mt: 4 }}>
-      {/* Back Button */}
       <BackButton />
 
-      {/* Image */}
       <Box
         sx={{
           position: "relative",
@@ -92,7 +91,6 @@ export default function MenuDetailClient({ menu, cart, userId }) {
         />
       </Box>
 
-      {/* Name & Description */}
       <Typography variant="h5" fontWeight="bold" gutterBottom>
         {menu.name}
       </Typography>
@@ -105,7 +103,6 @@ export default function MenuDetailClient({ menu, cart, userId }) {
         Price: {menu.price.toLocaleString()} MMK
       </Typography>
 
-      {/* Quantity */}
       <Box sx={{ mt: 3 }}>
         <Typography fontWeight={500}>Quantity</Typography>
         <TextField
@@ -118,7 +115,6 @@ export default function MenuDetailClient({ menu, cart, userId }) {
         />
       </Box>
 
-      {/* Add-ons */}
       {menu.addOns?.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Typography fontWeight={500} gutterBottom>
@@ -141,19 +137,17 @@ export default function MenuDetailClient({ menu, cart, userId }) {
         </Box>
       )}
 
-      {/* Error */}
       {errorMessage && (
         <Alert severity="error" sx={{ mt: 3 }}>
           {errorMessage}
         </Alert>
       )}
 
-      {/* Add to Cart Button */}
       <Button
         onClick={handleAddToCart}
         variant="contained"
         fullWidth
-        disabled={pending}
+        disabled={isLoading}
         sx={{
           mt: 4,
           py: 1.5,
@@ -170,7 +164,7 @@ export default function MenuDetailClient({ menu, cart, userId }) {
           },
         }}
       >
-        {pending ? (
+        {isLoading ? (
           <Stack
             direction="row"
             alignItems="center"

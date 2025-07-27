@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+
 import { getCartAction } from "@/actions/cart";
 import { enrichCart, calculateTotal } from "@/lib/data/cart/enrichedcart";
+
 import PaymentSelector from "@/components/PaymentSelector";
 
 import {
@@ -23,8 +25,6 @@ export default async function PlaceOrderPage({ searchParams }) {
   if (!enrichedCart.length) return notFound();
 
   const grandTotal = calculateTotal(enrichedCart);
-
-  // Get QR Code URL from first menu item's restaurant
   const qrCodeUrl = enrichedCart[0].menu.restaurant.qrCodeUrl;
 
   return (
@@ -43,7 +43,6 @@ export default async function PlaceOrderPage({ searchParams }) {
             (sum, addon) => sum + (addon?.price || 0),
             0
           );
-
           const itemPrice = item.menu.price + addonTotal;
           const totalForItem = itemPrice * item.quantity;
 
@@ -58,9 +57,11 @@ export default async function PlaceOrderPage({ searchParams }) {
                   <Typography variant="h6" fontWeight={600}>
                     {item.menu.name}
                   </Typography>
+
                   <Typography variant="body2" color="text.secondary">
                     Quantity: {item.quantity}
                   </Typography>
+
                   {selectedAddOns.length > 0 && (
                     <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
                       {selectedAddOns.map((addon) =>

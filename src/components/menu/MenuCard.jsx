@@ -145,7 +145,7 @@ export default function MenuCard({
           </Link>
 
           <Link
-            href={`/tests/restaurants/${canteenId}/menu/${id}/update-menu`}
+            href={`/admin/canteens/${canteenId}/menu/${id}/edit`}
             passHref
             legacyBehavior
           >

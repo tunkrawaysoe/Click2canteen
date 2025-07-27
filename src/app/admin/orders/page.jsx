@@ -21,5 +21,7 @@ export default async function OrdersPage() {
   }
 
   const orders = await getOrdersByRestaurantId(restaurantId, true);
-  return <OrdersDisplayClient restaurantId={restaurantId} initialOrders={orders} />;
+  return (
+    <OrdersDisplayClient restaurantId={restaurantId} initialOrders={orders} />
+  );
 }

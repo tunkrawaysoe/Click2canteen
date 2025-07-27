@@ -142,7 +142,7 @@ export default async function RestaurantsList({ isAdmin }) {
 
               {hasPermission(user, "create", "menu", rest.id) && (
                 <Link
-                  href={`/canteens/${rest.id}/add-menu`}
+                  href={`/admin/canteens/${rest.id}/add-menu`}
                   passHref
                   legacyBehavior
                 >

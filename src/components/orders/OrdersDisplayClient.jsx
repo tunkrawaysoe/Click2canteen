@@ -89,7 +89,7 @@ export default function OrdersDisplayClient({ restaurantId, initialOrders }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setOrders((prev) => [...prev]); // trigger re-render to update "New" highlight
+      setOrders((prev) => [...prev]);
     }, 60000);
     return () => clearInterval(interval);
   }, []);

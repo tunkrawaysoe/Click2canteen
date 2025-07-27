@@ -17,14 +17,25 @@ import {
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 import SubmitButton from "../buttons/SubmitButton";
+import { UploadDropzone } from "@/lib/utils/uploadthing";
 
-export default function MenuFormClient({ canteenId, onSubmit, submitLabel }) {
-  const [addOns, setAddOns] = useState([{ name: "", price: "" }]);
+export default function MenuFormClient({
+  canteenId,
+  onSubmit,
+  submitLabel,
+  defaultValues = {},
+}) {
+  const [addOns, setAddOns] = useState(
+    defaultValues.addOns?.length > 0
+      ? defaultValues.addOns
+      : [{ name: "", price: "" }]
+  );
+  const [imageUrl, setImageUrl] = useState(defaultValues.image || "");
 
   const handleAddOnChange = (index, field, value) => {
-    const newAddOns = [...addOns];
-    newAddOns[index][field] = value;
-    setAddOns(newAddOns);
+    const updated = [...addOns];
+    updated[index][field] = value;
+    setAddOns(updated);
   };
 
   const addAddOnField = () => {
@@ -41,8 +52,8 @@ export default function MenuFormClient({ canteenId, onSubmit, submitLabel }) {
       onSubmit={async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
+        formData.append("image", imageUrl);
 
-        // Append add-ons with keys your server expects
         addOns.forEach(({ name, price }) => {
           formData.append("addOnName", name);
           formData.append("addOnPrice", price || "0");
@@ -58,26 +69,37 @@ export default function MenuFormClient({ canteenId, onSubmit, submitLabel }) {
         gap: 3,
       }}
     >
-      <Typography variant="h5" fontWeight="bold">
-        {submitLabel}
-      </Typography>
-
+    
       <input type="hidden" name="restaurantId" value={canteenId} />
 
-      <TextField name="name" label="Menu Name" required fullWidth />
+      {defaultValues.id && (
+        <input type="hidden" name="menuId" value={defaultValues.id} />
+      )}
+
+      <TextField
+        name="name"
+        label="Menu Name"
+        required
+        fullWidth
+        defaultValue={defaultValues.name}
+      />
 
       <TextField
         name="price"
         label="Price"
-        type="number"
         inputProps={{ step: "0.01" }}
         required
         fullWidth
+        defaultValue={defaultValues.price}
       />
 
       <FormControl fullWidth required>
         <InputLabel id="category-label">Category</InputLabel>
-        <Select labelId="category-label" name="category" defaultValue="">
+        <Select
+          labelId="category-label"
+          name="category"
+          defaultValue={defaultValues.category || ""}
+        >
           <MenuItem value="APPETIZER">Appetizer</MenuItem>
           <MenuItem value="MAIN">Main</MenuItem>
           <MenuItem value="DESSERT">Dessert</MenuItem>
@@ -92,64 +114,104 @@ export default function MenuFormClient({ canteenId, onSubmit, submitLabel }) {
         multiline
         rows={3}
         fullWidth
+        defaultValue={defaultValues.description}
       />
 
       <FormControlLabel
-        control={<Checkbox name="isSpecial" />}
+        control={
+          <Checkbox name="isSpecial" defaultChecked={defaultValues.isSpecial} />
+        }
         label="Mark as Special"
       />
 
       <FormControlLabel
-        control={<Checkbox name="isActive" defaultChecked />}
+        control={
+          <Checkbox name="isActive" defaultChecked={defaultValues.isActive} />
+        }
         label="In Stock"
       />
 
+      {/* Image Upload */}
+      <Box>
+        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+          Upload Image
+        </Typography>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Preview"
+            style={{
+              width: "100%",
+              maxHeight: "250px",
+              objectFit: "cover",
+              borderRadius: "12px",
+              marginBottom: "1rem",
+            }}
+          />
+        )}
+        <UploadDropzone
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            setImageUrl(res[0].url);
+          }}
+          onUploadError={(err) => {
+            console.error("Upload error:", err);
+            alert("Image upload failed");
+          }}
+        />
+      </Box>
+
+      {/* Add-ons */}
       <Box>
         <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
           Add-ons
         </Typography>
-        {addOns.map((addOn, i) => (
-          <Stack key={i} direction="row" spacing={2} alignItems="center" mb={2}>
+        {addOns.map((addOn, index) => (
+          <Stack
+            key={index}
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            mb={2}
+          >
             <TextField
               label="Name"
               value={addOn.name}
-              onChange={(e) => handleAddOnChange(i, "name", e.target.value)}
+              onChange={(e) => handleAddOnChange(index, "name", e.target.value)}
               required
               fullWidth
-              name={`addOnName_${i}`} // Not needed for FormData, but okay to have
+              name={`addOnName_${index}`}
             />
             <TextField
               label="Price"
-              type="number"
               inputProps={{ step: "0.01", min: 0 }}
               value={addOn.price}
-              onChange={(e) => handleAddOnChange(i, "price", e.target.value)}
+              onChange={(e) =>
+                handleAddOnChange(index, "price", e.target.value)
+              }
               required
               sx={{ width: 100 }}
-              name={`addOnPrice_${i}`} // Not needed for FormData, but okay to have
+              name={`addOnPrice_${index}`}
             />
             <IconButton
-              aria-label="remove add-on"
-              onClick={() => removeAddOnField(i)}
+              onClick={() => removeAddOnField(index)}
               disabled={addOns.length === 1}
             >
               <Remove />
             </IconButton>
           </Stack>
         ))}
-
         <Button
-          type="button"
           variant="outlined"
-          startIcon={<Add />}
           onClick={addAddOnField}
+          startIcon={<Add />}
           sx={{ mt: 1 }}
         >
           Add Another Add-on
         </Button>
       </Box>
 
-      <SubmitButton label="Add memu"/>
+      <SubmitButton label={submitLabel} />
     </Box>
   );
 }

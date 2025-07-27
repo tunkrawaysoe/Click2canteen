@@ -63,34 +63,44 @@ export async function updateMenuWithAddOns(formData) {
     throw new Error("Missing menuId or restaurantId");
   }
 
-  // Extract main fields
-  const name = formData.get("name") || "";
-  const price = parseFloat(formData.get("price") || "0");
-  const category = formData.get("category") || "MAIN";
-  const description = formData.get("description") || "";
-  const imageUrl = formData.get("imageUrl") || "";
+  const name = formData.get("name")?.toString() || "";
+  const price = parseFloat(formData.get("price")?.toString() || "0");
+  const category = formData.get("category")?.toString() || "MAIN";
+  const description = formData.get("description")?.toString() || "";
+  const imageUrl = formData.get("image")?.toString() || "";
   const isActive = formData.get("isActive") === "on";
   const isSpecial = formData.get("isSpecial") === "on";
 
-  // Extract add-ons
   const addOnNames = formData.getAll("addOnName");
   const addOnPrices = formData.getAll("addOnPrice");
 
   const newAddOns = addOnNames
     .map((name, i) => ({
-      name: name.trim(),
-      price: parseFloat(addOnPrices[i]),
+      name: name.toString().trim(),
+      price: parseFloat(addOnPrices[i]?.toString() || "0"),
     }))
     .filter((a) => a.name !== "" && !isNaN(a.price));
 
-  console.log("🔁 Updating menu:", menuId);
-  console.log("🧩 New AddOns:", newAddOns);
+  const existingAddOns = await prisma.addOn.findMany({
+    where: { menuId: menuId.toString() },
+    select: { id: true },
+  });
 
-  // Transaction: update menu + delete old addOns + create new ones
+  const addOnIds = existingAddOns.map((a) => a.id);
+
   await prisma.$transaction([
-    // Update the menu
+    prisma.orderItemAddOn.deleteMany({
+      where: {
+        addOnId: { in: addOnIds },
+      },
+    }),
+
+    prisma.addOn.deleteMany({
+      where: { menuId: menuId.toString() },
+    }),
+
     prisma.menu.update({
-      where: { id: menuId },
+      where: { id: menuId.toString() },
       data: {
         name,
         price,
@@ -102,18 +112,13 @@ export async function updateMenuWithAddOns(formData) {
       },
     }),
 
-    // Delete all previous addOns
-    prisma.addOn.deleteMany({
-      where: { menuId },
-    }),
-
-    // Add the new ones if any
+    // Step 5: Create new AddOns if any
     ...(newAddOns.length > 0
       ? [
           prisma.addOn.createMany({
             data: newAddOns.map((a) => ({
               ...a,
-              menuId,
+              menuId: menuId.toString(),
             })),
           }),
         ]
