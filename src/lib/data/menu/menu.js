@@ -10,7 +10,8 @@ export async function getAllMenus(
   const CACHE_KEY = `menu:all:${canteenId}${categoryKey}`;
   const CACHE_TTL = 300;
 
-  console.time("🕒 getAllMenus");
+  const label = `🕒 getAllMenus:${canteenId}${categoryKey}`;
+  console.time(label);
 
   if (forceRefresh) {
     await delKey(CACHE_KEY);
@@ -20,7 +21,7 @@ export async function getAllMenus(
   const cached = await getCachedData(CACHE_KEY);
   if (cached) {
     console.log(`✅ [Redis] Menus loaded from cache ${CACHE_KEY}`);
-    console.timeEnd("🕒 getAllMenus");
+    console.timeEnd(label);
     return cached;
   }
 
@@ -42,7 +43,7 @@ export async function getAllMenus(
   console.log("⚡ [Database] Menus loaded from DB and cached");
   await setCachedData(CACHE_KEY, menus, CACHE_TTL);
 
-  console.timeEnd("🕒 getAllMenus");
+  console.timeEnd(label);
   return menus;
 }
 
@@ -50,7 +51,8 @@ export async function getMenuWithAddons(menuId, forceRefresh = false) {
   const CACHE_KEY = `menu:single:${menuId}`;
   const CACHE_TTL = 300;
 
-  console.time("🕒 getMenuWithAddons");
+  const label = `🕒 getMenuWithAddons:${menuId}`;
+  console.time(label);
 
   if (forceRefresh) {
     await delKey(CACHE_KEY);
@@ -60,7 +62,7 @@ export async function getMenuWithAddons(menuId, forceRefresh = false) {
   const cached = await getCachedData(CACHE_KEY);
   if (cached) {
     console.log(`✅ [Redis] Menu loaded from cache: ${menuId}`);
-    console.timeEnd("🕒 getMenuWithAddons");
+    console.timeEnd(label);
     return cached;
   }
 
@@ -72,14 +74,14 @@ export async function getMenuWithAddons(menuId, forceRefresh = false) {
   });
 
   if (!menu) {
-    console.timeEnd("🕒 getMenuWithAddons");
+    console.timeEnd(label);
     throw new Error(`Menu not found for id: ${menuId}`);
   }
 
   console.log("⚡ [Database] Menu loaded from DB and cached");
   await setCachedData(CACHE_KEY, menu, CACHE_TTL);
 
-  console.timeEnd("🕒 getMenuWithAddons");
+  console.timeEnd(label);
   return menu;
 }
 
@@ -87,12 +89,13 @@ export async function getAllSpecialMenus() {
   const CACHE_KEY = `menu:special:all`;
   const CACHE_TTL = 300; // cache for 5 minutes
 
-  console.time("🕒 getAllSpecialMenus");
+  const label = `🕒 getAllSpecialMenus`;
+  console.time(label);
 
   const cached = await getCachedData(CACHE_KEY);
   if (cached) {
     console.log(`✅ [Redis] All special menus loaded from cache`);
-    console.timeEnd("🕒 getAllSpecialMenus");
+    console.timeEnd(label);
     return cached;
   }
 
@@ -108,6 +111,6 @@ export async function getAllSpecialMenus() {
   console.log("⚡ [Database] All special menus loaded from DB and cached");
   await setCachedData(CACHE_KEY, specialMenus, CACHE_TTL);
 
-  console.timeEnd("🕒 getAllSpecialMenus");
+  console.timeEnd(label);
   return specialMenus;
 }

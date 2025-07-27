@@ -8,15 +8,14 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { hasPermission } from "@/lib/rbac";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 export default function AdminLayout({ children, user }) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const pathname = usePathname();
 
-  // Example: if you want to add an isAuthenticated flag based on user prop
   const isAuthenticated = Boolean(user);
 
-  // Your nav links with permissions
   const navLinks = [
     { name: "Users", href: "/admin/users", action: "read", resource: "user" },
     {
@@ -77,12 +76,6 @@ export default function AdminLayout({ children, user }) {
     }
   };
 
-  // Dummy logout function since you don't have useKindeBrowserClient here
-  const logout = () => {
-    // Implement logout or redirect to logout page
-    console.log("Logout clicked");
-  };
-
   return (
     <div className={styles.layout}>
       {/* Top Bar */}
@@ -118,29 +111,26 @@ export default function AdminLayout({ children, user }) {
         >
           {isAuthenticated && user ? (
             <>
-              <Image
-                src={user.picture}
-                alt={user.name || "Profile"}
-                width={40}
-                height={40}
-                className={styles.profile}
-              />
+              {user.picture ? (
+                <Image
+                  src={user.picture}
+                  alt={user.name || "Profile"}
+                  width={40}
+                  height={40}
+                  className={styles.profile}
+                />
+              ) : null}
               <span>
                 {user.given_name
                   ? `${user.given_name} ${user.family_name || ""}`.trim()
                   : user.name || "User"}
               </span>
-              <button
-                onClick={() => {
-                  logout();
-                  setIsMobileNavOpen(false);
-                }}
+              <LogoutLink
                 className="ml-4 px-3 py-1 bg-white text-black border border-black hover:bg-black hover:text-white rounded transition"
-                aria-label="Logout"
-                type="button"
+                onClick={() => setIsMobileNavOpen(false)}
               >
                 Logout
-              </button>
+              </LogoutLink>
             </>
           ) : (
             <Link
@@ -179,9 +169,7 @@ export default function AdminLayout({ children, user }) {
                   pathname.startsWith(link.href) ? styles.active : ""
                 }`}
               >
-                <span className={styles.navIcon}>
-                  {getIconByName(link.name)}
-                </span>
+                <span className={styles.navIcon}>{getIconByName(link.name)}</span>
                 <span className={styles.navText}>{link.name}</span>
               </Link>
             ))}

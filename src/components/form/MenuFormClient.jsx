@@ -69,7 +69,6 @@ export default function MenuFormClient({
         gap: 3,
       }}
     >
-    
       <input type="hidden" name="restaurantId" value={canteenId} />
 
       {defaultValues.id && (
@@ -108,6 +107,45 @@ export default function MenuFormClient({
         </Select>
       </FormControl>
 
+      {/* Image Upload */}
+      {/* Image Upload */}
+      <Box>
+        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+          Upload Image
+        </Typography>
+
+        <UploadDropzone
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            setImageUrl(res[0].url);
+          }}
+          onUploadError={(err) => {
+            console.error("Upload error:", err);
+            alert("Image upload failed");
+          }}
+        />
+
+        {imageUrl && (
+          <>
+            <img
+              src={imageUrl}
+              alt="Preview"
+              style={{
+                width: "150px",
+                height: "150px",
+                objectFit: "cover",
+                borderRadius: "12px",
+                marginBottom: "0.5rem",
+                marginTop: "1rem",
+              }}
+            />
+            <Typography variant="body2" color="success.main" sx={{ mb: 2 }}>
+              Image uploaded successfully!
+            </Typography>
+          </>
+        )}
+      </Box>
+
       <TextField
         name="description"
         label="Description"
@@ -119,47 +157,27 @@ export default function MenuFormClient({
 
       <FormControlLabel
         control={
-          <Checkbox name="isSpecial" defaultChecked={defaultValues.isSpecial} />
+          <Checkbox
+            name="isSpecial"
+            defaultChecked={Boolean(defaultValues.isSpecial)}
+          />
         }
         label="Mark as Special"
       />
 
       <FormControlLabel
         control={
-          <Checkbox name="isActive" defaultChecked={defaultValues.isActive} />
+          <Checkbox
+            name="isActive"
+            defaultChecked={
+              defaultValues.isActive === undefined
+                ? true
+                : Boolean(defaultValues.isActive)
+            }
+          />
         }
         label="In Stock"
       />
-
-      {/* Image Upload */}
-      <Box>
-        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-          Upload Image
-        </Typography>
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt="Preview"
-            style={{
-              width: "100%",
-              maxHeight: "250px",
-              objectFit: "cover",
-              borderRadius: "12px",
-              marginBottom: "1rem",
-            }}
-          />
-        )}
-        <UploadDropzone
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            setImageUrl(res[0].url);
-          }}
-          onUploadError={(err) => {
-            console.error("Upload error:", err);
-            alert("Image upload failed");
-          }}
-        />
-      </Box>
 
       {/* Add-ons */}
       <Box>
@@ -178,7 +196,6 @@ export default function MenuFormClient({
               label="Name"
               value={addOn.name}
               onChange={(e) => handleAddOnChange(index, "name", e.target.value)}
-              required
               fullWidth
               name={`addOnName_${index}`}
             />
@@ -189,11 +206,11 @@ export default function MenuFormClient({
               onChange={(e) =>
                 handleAddOnChange(index, "price", e.target.value)
               }
-              required
               sx={{ width: 100 }}
               name={`addOnPrice_${index}`}
             />
             <IconButton
+              aria-label="Remove add-on"
               onClick={() => removeAddOnField(index)}
               disabled={addOns.length === 1}
             >
