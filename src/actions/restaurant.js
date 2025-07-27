@@ -19,6 +19,7 @@ export async function addRestaurant(formData) {
   const phone = formData.get("phone");
   const address = formData.get("address");
   const imageUrl = formData.get("imageUrl") || null;
+  const qrCodeUrl = formData.get("qrCodeUrl") || null; 
   const isOpen = formData.get("isOpen") === "on";
   const isActive = formData.get("isActive") === "on";
 
@@ -33,6 +34,7 @@ export async function addRestaurant(formData) {
         phone,
         address,
         imageUrl,
+        qrCodeUrl,
         isOpen,
         isActive,
       },
@@ -40,13 +42,12 @@ export async function addRestaurant(formData) {
 
     await delKey("restaurants:all");
     revalidatePath("/admin/canteens");
-    return { success : true}
+
+    return { success: true };
   } catch (err) {
     console.error("❌ Create failed:", err);
     return { error: "Something went wrong while creating restaurant" };
   }
-
-  
 }
 
 export async function updateRestaurant(formData) {

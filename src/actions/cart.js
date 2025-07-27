@@ -5,7 +5,7 @@ import { pusherServer } from "@/lib/pusher";
 import { redis } from "@/lib/redis";
 import { delKey } from "@/lib/utils/cached";
 import { redirect } from "next/navigation";
-import { enrichCart,calculateTotal } from "@/lib/data/cart/enrichedcart";
+import { enrichCart, calculateTotal } from "@/lib/data/cart/enrichedcart";
 // Helper function to generate Redis cart key for a user
 const getCartKey = (userId) => `cart:${userId}`;
 
@@ -30,8 +30,6 @@ export async function addToCartAction(
   } catch (err) {
     console.error("Failed to parse cart from Redis:", err);
   }
-
-
 
   const existingIndex = cart.findIndex(
     (item) =>
@@ -93,20 +91,21 @@ export async function updateCartQuantity(userId, menuId, quantity) {
   await redis.set(key, JSON.stringify(updatedCart));
 }
 
-
-
 export async function placeOrder(formData) {
   const userId = formData.get("userId");
-  if (!userId) throw new Error("User ID missing");
+  const paymentMethod = formData.get("paymentMethod") || "cash";
+  const paymentUrl = formData.get("paymentProofUrl") || null;
+
+  if (paymentMethod === "kbzpay" && !paymentUrl) {
+    return { error: "Payment proof Image is required for KBZ Pay." };
+  }
 
   const cartRaw = await redis.get(getCartKey(userId));
-  if (!cartRaw) throw new Error("Cart is empty");
+  if (!cartRaw || !cartRaw.length) {
+    return { error: "Cart is empty." };
+  }
 
-  const cart = cartRaw;
-  if (!cart.length) throw new Error("Cart is empty");
-
-  const enrichedCart = await enrichCart(cart);
-
+  const enrichedCart = await enrichCart(cartRaw);
   const restaurantId = enrichedCart[0].menu.restaurantId;
   const totalPrice = calculateTotal(enrichedCart);
 
@@ -116,6 +115,8 @@ export async function placeOrder(formData) {
       restaurantId,
       totalPrice,
       status: "PENDING",
+      paymentMethod,
+      paymentUrl,
       orderItems: {
         create: enrichedCart.map((item) => ({
           menuId: item.menuId,
@@ -129,12 +130,10 @@ export async function placeOrder(formData) {
     },
   });
 
-  // Clear related Redis caches
   await delKey(`orders:restaurant:${restaurantId}`);
   await delKey(`orders:restaurant:${restaurantId}:today`);
   await redis.del(getCartKey(userId));
 
-  // Fetch full enriched order with nested relations
   const fullOrder = await prisma.order.findUnique({
     where: { id: order.id },
     include: {
@@ -142,11 +141,7 @@ export async function placeOrder(formData) {
       orderItems: {
         include: {
           menu: true,
-          orderItemAddOns: {
-            include: {
-              addOn: true,
-            },
-          },
+          orderItemAddOns: { include: { addOn: true } },
         },
       },
     },
@@ -160,4 +155,3 @@ export async function placeOrder(formData) {
 
   redirect(`/order-confirm?orderId=${order.id}`);
 }
-

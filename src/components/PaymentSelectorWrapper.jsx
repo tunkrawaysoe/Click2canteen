@@ -5,7 +5,11 @@ import { Stack, Typography } from "@mui/material";
 import PaymentSelector from "./PaymentSelector";
 import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
 
-export default function PaymentSelectorWrapper({ userId, grandTotal }) {
+export default function PaymentSelectorWrapper({
+  userId,
+  grandTotal,
+  qrCodeUrl,
+}) {
   const [paymentMethod, setPaymentMethod] = useState("cash");
 
   return (
@@ -13,6 +17,7 @@ export default function PaymentSelectorWrapper({ userId, grandTotal }) {
       <PaymentSelector
         paymentMethod={paymentMethod}
         setPaymentMethod={setPaymentMethod}
+        qrCodeUrl={qrCodeUrl}
       />
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant="h5" fontWeight="bold">

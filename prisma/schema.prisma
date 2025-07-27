@@ -42,19 +42,20 @@ model User {
 }
 
 model Restaurant {
-  id            String   @id @default(cuid())
-  name          String
-  phone         String
-  address       String
-  imageUrl      String?
-  isOpen        Boolean  @default(true)
-  isActive      Boolean  @default(true)
-  deliveryPrice Float    @default(0) 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  users         User[]
-  menus         Menu[]
-  orders        Order[]
+  id        String  @id @default(cuid())
+  name      String
+  phone     String
+  address   String
+  imageUrl  String?
+  qrCodeUrl String?
+  isOpen    Boolean @default(true)
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  menus     Menu[]
+  orders    Order[]
 }
 
 model Menu {
@@ -86,6 +87,9 @@ model Order {
   totalPrice      Float
   deliveryAddress String?
   orderItems      OrderItem[]
+
+  paymentMethod String?
+  paymentUrl    String?
 
   @@index([restaurantId])
   @@index([userId])

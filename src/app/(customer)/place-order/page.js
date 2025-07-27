@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCartAction } from "@/actions/cart";
 import { enrichCart, calculateTotal } from "@/lib/data/cart/enrichedcart";
+import PaymentSelector from "@/components/PaymentSelector";
 
 import {
   Box,
@@ -11,9 +12,6 @@ import {
   Chip,
   Grid,
 } from "@mui/material";
-import PaymentSelectorWrapper from "@/components/PaymentSelectorWrapper";
-
-
 
 export default async function PlaceOrderPage({ searchParams }) {
   const { userId } = await searchParams;
@@ -25,6 +23,9 @@ export default async function PlaceOrderPage({ searchParams }) {
   if (!enrichedCart.length) return notFound();
 
   const grandTotal = calculateTotal(enrichedCart);
+
+  // Get QR Code URL from first menu item's restaurant
+  const qrCodeUrl = enrichedCart[0].menu.restaurant.qrCodeUrl;
 
   return (
     <Box maxWidth="800px" mx="auto" my={5} px={2}>
@@ -92,7 +93,11 @@ export default async function PlaceOrderPage({ searchParams }) {
 
       <Divider sx={{ my: 4 }} />
 
-      <PaymentSelectorWrapper userId={userId} grandTotal={grandTotal} />
+      <PaymentSelector
+        userId={userId}
+        grandTotal={grandTotal}
+        qrCodeUrl={qrCodeUrl}
+      />
     </Box>
   );
 }

@@ -5,12 +5,23 @@ export async function enrichCart(cart) {
     cart.map(async (item) => {
       const menu = await prisma.menu.findUnique({
         where: { id: item.menuId },
-        include: { addOns: true },
+        include: {
+          addOns: true,
+          restaurant: {
+            select: {
+              id: true,
+              qrCodeUrl: true,
+            },
+          },
+        },
       });
+
       if (!menu) return null;
+
       return { ...item, menu };
     })
   );
+
   return enriched.filter(Boolean);
 }
 

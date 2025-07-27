@@ -1,43 +1,51 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography, Stack, Paper } from "@mui/material";
+import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
 
-import cashImg from '../../public/logo/cash.png';
-import kbzImg from '../../public/logo/kbz.png';
-
+import cashImg from "../../public/logo/cash.png";
+import kbzImg from "../../public/logo/kbz.png";
+import { UploadDropzone } from "@/lib/utils/uploadthing";
 
 const paymentOptions = [
   { value: "cash", label: "Cash", imgSrc: cashImg },
   { value: "kbzpay", label: "KBZ Pay", imgSrc: kbzImg },
-
 ];
 
-export default function PaymentSelector({ paymentMethod, setPaymentMethod }) {
+export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [paymentProofUrl, setPaymentProofUrl] = useState(null);
+
   return (
-    <Box my={4}>
-      <Typography variant="h6" mb={2}>
+    <Box my={4} textAlign="center" maxWidth={600} mx="auto">
+      <Typography variant="h6" mb={3}>
         Choose Payment Method
       </Typography>
 
-      <Stack spacing={2}>
+      <Stack spacing={2} mb={5} alignItems="center" maxWidth={500} mx="auto">
         {paymentOptions.map(({ value, label, imgSrc }) => {
           const selected = paymentMethod === value;
 
           return (
             <Box
               key={value}
-              onClick={() => setPaymentMethod(value)}
+              onClick={() => {
+                setPaymentMethod(value);
+                if (value !== "kbzpay") setPaymentProofUrl(null);
+              }}
               sx={{
                 border: selected ? "3px solid #1976d2" : "2px solid #ccc",
                 borderRadius: 2,
-                padding: 1,
+                padding: 1.5,
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
+                width: "100%",
                 userSelect: "none",
                 transition: "border-color 0.3s",
+                backgroundColor: selected ? "#e3f2fd" : "transparent",
                 "&:hover": {
                   borderColor: "#1976d2",
                 },
@@ -50,10 +58,108 @@ export default function PaymentSelector({ paymentMethod, setPaymentMethod }) {
                 height={48}
                 style={{ objectFit: "contain", marginRight: 12 }}
               />
-              <Typography variant="body1">{label}</Typography>
+              <Typography
+                variant="body1"
+                fontWeight={selected ? "bold" : "normal"}
+              >
+                {label}
+              </Typography>
             </Box>
           );
         })}
+      </Stack>
+
+      {paymentMethod === "kbzpay" && (
+        <>
+          {qrCodeUrl && (
+            <Box
+              mt={3}
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              mb={4}
+            >
+              <Typography variant="subtitle1" mb={2}>
+                Scan this KBZPay QR Code to Pay:
+              </Typography>
+              <Image
+                src={qrCodeUrl}
+                alt="KBZ Pay QR Code"
+                width={500}
+                height={500}
+                style={{ borderRadius: 16, border: "2px solid #ccc" }}
+              />
+            </Box>
+          )}
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="flex-start"
+            gap={3}
+            flexWrap="wrap"
+            mb={4}
+          >
+            {/* Upload Dropzone box */}
+            <Box flex="1 1 300px" minWidth={280} maxWidth={300}>
+              <Typography variant="subtitle1" mb={1} textAlign="left">
+                Upload your payment proof:
+              </Typography>
+              <UploadDropzone
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  const url = res?.[0]?.fileUrl || res?.[0]?.url || null;
+                  if (url) {
+                    setPaymentProofUrl(url);
+                    alert("Upload successful!");
+                  } else {
+                    alert("Upload failed. Please try again.");
+                  }
+                }}
+                onUploadError={(error) => {
+                  alert(`Upload error: ${error.message}`);
+                }}
+              />
+            </Box>
+
+            {/* Uploaded proof container */}
+            {paymentProofUrl && (
+              <Paper
+                sx={{
+                  borderRadius: 2,
+                  border: "1px solid #ccc",
+
+                  textAlign: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <Image
+                  src={paymentProofUrl}
+                  alt="Payment Proof"
+                  width={200}
+                  height={200}
+                  style={{ objectFit: "cover", borderRadius: 8 }}
+                />
+              </Paper>
+            )}
+          </Box>
+        </>
+      )}
+
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mt={6}
+      >
+        <Typography variant="h5" fontWeight="bold">
+          Total: {grandTotal.toLocaleString()} MMK
+        </Typography>
+        <ConfirmOrderButton
+          userId={userId}
+          paymentMethod={paymentMethod}
+          paymentProofUrl={paymentProofUrl}
+        />
       </Stack>
     </Box>
   );

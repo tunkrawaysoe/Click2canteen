@@ -32,11 +32,15 @@ export default function RestaurantForm({
 }) {
   const [status, setStatus] = useState(null);
   const [imageUrl, setImageUrl] = useState(initialData?.imageUrl || null);
+  const [qrCodeUrl, setQrCodeUrl] = useState(initialData?.qrCodeUrl || null);
   const router = useRouter();
 
   async function handleFormAction(formData) {
     if (imageUrl) {
       formData.set("imageUrl", imageUrl);
+    }
+    if (qrCodeUrl) {
+      formData.set("qrCodeUrl", qrCodeUrl);
     }
 
     if (mode === "edit") {
@@ -50,7 +54,7 @@ export default function RestaurantForm({
         setStatus(`❌ ${result.error}`);
       } else {
         setStatus(`✅ Restaurant ${mode === "edit" ? "updated" : "added"}!`);
-        router.push("/admin/canteens"); // ✅ Redirect after success
+        router.push("/admin/canteens");
       }
     } catch (error) {
       setStatus("❌ Something went wrong.");
@@ -92,8 +96,9 @@ export default function RestaurantForm({
           className="w-full p-2 border rounded"
         />
 
+        {/* Upload restaurant image */}
         <div>
-          <p className="mb-2 font-semibold text-gray-700">Upload Image</p>
+          <p className="mb-2 font-semibold text-gray-700">Upload Restaurant Image</p>
           <UploadDropzone
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
@@ -104,10 +109,10 @@ export default function RestaurantForm({
               } else {
                 console.warn("No valid URL in upload response");
               }
-              alert("Upload Completed");
+              alert("Image Upload Completed");
             }}
             onUploadError={(error) => {
-              alert(`Upload Error: ${error.message}`);
+              alert(`Image Upload Error: ${error.message}`);
             }}
           />
           {imageUrl && (
@@ -115,6 +120,36 @@ export default function RestaurantForm({
               <img
                 src={imageUrl}
                 alt="Uploaded preview"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Upload QR Code Image */}
+        <div>
+          <p className="mb-2 font-semibold text-gray-700">Upload QR Code Image</p>
+          <UploadDropzone
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              const url =
+                res?.[0]?.fileUrl || res?.[0]?.ufsUrl || res?.[0]?.url;
+              if (url) {
+                setQrCodeUrl(url);
+              } else {
+                console.warn("No valid URL in QR upload response");
+              }
+              alert("QR Code Upload Completed");
+            }}
+            onUploadError={(error) => {
+              alert(`QR Code Upload Error: ${error.message}`);
+            }}
+          />
+          {qrCodeUrl && (
+            <div className="mt-3 inline-block rounded overflow-hidden border border-gray-300 shadow-sm w-32 h-32">
+              <img
+                src={qrCodeUrl}
+                alt="QR Code preview"
                 className="w-full h-full object-cover"
               />
             </div>
