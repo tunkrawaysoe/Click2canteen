@@ -24,9 +24,7 @@ export default async function UsersPage() {
           placeholder="Search by name or email…"
           className={styles.searchInput}
         />
-        <Link passHref href="/admin/users/create">
-          <button className={styles.addUserButton}>+ Add Admin</button>
-        </Link>
+        
       </div>
       <UsersDisplay users={users} />
     </div>
