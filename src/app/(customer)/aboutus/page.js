@@ -18,8 +18,8 @@ export default function AboutUs() {
       icon: "🚀",
     },
     {
-      title: "Cashless Payments",
-      desc: "Pay instantly with your wallet—no cash needed.",
+      title: "Easy Payments",
+      desc: "Smooth payments with cash or KBZ Pay.",
       icon: "💳",
     },
   ];
@@ -89,7 +89,7 @@ export default function AboutUs() {
             {/* Meet Our Team */}
             <div>
               <h3 className="text-2xl font-bold mb-6 border-b border-gray-600 pb-2 mt-1">
-                👥 Meet Our Team
+                👥 ROKU FORCE TEAM
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">

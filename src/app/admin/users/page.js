@@ -19,11 +19,6 @@ export default async function UsersPage() {
   return (
     <div className="usersPage">
       <div className={`${styles.pageHeader} ${styles.textColor}`}>
-        <input
-          type="text"
-          placeholder="Search by name or email…"
-          className={styles.searchInput}
-        />
         
       </div>
       <UsersDisplay users={users} />
