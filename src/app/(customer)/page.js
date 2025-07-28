@@ -5,7 +5,6 @@ import AnimatedButton from "@/components/buttons/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 import { getAllSpecialMenus } from "@/lib/data/menu/menu";
 
-
 export const revalidate = 300;
 export default async function HeroSection() {
   const specialMenus = await getAllSpecialMenus();
@@ -97,9 +96,10 @@ export default async function HeroSection() {
           {/* Scrollable Card Container */}
           <div className="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide">
             {specialMenus.map((menu) => (
-              <div
+              <Link
                 key={menu.id}
-                className="min-w-[400px] bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 relative"
+                href={`/canteens/${menu.restaurantId}/menu/${menu.id}`}
+                className="min-w-[400px] bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 relative block"
               >
                 {/* Special sentence banner */}
                 <div className="absolute top-0 left-0 bg-red-500 text-white text-s font-bold px-3 py-1 rounded-br-2xl z-10">
@@ -131,7 +131,7 @@ export default async function HeroSection() {
                       : menu.description}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

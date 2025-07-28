@@ -53,7 +53,7 @@ export default function MenuCard({
           sx={{
             position: "absolute",
             top: 20,
-            left: 20,
+            right: 20,
             bgcolor: "#dc2626",
             color: "white",
             fontWeight: "bold",
