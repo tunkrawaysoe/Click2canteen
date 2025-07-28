@@ -1,7 +1,11 @@
 import { getUser } from "@/lib/data/user/user";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const user = await getUser();
+  if (user.role === "CUSTOMER") {
+    redirect("/");
+  }
 
   return (
     <div
