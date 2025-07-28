@@ -4,26 +4,7 @@ import { useState } from "react";
 import { UploadDropzone } from "@/lib/utils/uploadthing";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
-
-function SubmitButton({ label, mode }) {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={`w-full p-2 rounded text-white hover:opacity-90 ${
-        pending
-          ? "bg-gray-400 cursor-not-allowed"
-          : mode === "edit"
-          ? "bg-yellow-600"
-          : "bg-[linear-gradient(to_bottom,_#00022E,_#001D51)]"
-      }`}
-    >
-      {pending ? "Saving..." : label}
-    </button>
-  );
-}
+import SubmitButton from "../buttons/SubmitButton";
 
 export default function RestaurantForm({
   initialData = null,
@@ -65,7 +46,7 @@ export default function RestaurantForm({
   return (
     <div className="max-w-md mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">
-        {mode === "edit" ? "Edit Restaurant" : "Add Restaurant"}
+        {mode === "edit" ? "Update Canteen" : "Add Canteen"}
       </h1>
 
       <form action={handleFormAction} className="space-y-4">
@@ -98,7 +79,9 @@ export default function RestaurantForm({
 
         {/* Upload restaurant image */}
         <div>
-          <p className="mb-2 font-semibold text-gray-700">Upload Restaurant Image</p>
+          <p className="mb-2 font-semibold text-gray-700">
+            Upload Restaurant Image
+          </p>
           <UploadDropzone
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
@@ -128,7 +111,9 @@ export default function RestaurantForm({
 
         {/* Upload QR Code Image */}
         <div>
-          <p className="mb-2 font-semibold text-gray-700">Upload QR Code Image</p>
+          <p className="mb-2 font-semibold text-gray-700">
+            Upload QR Code Image
+          </p>
           <UploadDropzone
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
@@ -175,8 +160,7 @@ export default function RestaurantForm({
         </label>
 
         <SubmitButton
-          label={mode === "edit" ? "Update Restaurant" : "Add Restaurant"}
-          mode={mode}
+          label={mode === "edit" ? "Update Canteen" : "Add Canteen"}
         />
       </form>
 

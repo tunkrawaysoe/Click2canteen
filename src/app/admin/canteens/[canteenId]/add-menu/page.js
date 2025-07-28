@@ -9,5 +9,6 @@ export default async function AddMenuPage({ params }) {
       onSubmit={addMenuWithAddOns}
       submitLabel="Add Menu"
     />
+    
   );
 }

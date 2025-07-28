@@ -106,6 +106,7 @@ export async function getAllSpecialMenus() {
     orderBy: {
       createdAt: "desc",
     },
+    take : 5
   });
 
   console.log("⚡ [Database] All special menus loaded from DB and cached");

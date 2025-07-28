@@ -6,6 +6,7 @@ export const roles = {
     "read:restaurant",
     "create:restaurant",
     "update:restaurant",
+    "delete:restaurant",
   ],
   ADMIN: [
     "create:menu",
@@ -13,7 +14,7 @@ export const roles = {
     "update:menu",
     "delete:menu",
     "read:restaurant",
-    "read:order"
+    "read:order",
   ],
   CUSTOMER: ["read:menu", "read:restaurant"],
   GUEST: ["read:restaurant"],
