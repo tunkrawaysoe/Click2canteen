@@ -14,10 +14,14 @@ export async function addMenuWithAddOns(formData) {
   const price = parseFloat(formData.get("price"));
   const category = formData.get("category");
   const description = formData.get("description");
-  const imageUrl = formData.get("imageUrl");
+  const imageUrl = formData.get("image"); 
   const isActive = formData.get("isActive") === "on";
   const isSpecial = formData.get("isSpecial") === "on";
   const restaurantId = formData.get("restaurantId");
+
+  if (!name || !price || !category || !restaurantId) {
+    throw new Error("Missing required menu fields");
+  }
 
   // Get all add-ons
   const addOnNames = formData.getAll("addOnName");
@@ -30,7 +34,17 @@ export async function addMenuWithAddOns(formData) {
     }))
     .filter((addOn) => addOn.name !== "" && !isNaN(addOn.price));
 
-  console.log("🧩 AddOns submitted:", addOns);
+  console.log("📦 Creating Menu:", {
+    name,
+    price,
+    category,
+    description,
+    imageUrl,
+    isActive,
+    isSpecial,
+    restaurantId,
+    addOns,
+  });
 
   await prisma.menu.create({
     data: {
@@ -46,18 +60,19 @@ export async function addMenuWithAddOns(formData) {
     },
   });
 
+  // Cache cleanup
   const CACHE_KEY = `menu:all:${restaurantId}`;
   await delKey(CACHE_KEY);
   console.log(`🗑️ Deleted cache key: ${CACHE_KEY}`);
-  // If this menu is special, clear special menus cache too
+
   if (isSpecial) {
     const CACHE_KEY_SPECIAL = `menu:special:all`;
     await delKey(CACHE_KEY_SPECIAL);
     console.log(`🗑️ Deleted cache key: ${CACHE_KEY_SPECIAL}`);
   }
 
-  revalidatePath(`/canteens/${restaurantId}/menu`);
-  redirect(`/canteens/${restaurantId}/menu`);
+  revalidatePath(`/admin/canteens`);
+  redirect(`/admin/canteens`);
 }
 
 export async function updateMenuWithAddOns(formData) {
@@ -133,6 +148,6 @@ export async function updateMenuWithAddOns(formData) {
   await delKey(`menu:all:${restaurantId}`);
   await delKey(`menu:single:${menuId}`);
 
-  revalidatePath(`/canteens/${restaurantId}/menu`);
-  redirect(`/canteens/${restaurantId}/menu`);
+  revalidatePath(`admin/canteens`);
+  redirect(`/admin/canteens`);
 }

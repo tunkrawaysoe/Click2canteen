@@ -43,20 +43,20 @@ model User {
 }
 
 model Restaurant {
-  id        String  @id @default(cuid())
-  name      String
-  phone     String
-  address   String
-  imageUrl  String?
-  qrCodeUrl String?
-  isOpen    Boolean @default(true)
-  isActive  Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-  menus     Menu[]
-  orders    Order[]
+  id         String   @id @default(cuid())
+  name       String
+  phone      String
+  address    String
+  imageUrl   String?
+  qrCodeUrl  String?
+  kpayPhones String[] 
+  isOpen     Boolean  @default(true)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  users      User[]
+  menus      Menu[]
+  orders     Order[]
 }
 
 model Menu {
@@ -95,7 +95,7 @@ model Order {
   phoneNumber     String?
   paymentMethod   String?
   paymentUrl      String?
-  serviceType     ServiceType @default(SELF_SERVICE) 
+  serviceType     ServiceType @default(SELF_SERVICE)
 
   orderItems OrderItem[]
 

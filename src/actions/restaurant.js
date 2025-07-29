@@ -19,9 +19,12 @@ export async function addRestaurant(formData) {
   const phone = formData.get("phone");
   const address = formData.get("address");
   const imageUrl = formData.get("imageUrl") || null;
-  const qrCodeUrl = formData.get("qrCodeUrl") || null; 
+  const qrCodeUrl = formData.get("qrCodeUrl") || null;
   const isOpen = formData.get("isOpen") === "on";
   const isActive = formData.get("isActive") === "on";
+
+  // Get multiple kpayPhones
+  const kpayPhones = formData.getAll("kpayPhones[]").filter(Boolean);
 
   if (!name || !phone || !address) {
     return { error: "Missing required fields" };
@@ -37,6 +40,7 @@ export async function addRestaurant(formData) {
         qrCodeUrl,
         isOpen,
         isActive,
+        kpayPhones,
       },
     });
 
@@ -57,8 +61,12 @@ export async function updateRestaurant(formData) {
     const phone = formData.get("phone");
     const address = formData.get("address");
     const imageUrl = formData.get("imageUrl") || null;
+    const qrCodeUrl = formData.get("qrCodeUrl") || null;
     const isOpen = formData.get("isOpen") === "on";
     const isActive = formData.get("isActive") === "on";
+
+    // Get multiple kpayPhones
+    const kpayPhones = formData.getAll("kpayPhones[]").filter(Boolean);
 
     if (!id || !name || !phone || !address) {
       return { error: "Missing required fields" };
@@ -71,15 +79,17 @@ export async function updateRestaurant(formData) {
         phone,
         address,
         imageUrl,
+        qrCodeUrl,
         isOpen,
         isActive,
+        kpayPhones, // assuming this field exists in DB as string[]
       },
     });
 
-    await delKey(CACHE_KEY);
+    await delKey("restaurants:all");
     revalidatePath("/admin/canteens");
 
-    return { success: true }; // ✅ success response
+    return { success: true };
   } catch (err) {
     console.error("❌ Update failed:", err);
     return { error: "Something went wrong while updating restaurant" };

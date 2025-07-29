@@ -17,7 +17,7 @@ export const roles = {
     "read:order",
   ],
   CUSTOMER: ["read:menu", "read:restaurant"],
-  GUEST: ["read:restaurant"],
+  GUEST: ["read:restaurant", "read:menu"],
 };
 
 /**

@@ -11,11 +11,11 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Chip,
 } from "@mui/material";
 import ConfirmOrderButton from "@/components/buttons/ConfirmOrderButton";
 
 import StorefrontIcon from "@mui/icons-material/Storefront";
-
 
 import cashImg from "../../public/logo/cash.png";
 import kbzImg from "../../public/logo/kbz.png";
@@ -40,7 +40,12 @@ const serviceOptions = [
   },
 ];
 
-export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
+export default function PaymentSelector({
+  userId,
+  grandTotal,
+  qrCodeUrl,
+  kpayPhones = [],
+}) {
   const [serviceType, setServiceType] = useState("SELF_SERVICE");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -52,7 +57,7 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
       {/* Centered Service Type Selection with Icons */}
       <Box mb={4} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h6" mb={2}>
-           Select Service Type
+          Select Service Type
         </Typography>
 
         <RadioGroup
@@ -157,7 +162,7 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
         })}
       </Stack>
 
-      {/* QR Code for KBZ Pay */}
+      {/* QR Code for KBZ Pay with phone numbers */}
       {paymentMethod === "kbzpay" && qrCodeUrl && (
         <Box
           mt={3}
@@ -166,8 +171,10 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
           alignItems="center"
           mb={4}
         >
-          <Typography variant="subtitle1" mb={2}>
-            Scan this KBZPay QR Code to Pay:
+          <Typography variant="subtitle1" mb={2} textAlign="center">
+            You can pay by scanning this KBZPay QR Code
+            <br />
+            or by using one of these KBZ Pay numbers:
           </Typography>
           <Image
             src={qrCodeUrl}
@@ -176,6 +183,30 @@ export default function PaymentSelector({ userId, grandTotal, qrCodeUrl }) {
             height={500}
             style={{ borderRadius: 16, border: "2px solid #ccc" }}
           />
+
+          {kpayPhones.length > 0 && (
+            <Box mt={2} textAlign="center">
+              <Typography variant="body1" fontWeight="bold" mb={1}>
+                KBZ Numbers:
+              </Typography>
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent="center"
+                flexWrap="wrap"
+              >
+                {kpayPhones.filter(Boolean).map((phone, idx) => (
+                  <Chip
+                    key={idx}
+                    label={phone}
+                    color="primary"
+                    variant="outlined"
+                    sx={{ fontWeight: "medium" }}
+                  />
+                ))}
+              </Stack>
+            </Box>
+          )}
         </Box>
       )}
 

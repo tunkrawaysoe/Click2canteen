@@ -11,7 +11,6 @@ import {
   InputLabel,
 } from "@mui/material";
 
-
 import { updateUserAction } from "@/actions/users";
 import SubmitButton from "../buttons/SubmitButton";
 
@@ -19,12 +18,13 @@ export default function UserEditForm({ user, restaurants }) {
   const [role, setRole] = useState(user.role || "CUSTOMER");
   const [restaurantId, setRestaurantId] = useState(user.restaurantId || "");
 
+  console.log("userrris", user);
+
   return (
-    <Box
+    <form
       action={updateUserAction}
-      component="form"
       method="POST"
-      sx={{ maxWidth: 500, mx: "auto", mt: 4 }}
+      style={{ maxWidth: 500, margin: "2rem auto" }}
     >
       <Typography variant="h5" gutterBottom>
         Assign Canteen To User
@@ -48,6 +48,7 @@ export default function UserEditForm({ user, restaurants }) {
           label="Role"
           onChange={(e) => setRole(e.target.value)}
         >
+          <MenuItem value="ADMIN">SYSTEM_ADMIN</MenuItem>
           <MenuItem value="CUSTOMER">CUSTOMER</MenuItem>
           <MenuItem value="ADMIN">Admin</MenuItem>
         </Select>
@@ -72,7 +73,9 @@ export default function UserEditForm({ user, restaurants }) {
         </FormControl>
       )}
 
-      <SubmitButton label="Assign User"/>
-    </Box>
+      <Box mt={2}>
+        <SubmitButton label="Assign User" />
+      </Box>
+    </form>
   );
 }

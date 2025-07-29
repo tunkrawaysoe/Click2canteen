@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -25,7 +24,7 @@ export default function MenuCard({
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
 
   const canEdit = hasPermission(user, "update", "menu", user?.restaurantId);
-  const canViewDetails = user?.role === "CUSTOMER";
+  const canViewDetails = user?.role === "CUSTOMER" || user?.role === "GUEST";
 
   return (
     <Card

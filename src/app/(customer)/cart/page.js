@@ -2,11 +2,10 @@ import { getCartAction } from "@/actions/cart";
 import Link from "next/link";
 import CartListClient from "../../../components/CartListClient";
 import prisma from "@/lib/prisma";
-import { Restaurant } from "@mui/icons-material";
 import { getUserProfile } from "@/lib/data/user/user";
 export default async function CartPage() {
- const user = await getUserProfile()
- const userId = user?.id  || "guest";
+  const user = await getUserProfile();
+  const userId = user?.id || "guest";
   const cart = await getCartAction(userId);
 
   const menuDetails = await Promise.all(
@@ -18,7 +17,6 @@ export default async function CartPage() {
       return { ...item, menu };
     })
   );
-  console.log("Menudetails",menuDetails)
 
   return (
     <div className="max-w-4xl mx-auto p-6">
