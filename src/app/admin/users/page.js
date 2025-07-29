@@ -2,6 +2,8 @@ import UsersDisplay from "@/components/UsersDisplay/UsersDisplay";
 import styles from "@/components/UsersDisplay/UsersDisplay.module.css";
 import Link from "next/link";
 import { getAllUsers } from "@/lib/data/user/user";
+import { Button } from "@mui/material";
+import BackButton from "@/components/buttons/BackButton";
 
 export const metadata = {
   title: "Users Page",
@@ -22,6 +24,8 @@ export default async function UsersPage() {
         
       </div>
       <UsersDisplay users={users} />
+     
     </div>
+    
   );
 }

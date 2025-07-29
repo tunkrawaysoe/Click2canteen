@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import UserEditForm from "@/components/form/UserEditForm";
+import BackButton from "@/components/buttons/BackButton";
 
 export default async function UserEditPage({ params }) {
   const { userId } = await params;
@@ -20,7 +21,9 @@ export default async function UserEditPage({ params }) {
 
   return (
     <div style={{ padding: 20 }}>
+       <BackButton/>
       <UserEditForm user={user} restaurants={restaurants} />
+     
     </div>
   );
 }
