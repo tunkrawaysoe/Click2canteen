@@ -23,9 +23,12 @@ export default async function PlaceOrderPage({ searchParams }) {
 
   const enrichedCart = await enrichCart(cartItems);
   if (!enrichedCart.length) return notFound();
+  console.log("enrich", enrichedCart);
 
   const grandTotal = calculateTotal(enrichedCart);
   const qrCodeUrl = enrichedCart[0].menu.restaurant.qrCodeUrl;
+  const kpayPhones = enrichedCart[0].menu.restaurant.kpayPhones;
+  console.log("enrich",kpayPhones);
 
   return (
     <Box maxWidth="800px" mx="auto" my={5} px={2}>
@@ -98,6 +101,7 @@ export default async function PlaceOrderPage({ searchParams }) {
         userId={userId}
         grandTotal={grandTotal}
         qrCodeUrl={qrCodeUrl}
+        kpayPhones={kpayPhones}
       />
     </Box>
   );

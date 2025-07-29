@@ -13,7 +13,7 @@ export default async function UserEditPage({ params }) {
   const restaurants = await prisma.restaurant.findMany({
     select: { id: true, name: true },
   });
-  console.log("rest",restaurants)
+
   if (!user) {
     return <div>User not found</div>;
   }

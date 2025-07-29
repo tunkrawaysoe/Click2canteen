@@ -56,8 +56,8 @@ export async function addMenuWithAddOns(formData) {
     console.log(`🗑️ Deleted cache key: ${CACHE_KEY_SPECIAL}`);
   }
 
-  revalidatePath(`/canteens/${restaurantId}/menu`);
-  redirect(`/canteens/${restaurantId}/menu`);
+  revalidatePath(`admin/canteens`);
+  redirect(`/admin/canteens`);
 }
 
 export async function updateMenuWithAddOns(formData) {
@@ -133,6 +133,6 @@ export async function updateMenuWithAddOns(formData) {
   await delKey(`menu:all:${restaurantId}`);
   await delKey(`menu:single:${menuId}`);
 
-  revalidatePath(`/canteens/${restaurantId}/menu`);
-  redirect(`/canteens/${restaurantId}/menu`);
+  revalidatePath(`admin/canteens`);
+  redirect(`/admin/canteens`);
 }

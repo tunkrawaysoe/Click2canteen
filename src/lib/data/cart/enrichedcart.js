@@ -11,6 +11,7 @@ export async function enrichCart(cart) {
             select: {
               id: true,
               qrCodeUrl: true,
+              kpayPhones: true,
             },
           },
         },

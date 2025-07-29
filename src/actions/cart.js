@@ -18,11 +18,10 @@ export async function addToCartAction(
   menuId,
   quantity,
   addOns = [],
-  CACHE_ttl = 600
+  CACHE_ttl = 300
 ) {
   const key = getCartKey(userId);
 
-  // Fetch and parse cart
   const raw = await redis.get(key);
   let cart = [];
 
