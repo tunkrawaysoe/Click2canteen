@@ -14,7 +14,7 @@ export async function addMenuWithAddOns(formData) {
   const price = parseFloat(formData.get("price"));
   const category = formData.get("category");
   const description = formData.get("description");
-  const imageUrl = formData.get("image"); 
+  const imageUrl = formData.get("image");
   const isActive = formData.get("isActive") === "on";
   const isSpecial = formData.get("isSpecial") === "on";
   const restaurantId = formData.get("restaurantId");
@@ -33,18 +33,6 @@ export async function addMenuWithAddOns(formData) {
       price: parseFloat(addOnPrices[i]),
     }))
     .filter((addOn) => addOn.name !== "" && !isNaN(addOn.price));
-
-  console.log("📦 Creating Menu:", {
-    name,
-    price,
-    category,
-    description,
-    imageUrl,
-    isActive,
-    isSpecial,
-    restaurantId,
-    addOns,
-  });
 
   await prisma.menu.create({
     data: {
@@ -132,7 +120,6 @@ export async function updateMenuWithAddOns(formData) {
       },
     }),
 
-    // Step 5: Create new AddOns if any
     ...(newAddOns.length > 0
       ? [
           prisma.addOn.createMany({

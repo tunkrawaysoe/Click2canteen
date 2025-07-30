@@ -49,7 +49,7 @@ model Restaurant {
   address    String
   imageUrl   String?
   qrCodeUrl  String?
-  kpayPhones String[] 
+  kpayPhones String[]
   isOpen     Boolean  @default(true)
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
@@ -67,7 +67,7 @@ model Menu {
   description  String?
   imageUrl     String?
   isActive     Boolean      @default(true)
-  isSpecial    Boolean      @default(false) // 👈 Add this line
+  isSpecial    Boolean      @default(false)
   restaurant   Restaurant   @relation(fields: [restaurantId], references: [id])
   restaurantId String
   orderItems   OrderItem[]

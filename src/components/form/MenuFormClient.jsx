@@ -31,6 +31,7 @@ export default function MenuFormClient({
       ? defaultValues.addOns
       : [{ name: "", price: "" }]
   );
+
   const [imageUrl, setImageUrl] = useState(defaultValues.image || "");
 
   const handleAddOnChange = (index, field, value) => {
@@ -53,26 +54,14 @@ export default function MenuFormClient({
         <BackButton />
       </Box>
 
-      <Box
-        component="form"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target);
-          formData.append("image", imageUrl);
-
-          addOns.forEach(({ name, price }) => {
-            formData.append("addOnName", name);
-            formData.append("addOnPrice", price || "0");
-          });
-
-          await onSubmit(formData);
-        }}
-        sx={{
+      <form
+        action={onSubmit}
+        style={{
           maxWidth: 600,
-          mx: "auto",
+          margin: "auto",
           display: "flex",
           flexDirection: "column",
-          gap: 3,
+          gap: "24px",
         }}
       >
         <input type="hidden" name="restaurantId" value={canteenId} />
@@ -80,6 +69,8 @@ export default function MenuFormClient({
         {defaultValues.id && (
           <input type="hidden" name="menuId" value={defaultValues.id} />
         )}
+
+        <input type="hidden" name="image" value={imageUrl} />
 
         <TextField
           name="name"
@@ -197,22 +188,22 @@ export default function MenuFormClient({
             >
               <TextField
                 label="Name"
+                name="addOnName"
                 value={addOn.name}
                 onChange={(e) =>
                   handleAddOnChange(index, "name", e.target.value)
                 }
                 fullWidth
-                name={`addOnName_${index}`}
               />
               <TextField
                 label="Price"
+                name="addOnPrice"
                 inputProps={{ step: "0.01", min: 0 }}
                 value={addOn.price}
                 onChange={(e) =>
                   handleAddOnChange(index, "price", e.target.value)
                 }
                 sx={{ width: 100 }}
-                name={`addOnPrice_${index}`}
               />
               <IconButton
                 aria-label="Remove add-on"
@@ -234,7 +225,7 @@ export default function MenuFormClient({
         </Box>
 
         <SubmitButton label={submitLabel} />
-      </Box>
+      </form>
     </>
   );
 }
