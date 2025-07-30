@@ -14,6 +14,7 @@ import {
   Chip,
   Grid,
 } from "@mui/material";
+import BackButton from "@/components/buttons/BackButton";
 
 export default async function PlaceOrderPage({ searchParams }) {
   const { userId } = await searchParams;
@@ -32,6 +33,7 @@ export default async function PlaceOrderPage({ searchParams }) {
 
   return (
     <Box maxWidth="800px" mx="auto" my={5} px={2}>
+      <BackButton/>
       <Typography variant="h4" fontWeight="bold" textAlign="center" mb={4}>
         🧾 Order Summary
       </Typography>

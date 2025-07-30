@@ -3,6 +3,7 @@ import Link from "next/link";
 import CartListClient from "../../../components/CartListClient";
 import prisma from "@/lib/prisma";
 import { getUserProfile } from "@/lib/data/user/user";
+import BackButton from "@/components/buttons/BackButton";
 export default async function CartPage() {
   const user = await getUserProfile();
   const userId = user?.id || "guest";
@@ -35,7 +36,9 @@ export default async function CartPage() {
         </div>
       ) : (
         <CartListClient cartItems={menuDetails} userId={userId} />
+        
       )}
+      <BackButton/>
     </div>
   );
 }
