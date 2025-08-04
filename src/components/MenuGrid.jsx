@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Skeleton } from "@mui/material";
 import MenuCard from "@/components/menu/MenuCard";
 
 const defaultImageUrl =
@@ -24,7 +24,7 @@ export default function MenuGrid({ canteenId, isAdmin, user }) {
       setLoading(true);
       const res = await fetch(
         `/api/menus?canteenId=${canteenId}&category=${encodeURIComponent(
-          selectedCategory
+          category
         )}`
       );
       if (!res.ok) throw new Error("Failed to fetch menus");
@@ -78,11 +78,22 @@ export default function MenuGrid({ canteenId, isAdmin, user }) {
       </Stack>
 
       {/* Menu Grid */}
-      {loading ? (
-        <p className="text-center text-gray-500">Loading menus...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
-          {menus.map((item) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
+        {loading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="flex flex-col gap-2">
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={180}
+                sx={{ borderRadius: "12px" }}
+              />
+              <Skeleton variant="text" width="80%" />
+              <Skeleton variant="text" width="60%" />
+            </div>
+          ))
+        ) : menus.length > 0 ? (
+          menus.map((item) => (
             <MenuCard
               key={item.id}
               id={item.id}
@@ -95,14 +106,13 @@ export default function MenuGrid({ canteenId, isAdmin, user }) {
               isAdmin={isAdmin}
               user={user}
             />
-          ))}
-          {menus.length === 0 && !loading && (
-            <p className="col-span-full text-center text-gray-500">
-              No menu items found.
-            </p>
-          )}
-        </div>
-      )}
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-500">
+            No menu items found.
+          </p>
+        )}
+      </div>
     </>
   );
 }
