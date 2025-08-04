@@ -27,8 +27,10 @@ export default function RestaurantForm({
   async function handleFormAction(formData) {
     if (imageUrl) formData.set("imageUrl", imageUrl);
     if (qrCodeUrl) formData.set("qrCodeUrl", qrCodeUrl);
-
     if (mode === "edit") formData.set("id", initialData.id);
+
+    // Convert isOpen from string to boolean
+    formData.set("isOpen", formData.get("isOpen") === "true");
 
     kpayPhones
       .filter((phone) => phone.trim() !== "")
@@ -82,12 +84,11 @@ export default function RestaurantForm({
           className="w-full p-2 border rounded"
         />
 
-        {/* KPay Phone Inputs (Dynamic) */}
+        {/* KPay Phone Inputs */}
         <div>
           <label className="block font-semibold mb-2">
             KBZ Pay Phone Numbers
           </label>
-
           {kpayPhones.map((phone, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <input
@@ -112,7 +113,6 @@ export default function RestaurantForm({
               )}
             </div>
           ))}
-
           <button
             type="button"
             onClick={() => setKpayPhones([...kpayPhones, ""])}
@@ -178,23 +178,16 @@ export default function RestaurantForm({
           )}
         </div>
 
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isOpen"
-            defaultChecked={initialData?.isOpen ?? true}
-          />
-          <span>Is Open</span>
-        </label>
-
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isActive"
-            defaultChecked={initialData?.isActive ?? true}
-          />
-          <span>Is Active</span>
-        </label>
+        {/* Status Select */}
+        <label className="block font-semibold mb-2">Status</label>
+        <select
+          name="isOpen"
+          defaultValue={initialData?.isOpen ? "true" : "false"}
+          className="w-full p-2 border rounded"
+        >
+          <option value="true">Open</option>
+          <option value="false">Closed</option>
+        </select>
 
         <SubmitButton
           label={mode === "edit" ? "Update Canteen" : "Add Canteen"}

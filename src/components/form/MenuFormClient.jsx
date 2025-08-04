@@ -34,7 +34,7 @@ export default function MenuFormClient({
 
   const [imageUrl, setImageUrl] = useState(defaultValues.image || "");
 
-  const handleAddOnChange = (index, field, value) => {
+  const   handleAddOnChange = (index, field, value) => {
     const updated = [...addOns];
     updated[index][field] = value;
     setAddOns(updated);

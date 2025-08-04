@@ -52,7 +52,10 @@ export default async function RestaurantsList({ isAdmin }) {
             pointerEvents: rest.isOpen ? "auto" : "none",
           }}
         >
-          <RestaurantActions user={user} restaurantId={rest.id} />
+          {/* Keep RestaurantActions clickable even if closed */}
+          <Box sx={{ pointerEvents: "auto", zIndex: 1 }}>
+            <RestaurantActions user={user} restaurantId={rest.id} />
+          </Box>
 
           <Box
             sx={{
@@ -98,10 +101,7 @@ export default async function RestaurantsList({ isAdmin }) {
                 {rest.isOpen ? (
                   <Chip label="Open" color="success" size="small" />
                 ) : (
-                  <Chip label="Closed" color="error" size="small" />
-                )}
-                {!rest.isActive && (
-                  <Chip label="Inactive" color="warning" size="small" />
+                  <Chip label="Closed Temporary" color="error" size="small" />
                 )}
               </Stack>
             </Box>

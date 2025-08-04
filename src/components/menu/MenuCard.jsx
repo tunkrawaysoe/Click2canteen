@@ -40,7 +40,7 @@ export default function MenuCard({
         flexDirection: { xs: "row", sm: "column" },
         gap: { xs: 1, sm: 1.5 },
         opacity: isActive ? 1 : 0.6,
-        pointerEvents: isActive ? "auto" : "none",
+        pointerEvents: isActive ? "auto" : "none", // disable most of card when inactive
         alignItems: "stretch",
         minHeight: { xs: 140, sm: "auto" },
       }}
@@ -152,32 +152,40 @@ export default function MenuCard({
             </Link>
           )}
 
+          {/* EDIT BUTTON WRAPPED IN A BOX TO OVERRIDE POINTER EVENTS WHEN INACTIVE */}
           {canEdit && (
-            <Link
-              href={`/admin/canteens/${canteenId}/menu/${id}/edit`}
-              passHref
-              legacyBehavior
+            <Box
+              sx={{
+                pointerEvents: "auto", // override parent 'none' if inactive
+                zIndex: 1,
+              }}
             >
-              <Button
-                component="a"
-                sx={{
-                  backgroundColor: "#ca8a04",
-                  color: "white",
-                  px: 2,
-                  py: 0.5,
-                  borderRadius: 1,
-                  fontSize: "0.8rem",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "#b77904",
-                  },
-                }}
-                size="small"
-                variant="contained"
+              <Link
+                href={`/admin/canteens/${canteenId}/menu/${id}/edit`}
+                passHref
+                legacyBehavior
               >
-                Edit
-              </Button>
-            </Link>
+                <Button
+                  component="a"
+                  sx={{
+                    backgroundColor: "#ca8a04",
+                    color: "white",
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: 1,
+                    fontSize: "0.8rem",
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#b77904",
+                    },
+                  }}
+                  size="small"
+                  variant="contained"
+                >
+                  Edit
+                </Button>
+              </Link>
+            </Box>
           )}
         </Box>
       </CardContent>

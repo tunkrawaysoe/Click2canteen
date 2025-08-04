@@ -18,7 +18,7 @@ export async function addToCartAction(
   menuId,
   quantity,
   addOns = [],
-  CACHE_ttl = 300
+  CACHE_ttl = 600
 ) {
   const key = getCartKey(userId);
 

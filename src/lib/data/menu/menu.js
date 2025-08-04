@@ -6,9 +6,9 @@ export async function getAllMenus(
   category = null,
   forceRefresh = false
 ) {
-  const categoryKey = category ? `:${category}` : "";
+  const categoryKey = category && category !== "All" ? `:${category}` : "";
   const CACHE_KEY = `menu:all:${canteenId}${categoryKey}`;
-  const CACHE_TTL = 300;
+  const CACHE_TTL = 300; // 5 min
 
   const label = `🕒 getAllMenus:${canteenId}${categoryKey}`;
   console.time(label);
@@ -25,19 +25,16 @@ export async function getAllMenus(
     return cached;
   }
 
+  // Only filter by category if it's not "All"
   const where = {
     restaurantId: canteenId,
-    ...(category ? { category } : {}),
+    ...(category && category !== "All" ? { category } : {}),
   };
 
   const menus = await prisma.menu.findMany({
     where,
-    include: {
-      addOns: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+    include: { addOns: true },
+    orderBy: { createdAt: "desc" },
   });
 
   console.log("⚡ [Database] Menus loaded from DB and cached");
@@ -106,7 +103,7 @@ export async function getAllSpecialMenus() {
     orderBy: {
       createdAt: "desc",
     },
-    take : 5
+    take: 5,
   });
 
   console.log("⚡ [Database] All special menus loaded from DB and cached");

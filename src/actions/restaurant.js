@@ -20,8 +20,9 @@ export async function addRestaurant(formData) {
   const address = formData.get("address");
   const imageUrl = formData.get("imageUrl") || null;
   const qrCodeUrl = formData.get("qrCodeUrl") || null;
-  const isOpen = formData.get("isOpen") === "on";
-  const isActive = formData.get("isActive") === "on";
+
+  // Parse "true"/"false" from select dropdown into boolean
+  const isOpen = formData.get("isOpen") === "true";
 
   // Get multiple kpayPhones
   const kpayPhones = formData.getAll("kpayPhones[]").filter(Boolean);
@@ -39,7 +40,6 @@ export async function addRestaurant(formData) {
         imageUrl,
         qrCodeUrl,
         isOpen,
-        isActive,
         kpayPhones,
       },
     });
@@ -62,8 +62,9 @@ export async function updateRestaurant(formData) {
     const address = formData.get("address");
     const imageUrl = formData.get("imageUrl") || null;
     const qrCodeUrl = formData.get("qrCodeUrl") || null;
-    const isOpen = formData.get("isOpen") === "on";
-    const isActive = formData.get("isActive") === "on";
+
+    // Convert string "true"/"false" from select to boolean
+    const isOpen = formData.get("isOpen") === "true";
 
     // Get multiple kpayPhones
     const kpayPhones = formData.getAll("kpayPhones[]").filter(Boolean);
@@ -81,8 +82,7 @@ export async function updateRestaurant(formData) {
         imageUrl,
         qrCodeUrl,
         isOpen,
-        isActive,
-        kpayPhones, // assuming this field exists in DB as string[]
+        kpayPhones,
       },
     });
 

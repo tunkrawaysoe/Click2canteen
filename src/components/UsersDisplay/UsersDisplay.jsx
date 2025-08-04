@@ -3,7 +3,22 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import styles from "./UsersDisplay.module.css";
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Collapse,
+  IconButton,
+} from "@mui/material";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const UsersDisplay = ({ users }) => {
   const [expandedUserId, setExpandedUserId] = useState(null);
@@ -20,165 +35,207 @@ const UsersDisplay = ({ users }) => {
   };
 
   return (
-    <div className={styles.container}>
-      {/* Desktop View */}
-      <div className={styles.desktopView}>
-        <table className={styles.usersTable}>
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>User Type</th>
-              <th>Restaurant</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+    <Box>
+      {/* Desktop Table View */}
+      <TableContainer
+        component={Paper}
+        sx={{ display: { xs: "none", md: "block" }, boxShadow: 3 }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell>User</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell>User Type</TableCell>
+              <TableCell>Restaurant</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {currentUsers.map((user) => (
-              <tr key={user.id}>
-                <td>
-                  <div className={`${styles.userInfo} ${styles.textColor}`}>
-                    <Image
-                      src={user.profileImage || "/default-avatar.svg"}
-                      alt={user.name}
-                      width={40}
-                      height={40}
-                      className={styles.avatar}
-                    />
-                    <span>{user.name}</span>
-                  </div>
-                </td>
-                <td className={styles.textColor}>{user.email}</td>
-                <td className={styles.textColor}>-</td>
-                <td>
-                  <span
-                    className={`${styles.badge} ${
-                      styles[user.role?.toLowerCase() || "user"]
-                    }`}
-                  >
-                    {user.role || "User"}
-                  </span>
-                </td>
-                <td className={styles.textColor}>
-                  {user.restaurant?.name || "-"}
-                </td>
-                <td>
-                  <div className={styles.desktopActions}>
-                    <Link
-                      href={`/admin/users/${user.id}/edit`}
-                      className={styles.editButton}
-                    >
-                      Edit
-                    </Link>
-                    <button className={styles.deleteButton}>Delete</button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Mobile View */}
-      <div className={styles.mobileView}>
-        {currentUsers.map((user) => (
-          <div
-            key={user.id}
-            className={`${styles.userCard} ${
-              expandedUserId === user.id ? styles.expanded : ""
-            }`}
-          >
-            <div
-              className={styles.cardHeader}
-              onClick={() => toggleExpand(user.id)}
-            >
-              <Image
-                src={user.profileImage || "/default-avatar.svg"}
-                alt={user.name}
-                width={48}
-                height={48}
-                className={styles.cardAvatar}
-              />
-              <div className={styles.cardTitle}>
-                <h3>{user.name}</h3>
-                <span
-                  className={`${styles.badge} ${
-                    styles[user.role?.toLowerCase() || "user"]
-                  }`}
+              <TableRow key={user.id} hover>
+                <TableCell
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
                 >
-                  {user.role || "User"}
-                </span>
-              </div>
-              <span className={styles.expandIcon}>
-                {expandedUserId === user.id ? "▲" : "▼"}
-              </span>
-            </div>
-
-            {expandedUserId === user.id && (
-              <div className={styles.cardDetails}>
-                <div className={styles.detailRow}>
-                  <span>Email:</span>
-                  <span>{user.email}</span>
-                </div>
-                <div className={styles.detailRow}>
-                  <span>Phone:</span>
-                  <span>-</span>
-                </div>
-                <div className={styles.detailRow}>
-                  <span>User Type:</span>
-                  <span
-                    className={`${styles.badge} ${
-                      styles[user.role?.toLowerCase() || "user"]
-                    }`}
+                  <Image
+                    src={user.profileImage || "/default-avatar.svg"}
+                    alt={user.name}
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: "50%", objectFit: "cover" }}
+                  />
+                  <Typography>{user.name}</Typography>
+                </TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>-</TableCell>
+                <TableCell>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: "0.85rem",
+                      textTransform: "capitalize",
+                    }}
                   >
                     {user.role || "User"}
-                  </span>
-                </div>
-                <div className={styles.detailRow}>
-                  <span>Restaurant:</span>
-                  <span>{user.restaurant?.name || "-"}</span>
-                </div>
-                <div className={styles.cardActions}>
+                  </Typography>
+                </TableCell>
+                <TableCell>{user.restaurant?.name || "-"}</TableCell>
+                <TableCell>
                   <Link
                     href={`/admin/users/${user.id}/edit`}
-                    className={styles.editButton}
+                    passHref
+                    legacyBehavior
                   >
-                    Edit
+                    <Button
+                      component="a"
+                      variant="contained"
+                      size="small"
+                      sx={{
+                        textTransform: "none",
+                        backgroundColor: "#ccaa12",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "#b89910",
+                        },
+                      }}
+                    >
+                      Edit
+                    </Button>
                   </Link>
-                  <button className={styles.deleteButton}>Delete</button>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Mobile View */}
+      <Box sx={{ display: { xs: "block", md: "none" } }}>
+        {currentUsers.map((user) => {
+          const isExpanded = expandedUserId === user.id;
+          return (
+            <Paper
+              key={user.id}
+              sx={{
+                mb: 2,
+                p: 1,
+                cursor: "pointer",
+                boxShadow: isExpanded ? 6 : 1,
+                borderRadius: 2,
+              }}
+              onClick={() => toggleExpand(user.id)}
+              elevation={isExpanded ? 6 : 1}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Image
+                  src={user.profileImage || "/default-avatar.svg"}
+                  alt={user.name}
+                  width={48}
+                  height={48}
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                />
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6">{user.name}</Typography>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: "0.8rem",
+                      textTransform: "capitalize",
+                      mt: 0.5,
+                    }}
+                  >
+                    {user.role || "User"}
+                  </Typography>
+                </Box>
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleExpand(user.id);
+                  }}
+                  aria-label={isExpanded ? "Collapse" : "Expand"}
+                >
+                  {isExpanded ? (
+                    <KeyboardArrowUpIcon />
+                  ) : (
+                    <KeyboardArrowDownIcon />
+                  )}
+                </IconButton>
+              </Box>
+
+              <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                <Box sx={{ mt: 2, pl: 7 }}>
+                  <Typography>
+                    <strong>Email:</strong> {user.email}
+                  </Typography>
+                  <Typography>
+                    <strong>Phone:</strong> -
+                  </Typography>
+                  <Typography>
+                    <strong>Restaurant:</strong> {user.restaurant?.name || "-"}
+                  </Typography>
+                  <Box sx={{ mt: 1 }}>
+                    <Link
+                      href={`/admin/users/${user.id}/edit`}
+                      passHref
+                      legacyBehavior
+                    >
+                      <Button
+                        component="a"
+                        variant="contained"
+                        size="small"
+                        sx={{
+                          textTransform: "none",
+                          backgroundColor: "#ccaa12",
+                          color: "#000",
+                          "&:hover": {
+                            backgroundColor: "#b89910",
+                          },
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </Link>
+                  </Box>
+                </Box>
+              </Collapse>
+            </Paper>
+          );
+        })}
+      </Box>
 
       {/* Pagination */}
-      <div className={styles.pagination}>
-        <button
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 2,
+          mt: 3,
+        }}
+      >
+        <Button
+          variant="contained"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className={styles.pageButton}
         >
           Previous
-        </button>
-
-        <span className={styles.pageInfo}>
+        </Button>
+        <Typography sx={{ fontWeight: 600 }}>
           Page {currentPage} of {totalPages}
-        </span>
-
-        <button
+        </Typography>
+        <Button
+          variant="contained"
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
           disabled={currentPage === totalPages}
-          className={styles.pageButton}
         >
           Next
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
