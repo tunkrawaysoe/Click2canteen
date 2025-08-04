@@ -124,71 +124,55 @@ export default function OrderItemsTable({
                   <TableCell align="right">
                     {totalPrice.toLocaleString()}
                   </TableCell>
-
-                  {/* Service Type */}
-                  <TableCell>
-                    {isLastRow ? (
-                      <Typography>
-                        {serviceType}
-                      </Typography>
-                    ) : (
-                      ""
-                    )}
-                  </TableCell>
-
-                  {/* Payment Method */}
-                  <TableCell>
-                    {isLastRow ? (
-                      <Typography fontWeight="bold">
-                        {payMentMethod?.toUpperCase() || "N/A"}
-                      </Typography>
-                    ) : (
-                      ""
-                    )}
-                  </TableCell>
-
-                  {/* Payment Image */}
-                  <TableCell>
-                    {isLastRow ? (
-                      payMentMethod?.toUpperCase() === "KBZPAY" &&
-                      payMentUrl ? (
-                        <Image
-                          src={payMentUrl}
-                          alt="KBZPay QR Code"
-                          width={80}
-                          height={80}
-                          style={{
-                            border: "1px solid #ccc",
-                            borderRadius: 8,
-                            cursor: "pointer",
-                          }}
-                          onClick={handleOpen}
-                        />
-                      ) : (
-                        <Typography variant="body2" color="text.secondary">
-                          N/A
-                        </Typography>
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </TableCell>
                 </TableRow>
               );
             })}
-
-            {/* Total Row */}
-            <TableRow>
-              <TableCell colSpan={4} align="right" sx={{ fontWeight: "bold" }}>
+            <TableRow sx={{ backgroundColor: "#f9f9f9" }}>
+              <TableCell align="right" colSpan={4} sx={{ fontWeight: "bold" }}>
                 Total
               </TableCell>
-              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+
+              {/* Total Price */}
+              <TableCell
+                align="right"
+                sx={{ fontWeight: "bold", color: "primary.main" }}
+              >
                 {totalAll.toLocaleString()} MMK
               </TableCell>
-              {/* Empty cells for the rest of the columns */}
-              <TableCell />
-              <TableCell />
-              <TableCell />
+
+              {/* Service Type */}
+              <TableCell>
+                <Typography>{serviceType}</Typography>
+              </TableCell>
+
+              {/* Payment Method */}
+              <TableCell>
+                <Typography fontWeight="bold">
+                  {payMentMethod?.toUpperCase() || "N/A"}
+                </Typography>
+              </TableCell>
+
+              {/* Payment Image */}
+              <TableCell>
+                {payMentMethod?.toUpperCase() === "KBZPAY" && payMentUrl ? (
+                  <Image
+                    src={payMentUrl}
+                    alt="KBZPay QR Code"
+                    width={60}
+                    height={60}
+                    style={{
+                      border: "1px solid #ccc",
+                      borderRadius: 6,
+                      cursor: "pointer",
+                    }}
+                    onClick={handleOpen}
+                  />
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    N/A
+                  </Typography>
+                )}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
