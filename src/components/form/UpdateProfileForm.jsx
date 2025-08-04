@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { updateProfile } from "@/actions/users";
 import { UploadDropzone } from "@/lib/utils/uploadthing";
 import SubmitButton from "../buttons/SubmitButton";
+import BackButton from "../buttons/BackButton";
 
 export default function UpdateProfileForm({ user }) {
   const [name, setName] = useState(user.name || "");
@@ -15,10 +16,11 @@ export default function UpdateProfileForm({ user }) {
 
   return (
     <div className="flex items-center justify-center bg-gray-50 px-4 py-15">
-      <form
+      <form 
         action={updateProfile}
         className="w-full max-w-md bg-white p-6 rounded-xl shadow space-y-5"
       >
+        <BackButton/>
         <h2 className="text-xl font-bold text-center text-gray-700">
           Update Profile
         </h2>
