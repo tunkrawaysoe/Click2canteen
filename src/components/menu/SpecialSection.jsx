@@ -72,11 +72,11 @@ export default function SpecialsSection({ specialMenus }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="flex-shrink-0"
+              className="flex-shrink-0 w-full sm:w-[400px]"
             >
               <Link
                 href={`/canteens/${menu.restaurantId}/menu/${menu.id}`}
-                className="w-full sm:min-w-[400px] bg-white shadow-md hover:shadow-xl transition duration-300 relative block rounded-lg"
+                className="w-full sm:w-[400px] bg-white shadow-md hover:shadow-xl transition duration-300 relative block rounded-lg h-full"
               >
                 {/* Special badge */}
                 <div
@@ -114,7 +114,7 @@ export default function SpecialsSection({ specialMenus }) {
                 <div className="p-5 text-left">
                   <h3 className="text-xl font-semibold mb-1">{menu.name}</h3>
 
-                  {/* Replace inner restaurant Link with clickable div */}
+                  {/* Restaurant link */}
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
