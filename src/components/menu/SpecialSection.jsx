@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function SpecialsSection({ specialMenus }) {
   const scrollRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,6 +62,9 @@ export default function SpecialsSection({ specialMenus }) {
               ? "flex flex-col space-y-6"
               : "flex overflow-x-auto space-x-6 scroll-smooth scrollbar-hide pb-4"
           }`}
+          role="region"
+          aria-label="Today's specials menu carousel"
+          tabIndex={0}
         >
           {specialMenus.map((menu, i) => (
             <motion.div
@@ -109,27 +114,36 @@ export default function SpecialsSection({ specialMenus }) {
                 <div className="p-5 text-left">
                   <h3 className="text-xl font-semibold mb-1">{menu.name}</h3>
 
-                  {/* Restaurant */}
-                  <p className="flex items-center text-sm text-gray-600 mb-2 select-none space-x-3">
-                    <Link
-                      href={`/canteens/${menu.restaurantId}/menu`}
-                      className="flex items-center space-x-3 hover:underline"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="relative w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden border border-gray-300">
-                        <Image
-                          src={
-                            menu.restaurant?.imageUrl ||
-                            "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=64&q=80"
-                          }
-                          alt={`${menu.restaurant?.name} logo`}
-                          fill
-                          style={{ objectFit: "cover" }}
-                        />
-                      </div>
-                      <span>{menu.restaurant?.name}</span>
-                    </Link>
-                  </p>
+                  {/* Replace inner restaurant Link with clickable div */}
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/canteens/${menu.restaurantId}/menu`);
+                    }}
+                    className="flex items-center space-x-3 text-sm text-gray-600 mb-2 hover:underline select-none cursor-pointer"
+                    role="link"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        router.push(`/canteens/${menu.restaurantId}/menu`);
+                      }
+                    }}
+                    aria-label={`Go to ${menu.restaurant?.name} menu`}
+                  >
+                    <div className="relative w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden border border-gray-300">
+                      <Image
+                        src={
+                          menu.restaurant?.imageUrl ||
+                          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=64&q=80"
+                        }
+                        alt={`${menu.restaurant?.name} logo`}
+                        fill
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                    <span>{menu.restaurant?.name}</span>
+                  </div>
 
                   <p className="text-green-700 font-semibold mb-1">
                     MMK {menu.price.toLocaleString()}
