@@ -104,6 +104,15 @@ export async function getAllSpecialMenus() {
       createdAt: "desc",
     },
     take: 5,
+    include: {
+      restaurant: {
+        select: {
+          id: true,
+          name: true,
+          imageUrl: true,
+        },
+      },
+    },
   });
 
   console.log("⚡ [Database] All special menus loaded from DB and cached");

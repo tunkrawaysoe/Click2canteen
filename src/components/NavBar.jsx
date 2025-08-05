@@ -21,8 +21,6 @@ function Navbar() {
   console.log("total Quantity ", totalQuantity);
 
   useEffect(() => {
-    if (!user) return;
-
     async function fetchCart() {
       const userId = user?.id || "guest";
 

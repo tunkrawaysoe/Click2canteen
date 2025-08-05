@@ -4,6 +4,7 @@ import pizza from "../../../public/images/pizza123.png";
 import AnimatedButton from "@/components/buttons/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 import { getAllSpecialMenus } from "@/lib/data/menu/menu";
+import SpecialsSection from "@/components/menu/SpecialSection";
 
 export const revalidate = 300;
 export default async function HeroSection() {
@@ -84,58 +85,7 @@ export default async function HeroSection() {
         </div>
       </section>
       {/* Special menu */}
-      <section className="bg-[#FFF8E7] py-10 px-4 sm:px-8 lg:px-16 text-[#1d2941]">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-extrabold text-center mb-4">
-            Today's Specials
-          </h2>
-          <p className="text-center text-lg text-gray-600 mb-10">
-            Hand-picked meals cooked fresh, just for you!
-          </p>
-
-          {/* Scrollable Card Container */}
-          <div className="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide">
-            {specialMenus.map((menu) => (
-              <Link
-                key={menu.id}
-                href={`/canteens/${menu.restaurantId}/menu/${menu.id}`}
-                className="min-w-[400px] bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 relative block"
-              >
-                {/* Special sentence banner */}
-                <div className="absolute top-0 left-0 bg-red-500 text-white text-s font-bold px-3 py-1 rounded-br-2xl z-10">
-                  ⭐ Special
-                </div>
-
-                {/* Image */}
-                <div className="relative h-48 w-full rounded-t-3xl overflow-hidden">
-                  <Image
-                    src={
-                      menu.imageUrl ||
-                      "https://images.unsplash.com/photo-1600891964599-f61ba0e24092"
-                    }
-                    alt={menu.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="p-5 text-left">
-                  <h3 className="text-xl font-semibold mb-2">{menu.name}</h3>
-                  <p className="text-green-700 font-semibold mb-1">
-                    MMK {menu.price.toLocaleString()}
-                  </p>
-                  <p className="text-gray-600 text-sm">
-                    {menu.description.length > 80
-                      ? `${menu.description.slice(0, 80)}...`
-                      : menu.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SpecialsSection specialMenus={specialMenus} />
 
       <section
         style={{
