@@ -46,6 +46,7 @@ export default function OrderItemsTable({
 
   return (
     <>
+      {/* Table for order items */}
       <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table>
           <TableHead>
@@ -56,23 +57,11 @@ export default function OrderItemsTable({
                 "Unit Price (MMK)",
                 "Quantity",
                 "Total Price (MMK)",
-                "Service Type",
-                "Payment Method",
-                "Payment Image",
               ].map((header) => (
                 <TableCell
                   key={header}
                   sx={{ fontWeight: "bold" }}
-                  align={
-                    [
-                      "Menu Name",
-                      "Service Type",
-                      "Payment Method",
-                      "Payment Image",
-                    ].includes(header)
-                      ? "left"
-                      : "right"
-                  }
+                  align={header === "Menu Name" ? "left" : "right"}
                 >
                   {header}
                 </TableCell>
@@ -125,58 +114,66 @@ export default function OrderItemsTable({
               );
             })}
 
+            {/* Total row */}
             <TableRow sx={{ backgroundColor: "#f9f9f9" }}>
               <TableCell align="right" colSpan={4} sx={{ fontWeight: "bold" }}>
                 Total
               </TableCell>
-
-              {/* Total Price */}
               <TableCell
                 align="right"
                 sx={{ fontWeight: "bold", color: "primary.main" }}
               >
                 {totalAll.toLocaleString()} MMK
               </TableCell>
-
-              {/* Service Type */}
-              <TableCell>
-                <Typography>{serviceType}</Typography>
-              </TableCell>
-
-              {/* Payment Method */}
-              <TableCell>
-                <Typography fontWeight="bold">
-                  {payMentMethod?.toUpperCase() || "N/A"}
-                </Typography>
-              </TableCell>
-
-              {/* Payment Image */}
-              <TableCell>
-                {payMentMethod?.toUpperCase() === "KBZPAY" && payMentUrl ? (
-                  <Image
-                    src={payMentUrl}
-                    alt="KBZPay QR Code"
-                    width={60}
-                    height={60}
-                    style={{
-                      border: "1px solid #ccc",
-                      borderRadius: 6,
-                      cursor: "pointer",
-                    }}
-                    onClick={handleOpen}
-                  />
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    N/A
-                  </Typography>
-                )}
-              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
 
-      {/* Modal Dialog for Payment Image - Hidden scrollbar but scrollable */}
+      {/* Responsive Order Summary */}
+      <Box
+        display="flex"
+        flexDirection={{ xs: "column", sm: "row" }} // stack on mobile, row on desktop
+        justifyContent="space-between"
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        gap={2}
+        mt={2}
+        p={2}
+        sx={{
+          backgroundColor: "#fafafa",
+          borderRadius: 2,
+          border: "1px solid #eee",
+        }}
+      >
+        <Typography>
+          <strong>Service Type:</strong> {serviceType}
+        </Typography>
+
+        <Typography>
+          <strong>Payment Method:</strong> {payMentMethod?.toUpperCase() || "N/A"}
+        </Typography>
+
+        {payMentMethod?.toUpperCase() === "KBZPAY" && payMentUrl ? (
+          <Image
+            src={payMentUrl}
+            alt="KBZPay QR Code"
+            width={60}
+            height={60}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+            onClick={handleOpen}
+          />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No payment image
+          </Typography>
+        )}
+      </Box>
+
+      {/* Modal Dialog for Payment Image */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -190,13 +187,12 @@ export default function OrderItemsTable({
             p: 2,
             backgroundColor: "#fff",
             position: "relative",
-            overflow: "auto", // allow scroll
-            scrollbarWidth: "none", // hide scrollbar in Firefox
-            "&::-webkit-scrollbar": { display: "none" }, // hide scrollbar in Chrome/Safari/Edge
+            overflow: "auto",
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": { display: "none" },
           },
         }}
       >
-        {/* Lightbox style close button */}
         <IconButton
           aria-label="Close payment modal"
           onClick={handleClose}
@@ -211,7 +207,7 @@ export default function OrderItemsTable({
             zIndex: 999,
             transition: "background-color 0.2s ease",
             "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.8)", // darker on hover
+              backgroundColor: "rgba(0,0,0,0.8)",
             },
           }}
         >

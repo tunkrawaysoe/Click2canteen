@@ -38,6 +38,7 @@ export default async function MenuContent({ canteenId, isAdmin, category }) {
           </p>
         </div>
       </div>
+       <BackButton />
 
       {/* Menu Grid (Client) */}
       <MenuGrid
