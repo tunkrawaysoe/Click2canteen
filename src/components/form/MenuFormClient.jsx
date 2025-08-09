@@ -92,6 +92,7 @@ export default function MenuFormClient({
         <FormControl fullWidth required>
           <InputLabel id="category-label">Category</InputLabel>
           <Select
+            label="Category"  // <-- This is important
             labelId="category-label"
             name="category"
             defaultValue={defaultValues.category || ""}
