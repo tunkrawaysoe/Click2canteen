@@ -14,7 +14,6 @@ import {
   Chip,
   Typography,
   Dialog,
-  DialogContent,
   IconButton,
   Box,
 } from "@mui/material";
@@ -90,8 +89,6 @@ export default function OrderItemsTable({
               const unitPriceWithAddons = (item.price || 0) + addonsTotal;
               const totalPrice = unitPriceWithAddons * (item.quantity || 0);
 
-              const isLastRow = index === orderItems.length - 1;
-
               return (
                 <TableRow key={item.id} hover>
                   <TableCell align="right">{index + 1}</TableCell>
@@ -127,6 +124,7 @@ export default function OrderItemsTable({
                 </TableRow>
               );
             })}
+
             <TableRow sx={{ backgroundColor: "#f9f9f9" }}>
               <TableCell align="right" colSpan={4} sx={{ fontWeight: "bold" }}>
                 Total
@@ -178,7 +176,7 @@ export default function OrderItemsTable({
         </Table>
       </TableContainer>
 
-      {/* Modal Dialog for Payment Image */}
+      {/* Modal Dialog for Payment Image - Hidden scrollbar but scrollable */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -190,26 +188,34 @@ export default function OrderItemsTable({
             borderRadius: 3,
             boxShadow: 24,
             p: 2,
-            backgroundColor: "fff",
+            backgroundColor: "#fff",
             position: "relative",
+            overflow: "auto", // allow scroll
+            scrollbarWidth: "none", // hide scrollbar in Firefox
+            "&::-webkit-scrollbar": { display: "none" }, // hide scrollbar in Chrome/Safari/Edge
           },
         }}
       >
+        {/* Lightbox style close button */}
         <IconButton
           aria-label="Close payment modal"
           onClick={handleClose}
           sx={{
             position: "absolute",
-            top: 12,
-            right: 12,
-            color: (theme) => theme.palette.grey[600],
-            zIndex: 10,
-            bgcolor: "rgba(255,255,255,0.8)",
-            "&:hover": { bgcolor: "rgba(255,255,255,1)" },
+            top: 16,
+            right: 16,
+            color: "#fff",
+            backgroundColor: "rgba(0,0,0,0.4)",
+            borderRadius: "50%",
+            padding: 1,
+            zIndex: 999,
+            transition: "background-color 0.2s ease",
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.8)", // darker on hover
+            },
           }}
-          size="large"
         >
-          <CloseIcon fontSize="inherit" />
+          <CloseIcon fontSize="large" />
         </IconButton>
 
         {payMentUrl ? (
@@ -219,7 +225,6 @@ export default function OrderItemsTable({
             alt="Payment QR Code Large"
             sx={{
               width: "100%",
-              maxWidth: 400,
               height: "auto",
               borderRadius: 2,
               mx: "auto",

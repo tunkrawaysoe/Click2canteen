@@ -38,7 +38,6 @@ export default async function OrdersHistoryPage() {
     );
   }
 
-  // Fetch orders, with 'true' to get today's orders only (if your function supports that)
   const orders = await getOrdersByRestaurantId(restaurantId);
 
   return (
@@ -107,7 +106,7 @@ export default async function OrdersHistoryPage() {
 
                 {/* Link to order detail page with eye icon */}
                 <TableCell>
-                  <Link href={`/admin/orders/${order.id}`}>
+                  <Link href={`/admin/orderhistory/${order.id}`}>
                     <IconButton aria-label="View Details">
                       <VisibilityIcon />
                     </IconButton>
