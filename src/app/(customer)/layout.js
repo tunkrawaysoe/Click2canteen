@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import NavBar from "@/components/NavBar";
 import { AuthProvider } from "../AuthProvider";
+import OfflineNotice from "@/components/OfflineNotice";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +27,7 @@ export default async function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <OfflineNotice/>
           <NavBar />
           {children}
         </body>
