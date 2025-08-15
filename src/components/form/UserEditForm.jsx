@@ -50,20 +50,20 @@ export default function UserEditForm({ user, restaurants }) {
         >
           <MenuItem value="ADMIN">SYSTEM_ADMIN</MenuItem>
           <MenuItem value="CUSTOMER">CUSTOMER</MenuItem>
-          <MenuItem value="ADMIN">Admin</MenuItem>
+          <MenuItem value="ADMIN">ADMIN</MenuItem>
         </Select>
       </FormControl>
 
       {role === "ADMIN" && (
         <FormControl fullWidth margin="normal">
-          <InputLabel>Assign Restaurant</InputLabel>
+          <InputLabel>Assign Canteen</InputLabel>
           <Select
             name="restaurantId"
             value={restaurantId}
             label="Assign Restaurant"
             onChange={(e) => setRestaurantId(e.target.value)}
           >
-            <MenuItem value="">-- Select Restaurant --</MenuItem>
+            <MenuItem value="">-- Select Canteen --</MenuItem>
             {restaurants.map((rest) => (
               <MenuItem key={rest.id} value={rest.id}>
                 {rest.name}

@@ -48,7 +48,7 @@ const UsersDisplay = ({ users }) => {
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
               <TableCell>User Type</TableCell>
-              <TableCell>Restaurant</TableCell>
+              <TableCell>Canteen</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
