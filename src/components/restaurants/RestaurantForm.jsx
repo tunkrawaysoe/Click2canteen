@@ -37,15 +37,21 @@ export default function RestaurantForm({
       .forEach((phone) => formData.append("kpayPhones[]", phone));
 
     try {
+      setStatus(null);
+
       const result = await onSubmit(formData);
+
       if (result?.error) {
-        setStatus(`❌ ${result.error}`);
+        setStatus({ type: "error", message: result.error });
       } else {
-        setStatus(`✅ Restaurant ${mode === "edit" ? "updated" : "added"}!`);
+        setStatus({
+          type: "success",
+          message: `Restaurant ${mode === "edit" ? "updated" : "added"}!`,
+        });
         router.push("/admin/canteens");
       }
     } catch (error) {
-      setStatus("❌ Something went wrong.");
+      setStatus({ type: "error", message: "❌ Something went wrong." });
       console.error(error);
     }
   }
@@ -55,6 +61,19 @@ export default function RestaurantForm({
       <h1 className="text-2xl font-bold mb-4">
         {mode === "edit" ? "Update Canteen" : "Add Canteen"}
       </h1>
+
+      {/* 🔹 Banner for errors/success */}
+      {status && (
+        <div
+          className={`mb-4 p-3 rounded-md text-sm font-medium ${
+            status.type === "error"
+              ? "bg-red-100 text-red-700 border border-red-300"
+              : "bg-green-100 text-green-700 border border-green-300"
+          }`}
+        >
+          {status.message}
+        </div>
+      )}
 
       <form action={handleFormAction} className="space-y-4">
         <input
@@ -193,8 +212,6 @@ export default function RestaurantForm({
           label={mode === "edit" ? "Update Canteen" : "Add Canteen"}
         />
       </form>
-
-      {status && <p className="mt-4 text-center">{status}</p>}
     </div>
   );
 }

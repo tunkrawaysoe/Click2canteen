@@ -13,7 +13,6 @@ import { hasPermission } from "@/lib/rbac";
 export default function MenuCard({
   id,
   title,
-  description,
   price,
   imageUrl,
   canteenId,

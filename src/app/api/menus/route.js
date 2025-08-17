@@ -6,8 +6,6 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const canteenId = searchParams.get("canteenId");
     const category = searchParams.get("category") || null;
-    console.log("cafdfdfd", category);
-
     const forceRefresh = searchParams.get("forceRefresh") === "true";
 
     if (!canteenId) {

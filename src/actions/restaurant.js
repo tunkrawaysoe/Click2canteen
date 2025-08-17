@@ -32,6 +32,15 @@ export async function addRestaurant(formData) {
   }
 
   try {
+    // ✅ Check if canteen with same name already exists
+    const existing = await prisma.restaurant.findUnique({
+      where: { name },
+    });
+
+    if (existing) {
+      return { error: "A canteen with this name already exists." };
+    }
+
     await prisma.restaurant.create({
       data: {
         name,
@@ -49,6 +58,11 @@ export async function addRestaurant(formData) {
 
     return { success: true };
   } catch (err) {
+    // ✅ Catch DB-level duplicate errors as a fallback
+    if (err.code === "P2002" && err.meta?.target?.includes("name")) {
+      return { error: "A canteen with this name already exists." };
+    }
+
     console.error("❌ Create failed:", err);
     return { error: "Something went wrong while creating restaurant" };
   }
