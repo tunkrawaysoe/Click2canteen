@@ -144,7 +144,7 @@ export default function RestaurantForm({
         {/* Upload Restaurant Image */}
         <div>
           <p className="mb-2 font-semibold text-gray-700">
-            Upload Restaurant Image
+            Upload Canteen Image
           </p>
           <UploadDropzone
             endpoint="imageUploader"

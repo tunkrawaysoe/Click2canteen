@@ -80,9 +80,9 @@ export default function RestaurantActions({ user, restaurantId }) {
       </Menu>
 
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <DialogTitle>Delete Restaurant?</DialogTitle>
+        <DialogTitle>Delete Canteen?</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this restaurant?
+          Are you sure you want to delete this canteen?
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>

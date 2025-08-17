@@ -96,10 +96,8 @@ export default function MenuFormClient({
             labelId="category-label"
             name="category"
             defaultValue={defaultValues.category || ""}
-          >
-            <MenuItem value="APPETIZER">Appetizer</MenuItem>
+          >     
             <MenuItem value="MAIN">Main</MenuItem>
-            <MenuItem value="DESSERT">Dessert</MenuItem>
             <MenuItem value="DRINK">Drink</MenuItem>
             <MenuItem value="SNACK">Snack</MenuItem>
           </Select>
