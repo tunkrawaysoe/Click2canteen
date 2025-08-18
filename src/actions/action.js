@@ -22,6 +22,7 @@ export async function addMenuWithAddOns(formData) {
   if (!name || !price || !category || !restaurantId) {
     throw new Error("Missing required menu fields");
   }
+  console.log("isspecial",isSpecial)
 
   // Get all add-ons
   const addOnNames = formData.getAll("addOnName");

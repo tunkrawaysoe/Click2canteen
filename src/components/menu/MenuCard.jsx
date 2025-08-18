@@ -17,6 +17,7 @@ export default function MenuCard({
   imageUrl,
   canteenId,
   isActive,
+  isSpecial,
   user,
 }) {
   const defaultImageUrl =
@@ -24,6 +25,7 @@ export default function MenuCard({
 
   const canEdit = hasPermission(user, "update", "menu", user?.restaurantId);
   const canViewDetails = user?.role === "CUSTOMER" || user?.role === "GUEST";
+  console.log("isspecial form menu", isSpecial);
 
   return (
     <Card
@@ -39,12 +41,13 @@ export default function MenuCard({
         flexDirection: { xs: "row", sm: "column" },
         gap: { xs: 1, sm: 1.5 },
         opacity: isActive ? 1 : 0.6,
-        pointerEvents: isActive ? "auto" : "none", // disable most of card when inactive
+        pointerEvents: isActive ? "auto" : "none",
         alignItems: "stretch",
         minHeight: { xs: 140, sm: "auto" },
       }}
       elevation={3}
     >
+      {/* Out of Stock Badge */}
       {!isActive && (
         <Chip
           label="Out of Stock"
@@ -62,6 +65,29 @@ export default function MenuCard({
             borderRadius: 1,
             boxShadow: 1,
             zIndex: 10,
+          }}
+        />
+      )}
+
+      {/* Special Badge */}
+      {isSpecial && (
+        <Chip
+          label="Special"
+          size="small"
+          sx={{
+            position: "absolute",
+            top: 10,
+            left: 5,
+            bgcolor: "#dc2626", // red
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "0.75rem",
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            boxShadow: 1,
+            zIndex: 10,
+            transform: "rotate(-10deg)", // tilt effect
           }}
         />
       )}
@@ -151,11 +177,11 @@ export default function MenuCard({
             </Link>
           )}
 
-          {/* EDIT BUTTON WRAPPED IN A BOX TO OVERRIDE POINTER EVENTS WHEN INACTIVE */}
+          {/* EDIT BUTTON */}
           {canEdit && (
             <Box
               sx={{
-                pointerEvents: "auto", // override parent 'none' if inactive
+                pointerEvents: "auto",
                 zIndex: 1,
               }}
             >

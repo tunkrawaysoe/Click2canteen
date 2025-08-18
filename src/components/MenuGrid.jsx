@@ -100,6 +100,7 @@ export default function MenuGrid({ canteenId, isAdmin, user }) {
               title={item.name}
               description={item.description || ""}
               isActive={item.isActive}
+              isSpecial={item.isSpecial}
               price={`MMK ${item.price.toLocaleString()}`}
               imageUrl={item.imageUrl || defaultImageUrl}
               canteenId={canteenId}
