@@ -1,3 +1,5 @@
+
+import BackButton from "@/components/buttons/BackButton";
 import RestaurantsList from "@/components/restaurants/RestaurantLists";
 import { getUser } from "@/lib/data/user/user";
 import { hasPermission } from "@/lib/rbac";
@@ -25,7 +27,6 @@ export default async function CanteensPage() {
           </Link>
         )}
       </div>
-
       <RestaurantsList isAdmin={true} />
     </div>
   );
