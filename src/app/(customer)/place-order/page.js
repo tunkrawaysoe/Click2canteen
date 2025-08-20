@@ -1,3 +1,4 @@
+// /app/place-order/page.js
 import { notFound } from "next/navigation";
 import { getCartAction } from "@/actions/cart";
 import { enrichCart, calculateTotal } from "@/lib/data/cart/enrichedcart";
@@ -24,19 +25,10 @@ export default async function PlaceOrderPage({ searchParams }) {
     <Box maxWidth="900px" mx="auto" my={5} px={2}>
       <BackButton />
 
-      <Paper
-        elevation={3}
-        sx={{
-          p: 3,
-          borderRadius: 3,
-          backgroundColor: "#fff",
-          mb: 3,
-        }}
-      >
+      <Paper elevation={3} sx={{ p: 3, borderRadius: 3, mb: 3 }}>
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           Order Summary
         </Typography>
-
         <Divider sx={{ mb: 2 }} />
 
         {enrichedCart.map((item, idx) => {
@@ -64,7 +56,6 @@ export default async function PlaceOrderPage({ searchParams }) {
                   idx !== enrichedCart.length - 1 ? "1px solid #eee" : "none",
               }}
             >
-              {/* Fixed Size Image Box */}
               <Box
                 sx={{
                   width: 100,
@@ -81,14 +72,11 @@ export default async function PlaceOrderPage({ searchParams }) {
                     alt={item.menu.name}
                     width={100}
                     height={100}
-                    style={{
-                      objectFit: "cover",
-                    }}
+                    style={{ objectFit: "cover" }}
                   />
                 )}
               </Box>
 
-              {/* Item Details */}
               <Box flex={1}>
                 <Typography variant="subtitle1" fontWeight={600}>
                   {item.menu.name}
@@ -98,13 +86,7 @@ export default async function PlaceOrderPage({ searchParams }) {
                 </Typography>
 
                 {selectedAddOns.length > 0 && (
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    mt={1}
-                    flexWrap="wrap"
-                    rowGap={0.5}
-                  >
+                  <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
                     {selectedAddOns.map(
                       (addon) =>
                         addon && (
@@ -125,7 +107,6 @@ export default async function PlaceOrderPage({ searchParams }) {
                 )}
               </Box>
 
-              {/* Price */}
               <Box textAlign="right" minWidth={120}>
                 <Typography fontWeight="bold" color="primary">
                   {totalForItem.toLocaleString()} MMK
@@ -138,7 +119,6 @@ export default async function PlaceOrderPage({ searchParams }) {
           );
         })}
 
-        {/* Grand Total */}
         <Divider sx={{ my: 2 }} />
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="h6" fontWeight={700}>
@@ -150,7 +130,6 @@ export default async function PlaceOrderPage({ searchParams }) {
         </Box>
       </Paper>
 
-      {/* Payment */}
       <PaymentSelector
         userId={userId}
         grandTotal={grandTotal}
