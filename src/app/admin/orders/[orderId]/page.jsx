@@ -8,11 +8,9 @@ export default async function OrderDetailPage({ params }) {
   const { orderId } = await params;
   const order = await getOrderById(orderId);
   if (!order) return notFound();
-  console.log("orderrr", order);
   const payMentMethod = order.paymentMethod;
   const payMentUrl = order.paymentUrl;
   const serviceType = order.serviceType;
-  console.log("serviceType", serviceType);
 
   return (
     <Box sx={{ p: 4 }}>
@@ -24,7 +22,7 @@ export default async function OrderDetailPage({ params }) {
       />
 
       {/* Add margin-top here for spacing */}
-      <Box mt={3} >
+      <Box mt={3}>
         <BackButton />
       </Box>
     </Box>

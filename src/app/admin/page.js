@@ -2,10 +2,16 @@ import { getUser } from "@/lib/data/user/user";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const user = await getUser();
+  const user = await getUser(true);
+
   if (user.role === "CUSTOMER") {
     redirect("/");
   }
+
+  const managedEntity =
+    user.role === "ADMIN" && user.restaurantName
+      ? user.restaurantName
+      : "Click2Canteen";
 
   return (
     <div
@@ -27,7 +33,15 @@ export default async function Home() {
         </h2>
 
         <p className="mb-4 text-lg text-gray-700">
-          You have full authorization to manage Click2Canteen.
+          You have full authorization to manage{" "}
+          {user.role === "ADMIN" ? (
+            <span className="font-bold text-blue-900">
+              {user.restaurantName}
+            </span>
+          ) : (
+            "Click2Canteen"
+          )}
+          .
         </p>
 
         <p className="text-lg text-gray-800 font-medium">

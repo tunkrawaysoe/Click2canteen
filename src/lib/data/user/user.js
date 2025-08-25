@@ -9,7 +9,7 @@ export async function getUserProfile() {
   return user;
 }
 
-export async function getUser() {
+export async function getUser(restName = false) {
   const kindeUser = await getUserProfile();
 
   if (!kindeUser) {
@@ -23,14 +23,23 @@ export async function getUser() {
 
   const user = await prisma.user.findUnique({
     where: { id: kindeUser.id },
+    include: restName ? { restaurant: { select: { name: true } } } : undefined,
   });
 
-  // If user not found in DB, fallback to guest as well
+  // If user not found in DB, fallback to guest
   if (!user) {
     return {
       id: null,
       name: "Guest",
       role: "GUEST",
+    };
+  }
+
+  // If restName requested, attach restaurant name
+  if (restName && user.restaurant) {
+    return {
+      ...user,
+      restaurantName: user.restaurant.name,
     };
   }
 
