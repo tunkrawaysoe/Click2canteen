@@ -5,10 +5,17 @@ import AnimatedButton from "@/components/buttons/AnimatedButton";
 import { ClipboardList, CheckCircle, Truck } from "lucide-react";
 import { getAllSpecialMenus } from "@/lib/data/menu/menu";
 import SpecialsSection from "@/components/menu/SpecialSection";
+import { getUser } from "@/lib/data/user/user";
+import { redirect } from "next/navigation";
 
 export const revalidate = 300;
 export default async function HeroSection() {
   const specialMenus = await getAllSpecialMenus();
+  const user = await getUser();
+
+  if (user.role === "ADMIN" || user.role === "SYSTEM_ADMIN") {
+    redirect("/admin");
+  }
 
   return (
     <>
