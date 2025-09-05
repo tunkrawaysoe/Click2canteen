@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export default function AboutUs() {
   const features = [
     {
@@ -44,12 +46,14 @@ export default function AboutUs() {
           {/* Image Column */}
           <div className="grid grid-cols-2 gap-4 md:col-span-2">
             {images.map((img, i) => (
-              <img
-                key={i}
-                src={`/images/${img}`}
-                alt={`canteen-${i}`}
-                className="rounded-2xl shadow-md w-full h-50 object-cover transition-transform hover:scale-105 duration-300"
-              />
+              <div key={i} className="relative w-full h-48 sm:h-56 md:h-64">
+                <Image
+                  src={`/images/${img}`}
+                  alt={`canteen-${i}`}
+                  fill
+                  className="rounded-2xl shadow-md object-cover transition-transform hover:scale-105 duration-300"
+                />
+              </div>
             ))}
           </div>
 
@@ -93,11 +97,13 @@ export default function AboutUs() {
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center text-lg font-bold">
-                    <img
+                  <div className="w-12 h-12 rounded-full overflow-hidden shadow">
+                    <Image
                       src="/images/founder.jpeg"
                       alt="Kaung Nyein Kyaw"
-                      className="w-12 h-12 rounded-full object-cover shadow"
+                      width={48}
+                      height={48}
+                      className="object-cover"
                     />
                   </div>
                   <div>
@@ -106,11 +112,13 @@ export default function AboutUs() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center text-lg font-bold">
-                    <img
+                  <div className="w-12 h-12 rounded-full overflow-hidden shadow">
+                    <Image
                       src="/images/Developer.jpeg"
                       alt="Tun Kraway Soe"
-                      className="w-12 h-12 rounded-full object-cover shadow"
+                      width={48}
+                      height={48}
+                      className="object-cover"
                     />
                   </div>
                   <div>
@@ -154,7 +162,13 @@ export default function AboutUs() {
 
           {/* Footer Bottom Text */}
           <div className="mt-10 text-center text-sm text-gray-400 border-t border-gray-700 pt-4">
-            © {new Date().getFullYear()} Canteen Connect. All rights reserved.
+            ©{" "}
+            {new Intl.DateTimeFormat("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }).format(new Date())}{" "}
+            Canteen Connect. All rights reserved.
           </div>
         </div>
       </div>
