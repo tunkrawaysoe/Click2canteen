@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://click2canteen.vercel.app
+
+# Sitemaps
+Sitemap: https://click2canteen.vercel.app/sitemap.xml
