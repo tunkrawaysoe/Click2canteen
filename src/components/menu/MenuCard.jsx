@@ -25,7 +25,6 @@ export default function MenuCard({
 
   const canEdit = hasPermission(user, "update", "menu", user?.restaurantId);
   const canViewDetails = user?.role === "CUSTOMER" || user?.role === "GUEST";
-  console.log("isspecial form menu", isSpecial);
 
   return (
     <Card

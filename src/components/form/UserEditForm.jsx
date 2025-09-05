@@ -18,8 +18,6 @@ export default function UserEditForm({ user, restaurants }) {
   const [role, setRole] = useState(user.role || "CUSTOMER");
   const [restaurantId, setRestaurantId] = useState(user.restaurantId || "");
 
-  console.log("userrris", user);
-
   return (
     <form
       action={updateUserAction}

@@ -18,7 +18,6 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const { user, isAuthenticated } = useKindeBrowserClient();
-  console.log("total Quantity ", totalQuantity);
 
   useEffect(() => {
     async function fetchCart() {
