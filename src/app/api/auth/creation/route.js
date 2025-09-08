@@ -26,7 +26,7 @@ export async function GET(request) {
     },
   });
 
-  // Merge guest cart
+  // Merge guest cart into user cart
   const guestKey = "cart:guest";
   const userKey = `cart:${user.id}`;
 
@@ -50,16 +50,25 @@ export async function GET(request) {
       }
     }
 
-    // Store merged cart directly (no JSON)
+    // Store merged cart
     await redis.set(userKey, mergedCart, { ex: 600 });
     await redis.del(guestKey);
   }
 
-  // Redirect to place-order with userId and role
-  const redirectUrl = new URL(
-    `/place-order?userId=${user.id}&role=${user.role}`,
-    request.url
-  );
+  // Decide redirect location
+  const userCart = await redis.get(userKey);
+  let redirectUrl;
+
+  if (userCart && userCart.length > 0) {
+    // Cart exists → go to place-order
+    redirectUrl = new URL(
+      `/place-order?userId=${user.id}&role=${user.role}`,
+      request.url
+    );
+  } else {
+    // No cart → go to homepage
+    redirectUrl = new URL("/", request.url);
+  }
 
   const response = NextResponse.redirect(redirectUrl);
 

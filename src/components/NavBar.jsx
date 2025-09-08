@@ -176,7 +176,7 @@ function Navbar() {
                   </button>
                 </LogoutLink>
               ) : (
-                <LoginLink postLoginRedirectURL="/">
+                <LoginLink >
                   <button className="bg-white text-[#00022E] px-4 py-1 rounded-lg font-medium cursor-pointer">
                     Login
                   </button>
