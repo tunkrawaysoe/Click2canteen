@@ -1,4 +1,3 @@
-"use client";
 
 import Image from "next/image";
 
@@ -51,6 +50,8 @@ export default function AboutUs() {
                   src={`/images/${img}`}
                   alt={`canteen-${i}`}
                   fill
+                  priority={i === 0}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="rounded-2xl shadow-md object-cover transition-transform hover:scale-105 duration-300"
                 />
               </div>
@@ -73,7 +74,7 @@ export default function AboutUs() {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="bg-white shadow hover:shadow-xl p-5 flex items-start gap-4 transition-transform hover:scale-[1.02]"
+                  className="bg-white shadow hover:shadow-xl p-5 flex items-start gap-4 transition-transform hover:scale-[1.02] rounded-xl"
                 >
                   <div className="text-3xl">{feature.icon}</div>
                   <div>
@@ -88,7 +89,8 @@ export default function AboutUs() {
           </div>
         </div>
 
-        <div className="mt-15 bg-gray-800 text-white rounded-3xl px-6 py-12">
+        {/* Team & Contact */}
+        <div className="mt-16 bg-gray-800 text-white rounded-3xl px-6 py-12">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Meet Our Team */}
             <div>
@@ -97,12 +99,12 @@ export default function AboutUs() {
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden shadow">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden shadow">
                     <Image
                       src="/images/founder.jpeg"
                       alt="Kaung Nyein Kyaw"
-                      width={48}
-                      height={48}
+                      fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>
@@ -112,12 +114,12 @@ export default function AboutUs() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden shadow">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden shadow">
                     <Image
                       src="/images/Developer.jpeg"
                       alt="Tun Kraway Soe"
-                      width={48}
-                      height={48}
+                      fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>
@@ -147,6 +149,7 @@ export default function AboutUs() {
                   <div>
                     <p className="font-semibold">Email</p>
                     <p>kaungnyeinkyaw000@gmail.com</p>
+                    <p>tunkrawaysoe@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -165,8 +168,6 @@ export default function AboutUs() {
             ©{" "}
             {new Intl.DateTimeFormat("en-US", {
               year: "numeric",
-              month: "long",
-              day: "numeric",
             }).format(new Date())}{" "}
             Canteen Connect. All rights reserved.
           </div>

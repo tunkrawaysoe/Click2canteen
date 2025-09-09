@@ -9,7 +9,7 @@ import {
   LogoutLink,
   useKindeBrowserClient,
 } from "@kinde-oss/kinde-auth-nextjs";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 import Logo from "../../public/logo/logo.svg";
 import background from "../../public/images/canteen.jpeg";
 
@@ -22,14 +22,10 @@ function Navbar() {
   useEffect(() => {
     async function fetchCart() {
       const userId = user?.id || "guest";
-
       try {
-        const res = await fetch(
-          `/api/cart?userId=${encodeURIComponent(userId)}`,
-          {
-            cache: "no-store",
-          }
-        );
+        const res = await fetch(`/api/cart?userId=${encodeURIComponent(userId)}`, {
+          cache: "no-store",
+        });
         const cart = await res.json();
         const total = Array.isArray(cart)
           ? cart.reduce((sum, item) => sum + item.quantity, 0)
@@ -44,17 +40,14 @@ function Navbar() {
 
     const handleCartUpdate = () => fetchCart();
     window.addEventListener("cartUpdated", handleCartUpdate);
-
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, [user]);
 
-  // Lock scroll when mobile menu is open
   useEffect(() => {
     const html = document.documentElement;
     const scrollBarWidth = window.innerWidth - html.clientWidth;
-
     if (menuOpen) {
       html.style.overflow = "hidden";
       html.style.paddingRight = `${scrollBarWidth}px`;
@@ -62,7 +55,6 @@ function Navbar() {
       html.style.overflow = "";
       html.style.paddingRight = "";
     }
-
     return () => {
       html.style.overflow = "";
       html.style.paddingRight = "";
@@ -176,7 +168,7 @@ function Navbar() {
                   </button>
                 </LogoutLink>
               ) : (
-                <LoginLink >
+                <LoginLink>
                   <button className="bg-white text-[#00022E] px-4 py-1 rounded-lg font-medium cursor-pointer">
                     Login
                   </button>
@@ -187,20 +179,16 @@ function Navbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={toggleMenu}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label="Open menu"
               className="md:hidden text-white z-50"
             >
-              {menuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer (no X button) */}
       <div
         className={`fixed top-0 right-0 h-full bg-[#001D51] shadow-lg z-50 w-2/3 max-w-xs transform transition-transform duration-300 ease-in-out ${
           menuOpen ? "translate-x-0" : "translate-x-full"
@@ -251,6 +239,14 @@ function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Click outside to close */}
+      {menuOpen && (
+        <div
+          onClick={() => setMenuOpen(false)}
+          className="fixed inset-0 z-40"
+        />
+      )}
     </>
   );
 }

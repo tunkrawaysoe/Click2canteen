@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getUser } from "@/lib/data/user/user";
 import { redirect } from "next/navigation";
 
@@ -19,12 +20,15 @@ export default async function Home() {
       aria-label={`Welcome message for ${user?.name || "user"}`}
     >
       {user?.profileImage && (
-        <img
-          src={user.profileImage}
-          alt={user.name || "Profile Image"}
-          loading="lazy"
-          className="w-44 h-44 object-cover rounded-full shadow-lg"
-        />
+        <div className="w-44 h-44 relative rounded-full shadow-lg overflow-hidden">
+          <Image
+            src={user.profileImage}
+            alt={user.name || "Profile Image"}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
       )}
 
       <div>
@@ -34,7 +38,7 @@ export default async function Home() {
 
         <p className="mb-4 text-lg text-gray-700">
           You have full authorization to manage{" "}
-          {<span className="font-bold text-blue-900">{managedEntity}</span>}.
+          <span className="font-bold text-blue-900">{managedEntity}</span>.
         </p>
 
         <p className="text-lg text-gray-800 font-medium">
