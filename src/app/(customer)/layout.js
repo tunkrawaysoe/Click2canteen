@@ -29,16 +29,16 @@ export const metadata = {
   ],
   authors: [{ name: "Tun Kraway Soe" }],
   creator: "Tun Kraway Soe",
-  metadataBase: new URL("https://your-domain.com"), // replace with real domain
+  metadataBase: new URL("https://click2canteen.vercel.app"),
   openGraph: {
     title: "Click2Canteen | Order Food Online",
     description:
       "Order meals online with Click2Canteen — fast, simple, and reliable.",
-    url: "https://your-domain.com",
+    url: "https://click2canteen.vercel.app",
     siteName: "Click2Canteen",
     images: [
       {
-        url: "https://your-domain.com/preview.png", // add a preview image
+        url: "https://click2canteen.vercel.app//preview.png",
         width: 1200,
         height: 630,
         alt: "Click2Canteen Preview",
@@ -51,15 +51,15 @@ export const metadata = {
     card: "summary_large_image",
     title: "Click2Canteen | Order Food Online",
     description: "Click2Canteen makes canteen food ordering simple and fast.",
-    images: ["https://your-domain.com/preview.png"],
-    creator: "@your_twitter_handle", // optional
+    images: ["https://click2canteen.vercel.app/preview.png"],
+    creator: "@your_twitter_handle", 
   },
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: "https://your-domain.com",
+    canonical: "https://click2canteen.vercel.app",
   },
 };
 
