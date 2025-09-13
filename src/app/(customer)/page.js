@@ -70,7 +70,9 @@ export default async function HeroSection() {
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-white z-10">
               <h1 className="text-3xl font-bold mb-3">
                 Order Food Effortlessly with{" "}
-                <span className="text-green-400">Clicked2Canteen</span>
+                <span className="bg-gradient-to-r from-blue-600 to-sky-300 bg-clip-text text-transparent">
+                  Clicked2Canteen
+                </span>
               </h1>
               <p className="mb-6 max-w-xs">
                 Skip the wait and order your favorite meals online. Fresh, fast,
@@ -80,11 +82,11 @@ export default async function HeroSection() {
                 <button
                   style={{
                     background:
-                      "linear-gradient(180deg, #000212 0%, #ffffff 100%)",
+                      "linear-gradient(180deg, #0F172A 0%, #1E40AF 100%)",
                   }}
                   className="text-white px-6 py-3 rounded-2xl shadow transition duration-300 ease-in-out hover:brightness-110"
                 >
-                  Browse Menus
+                  Browse Canteens
                 </button>
               </Link>
             </div>
