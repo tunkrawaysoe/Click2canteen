@@ -51,7 +51,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Click2Canteen | Order Food Online",
     description: "Click2Canteen makes canteen food ordering simple and fast.",
-    images: ["https://click2canteen.vercel.app/preview.png"],
+    images: ["https://click2canteen.vercel.app/click2canteen.png"],
     creator: "@your_twitter_handle", 
   },
   robots: {

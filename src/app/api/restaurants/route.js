@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 const CACHE_KEY = "restaurants:all";
-const CACHE_TTL = 60 * 5; // 5 minutes
+const CACHE_TTL = 60 * 5; 
 
 export async function GET() {
   const cached = await redis.get(CACHE_KEY)
