@@ -1,4 +1,4 @@
-// src/app/layout.tsx
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import NavBar from "@/components/NavBar";
@@ -38,7 +38,7 @@ export const metadata = {
     siteName: "Click2Canteen",
     images: [
       {
-        url: "https://click2canteen.vercel.app//preview.png",
+        url: "https://click2canteen.vercel.app/click2canteen.png",
         width: 1200,
         height: 630,
         alt: "Click2Canteen Preview",
