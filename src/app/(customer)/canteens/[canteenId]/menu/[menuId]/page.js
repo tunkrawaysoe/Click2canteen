@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Box, Stack, Skeleton } from "@mui/material";
+
 import { getMenuWithAddons } from "@/lib/data/menu/menu";
 import MenuDetailClient from "@/components/menu/MenuDetailClient";
 import { getCartAction } from "@/actions/cart";
@@ -8,11 +8,11 @@ import { getUserProfile } from "@/lib/data/user/user";
 
 export default async function MenuDetailPage({ params }) {
   const { menuId } = await params;
-  const user = await getUserProfile()
+  const user = await getUserProfile();
   const userId = user?.id;
 
-
   // Get current cart
+  
   const cart = await getCartAction(userId);
 
   // Get full details for each menu item in cart

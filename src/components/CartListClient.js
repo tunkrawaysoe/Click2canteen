@@ -10,38 +10,48 @@ import {
   CardMedia,
   Typography,
   IconButton,
-  TextField,
   Stack,
   Chip,
   Box,
   Divider,
   Button,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import { useState } from "react";
 
 export default function CartListClient({ cartItems, userId }) {
   const router = useRouter();
+  const [localCart, setLocalCart] = useState(cartItems); // 👈 Optimistic cart
+
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
 
   async function handleRemove(menuId) {
+    // Optimistic remove
+    setLocalCart((prev) => prev.filter((item) => item.menuId !== menuId));
     await removeFromCartAction(userId, menuId);
     window.dispatchEvent(new Event("cartUpdated"));
-    router.refresh();
   }
 
   async function handleQuantityChange(menuId, value) {
     const quantity = parseInt(value);
     if (quantity > 0) {
+      // Optimistic update
+      setLocalCart((prev) =>
+        prev.map((item) =>
+          item.menuId === menuId ? { ...item, quantity } : item
+        )
+      );
       await updateCartQuantity(userId, menuId, quantity);
       window.dispatchEvent(new Event("cartUpdated"));
-      router.refresh();
     }
   }
 
   return (
     <>
       <Stack spacing={3}>
-        {cartItems.map((item, idx) => {
+        {localCart.map((item, idx) => {
           if (!item.menu) {
             return (
               <Typography key={idx} color="error">
@@ -130,7 +140,7 @@ export default function CartListClient({ cartItems, userId }) {
                     </Typography>
                   )}
 
-                  {/* Quantity Input */}
+                  {/* Quantity Select */}
                   <Stack
                     direction="row"
                     alignItems="center"
@@ -138,16 +148,22 @@ export default function CartListClient({ cartItems, userId }) {
                     sx={{ mb: 1 }}
                   >
                     <Typography variant="body2">Quantity:</Typography>
-                    <TextField
-                      type="number"
+                    <Select
                       size="small"
-                      inputProps={{ min: 1 }}
                       value={item.quantity}
                       onChange={(e) =>
                         handleQuantityChange(item.menuId, e.target.value)
                       }
                       sx={{ width: 80 }}
-                    />
+                    >
+                      {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                        (num) => (
+                          <MenuItem key={num} value={num}>
+                            {num}
+                          </MenuItem>
+                        )
+                      )}
+                    </Select>
                   </Stack>
 
                   {/* Add-ons */}

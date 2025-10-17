@@ -36,9 +36,8 @@ export default async function CartPage() {
         </div>
       ) : (
         <CartListClient cartItems={menuDetails} userId={userId} />
-        
       )}
-      <BackButton/>
+      <BackButton />
     </div>
   );
 }
