@@ -22,13 +22,11 @@ import { useState } from "react";
 
 export default function CartListClient({ cartItems, userId }) {
   const router = useRouter();
-  const [localCart, setLocalCart] = useState(cartItems); // 👈 Optimistic cart
-
+  const [localCart, setLocalCart] = useState(cartItems);
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=400&q=80";
 
   async function handleRemove(menuId) {
-    // Optimistic remove
     setLocalCart((prev) => prev.filter((item) => item.menuId !== menuId));
     await removeFromCartAction(userId, menuId);
     window.dispatchEvent(new Event("cartUpdated"));
@@ -37,7 +35,6 @@ export default function CartListClient({ cartItems, userId }) {
   async function handleQuantityChange(menuId, value) {
     const quantity = parseInt(value);
     if (quantity > 0) {
-      // Optimistic update
       setLocalCart((prev) =>
         prev.map((item) =>
           item.menuId === menuId ? { ...item, quantity } : item
@@ -60,12 +57,9 @@ export default function CartListClient({ cartItems, userId }) {
             );
           }
 
-          const itemAddons = item.addOns
-            .map((id) => item.menu.addOns.find((a) => a.id === id))
-            .filter(Boolean);
-
-          const basePrice = item.menu.price;
-          const addonTotal = itemAddons.reduce(
+          const { menu, selectedAddOns = [] } = item;
+          const basePrice = menu.price;
+          const addonTotal = selectedAddOns.reduce(
             (sum, a) => sum + (a?.price || 0),
             0
           );
@@ -83,7 +77,7 @@ export default function CartListClient({ cartItems, userId }) {
                 height: { xs: "auto", sm: 220 },
               }}
             >
-              {/* Image section */}
+              {/* Image */}
               <CardMedia
                 sx={{
                   position: "relative",
@@ -93,15 +87,15 @@ export default function CartListClient({ cartItems, userId }) {
                 }}
               >
                 <Image
-                  src={item.menu.imageUrl || defaultImageUrl}
-                  alt={item.menu.name}
+                  src={menu.imageUrl || defaultImageUrl}
+                  alt={menu.name}
                   fill
                   sizes="(max-width: 600px) 100vw, 33vw"
                   style={{ objectFit: "cover" }}
                 />
               </CardMedia>
 
-              {/* Content section */}
+              {/* Content */}
               <CardContent
                 sx={{
                   width: { xs: "100%", sm: "66.66%" },
@@ -128,19 +122,19 @@ export default function CartListClient({ cartItems, userId }) {
 
                 <Box>
                   <Typography variant="h6" noWrap>
-                    {item.menu.name}
+                    {menu.name}
                   </Typography>
-                  {item.menu.restaurant?.name && (
+                  {menu.restaurant?.name && (
                     <Typography
                       variant="body2"
                       color="text.secondary"
                       gutterBottom
                     >
-                      from <strong>{item.menu.restaurant.name}</strong>
+                      from <strong>{menu.restaurant.name}</strong>
                     </Typography>
                   )}
 
-                  {/* Quantity Select */}
+                  {/* Quantity */}
                   <Stack
                     direction="row"
                     alignItems="center"
@@ -167,9 +161,9 @@ export default function CartListClient({ cartItems, userId }) {
                   </Stack>
 
                   {/* Add-ons */}
-                  {itemAddons.length > 0 && (
+                  {selectedAddOns.length > 0 && (
                     <Stack direction="row" spacing={1} flexWrap="wrap" mb={1}>
-                      {itemAddons.map((addon) => (
+                      {selectedAddOns.map((addon) => (
                         <Chip
                           key={addon.id}
                           label={`${
@@ -243,9 +237,7 @@ export default function CartListClient({ cartItems, userId }) {
             background: "linear-gradient(to bottom, #00022E, #001D51)",
             color: "white",
             textTransform: "none",
-            "&:hover": {
-              background: "#253863",
-            },
+            "&:hover": { background: "#253863" },
           }}
         >
           Place Order

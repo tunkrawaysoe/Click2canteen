@@ -46,7 +46,6 @@ export async function addToCartAction(
   // Save back to Redis
   try {
     await redis.set(key, JSON.stringify(cart), { ex: CACHE_ttl });
-    console.log("Cart saved:", cart);
   } catch (err) {
     console.error("Failed to save cart:", err);
   }

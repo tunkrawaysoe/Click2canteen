@@ -4,6 +4,7 @@ import CartListClient from "../../../components/CartListClient";
 import prisma from "@/lib/prisma";
 import { getUserProfile } from "@/lib/data/user/user";
 import BackButton from "@/components/buttons/BackButton";
+
 export default async function CartPage() {
   const user = await getUserProfile();
   const userId = user?.id || "guest";
@@ -15,7 +16,14 @@ export default async function CartPage() {
         where: { id: item.menuId },
         include: { addOns: true, restaurant: true },
       });
-      return { ...item, menu };
+
+      if (!menu) return { ...item, menu: null, selectedAddOns: [] };
+
+      const selectedAddOns = item.addOns
+        .map((id) => menu.addOns.find((a) => a.id === id))
+        .filter(Boolean);
+
+      return { ...item, menu, selectedAddOns };
     })
   );
 
