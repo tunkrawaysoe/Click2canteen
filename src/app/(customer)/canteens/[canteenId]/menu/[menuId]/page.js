@@ -10,9 +10,6 @@ export default async function MenuDetailPage({ params }) {
   const { menuId } = await params;
   const user = await getUserProfile();
   const userId = user?.id;
-
-  // Get current cart
-  
   const cart = await getCartAction(userId);
 
   // Get full details for each menu item in cart
