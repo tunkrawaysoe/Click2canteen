@@ -7,7 +7,7 @@ export default withAuth(async function middleware(req) {
   const path = req.nextUrl.pathname;
   const baseUrl = req.nextUrl.origin;
 
-  console.log("Middleware check:", { path, role });
+ 
 
   // Protect /place-order
   if (path === "/place-order") {
